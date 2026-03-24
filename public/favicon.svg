@@ -1,4 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" fill="#0a0f0a"/>
-  <text x="16" y="23" font-family="Georgia,serif" font-size="18" fill="#c4a050" text-anchor="middle" letter-spacing="-5">BB</text>
+  <rect x="1.5" y="1.5" width="29" height="29" fill="none" stroke="#c4a050" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- B gauche — spine -->
+  <rect x="6" y="7" width="2.2" height="18" fill="#c4a050"/>
+  <!-- B gauche — bosse haute -->
+  <path d="M8.2 7 Q15 7 15 11 Q15 15 8.2 15 Z" fill="#c4a050"/>
+  <!-- B gauche — bosse basse (plus grande) -->
+  <path d="M8.2 15 Q16 15 16 20 Q16 25 8.2 25 Z" fill="#c4a050"/>
+
+  <!-- B droit — spine -->
+  <rect x="16.5" y="7" width="2.2" height="18" fill="#c4a050"/>
+  <!-- B droit — bosse haute -->
+  <path d="M18.7 7 Q25.5 7 25.5 11 Q25.5 15 18.7 15 Z" fill="#c4a050"/>
+  <!-- B droit — bosse basse -->
+  <path d="M18.7 15 Q26.5 15 26.5 20 Q26.5 25 18.7 25 Z" fill="#c4a050"/>
 </svg>

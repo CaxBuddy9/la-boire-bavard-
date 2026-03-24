@@ -1,5 +1,18 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192'>
-  <rect width='192' height='192' fill='#0a0f0a'/>
-  <rect x='16' y='16' width='160' height='160' fill='none' stroke='%23c4a050' stroke-width='3' opacity='0.4'/>
-  <text x='96' y='118' font-family='Georgia,serif' font-size='72' fill='%23c4a050' text-anchor='middle' opacity='0.9' letter-spacing='-18'>BB</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#0a0f0a"/>
+  <rect x="10" y="10" width="172" height="172" fill="none" stroke="#c4a050" stroke-width="4" opacity="0.4"/>
+
+  <!-- B gauche — spine -->
+  <rect x="38" y="44" width="13" height="104" fill="#c4a050"/>
+  <!-- B gauche — bosse haute -->
+  <path d="M51 44 Q89 44 89 65 Q89 88 51 88 Z" fill="#c4a050"/>
+  <!-- B gauche — bosse basse -->
+  <path d="M51 88 Q95 88 95 117 Q95 148 51 148 Z" fill="#c4a050"/>
+
+  <!-- B droit — spine -->
+  <rect x="99" y="44" width="13" height="104" fill="#c4a050"/>
+  <!-- B droit — bosse haute -->
+  <path d="M112 44 Q150 44 150 65 Q150 88 112 88 Z" fill="#c4a050"/>
+  <!-- B droit — bosse basse -->
+  <path d="M112 88 Q156 88 156 117 Q156 148 112 148 Z" fill="#c4a050"/>
 </svg>

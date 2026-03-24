@@ -1,5 +1,18 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'>
-  <rect width='512' height='512' fill='%230a0f0a'/>
-  <rect x='32' y='32' width='448' height='448' fill='none' stroke='%23c4a050' stroke-width='6' opacity='0.4'/>
-  <text x='256' y='310' font-family='Georgia,serif' font-size='180' fill='%23c4a050' text-anchor='middle' opacity='0.9' letter-spacing='-48'>BB</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0a0f0a"/>
+  <rect x="24" y="24" width="464" height="464" fill="none" stroke="#c4a050" stroke-width="10" opacity="0.4"/>
+
+  <!-- B gauche — spine -->
+  <rect x="100" y="116" width="34" height="280" fill="#c4a050"/>
+  <!-- B gauche — bosse haute -->
+  <path d="M134 116 Q238 116 238 174 Q238 232 134 232 Z" fill="#c4a050"/>
+  <!-- B gauche — bosse basse -->
+  <path d="M134 232 Q252 232 252 312 Q252 396 134 396 Z" fill="#c4a050"/>
+
+  <!-- B droit — spine -->
+  <rect x="265" y="116" width="34" height="280" fill="#c4a050"/>
+  <!-- B droit — bosse haute -->
+  <path d="M299 116 Q403 116 403 174 Q403 232 299 232 Z" fill="#c4a050"/>
+  <!-- B droit — bosse basse -->
+  <path d="M299 232 Q417 232 417 312 Q417 396 299 396 Z" fill="#c4a050"/>
 </svg>
