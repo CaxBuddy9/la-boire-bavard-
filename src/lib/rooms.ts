@@ -1,0 +1,72 @@
+export type Room = {
+  id: string
+  slug: string
+  name: string
+  tagline: string
+  description: string
+  capacityMin: number
+  capacityMax: number
+  pricePerNight: number
+  features: string[]
+  images: string[]
+  character: string
+}
+
+export const ROOMS: Room[] = [
+  {
+    id: 'jardin',
+    slug: 'cote-jardin',
+    name: 'Côté Jardin',
+    tagline: 'Cheminée & terrasse privée',
+    description: 'Grande chambre lumineuse avec accès direct sur la terrasse et le jardin. La cheminée crée une atmosphère chaleureuse en toutes saisons. Idéale pour les familles ou les groupes jusqu\'à 4 personnes.',
+    capacityMin: 1,
+    capacityMax: 4,
+    pricePerNight: 88,
+    features: ['Cheminée', 'Terrasse privée', 'Accès jardin', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    images: ['/photos/photo1.jpg', '/photos/photo5.jpg', '/photos/photo6.jpg'],
+    character: 'Familiale & lumineuse',
+  },
+  {
+    id: 'cedre',
+    slug: 'cote-cedre',
+    name: 'Côté Cèdre',
+    tagline: 'Romance sous le grand cèdre',
+    description: 'Chambre romantique avec baignoire et accès direct à la piscine depuis la chambre. Le grand cèdre centenaire apporte ombre et sérénité. La chambre idéale pour un séjour en amoureux.',
+    capacityMin: 1,
+    capacityMax: 2,
+    pricePerNight: 88,
+    features: ['Baignoire', 'Accès piscine direct', 'Vue cèdre centenaire', 'WiFi', 'Petit-déjeuner inclus'],
+    images: ['/photos/photo2.jpg', '/photos/photo7.jpg', '/photos/photo8.jpg'],
+    character: 'Romantique & intime',
+  },
+  {
+    id: 'vallee',
+    slug: 'cote-vallee',
+    name: 'Côté Vallée',
+    tagline: 'Vue sur la Loire & les vignes',
+    description: 'Chambre spacieuse avec vue panoramique sur la vallée de la Loire et le vignoble. Escalier privé, salle de douche indépendante. Regarder le lever du soleil sur la Loire depuis cette chambre est un moment inoubliable.',
+    capacityMin: 1,
+    capacityMax: 4,
+    pricePerNight: 88,
+    features: ['Vue Loire', 'Escalier privé', 'Salle de douche', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    images: ['/photos/photo3.jpg', '/photos/photo5.jpg', '/photos/photo9.jpg'],
+    character: 'Vue panoramique',
+  },
+  {
+    id: 'potager',
+    slug: 'cote-potager',
+    name: 'Côté Potager',
+    tagline: 'Calme absolu face au jardin',
+    description: 'Chambre au calme absolu donnant sur le potager et les herbes aromatiques. Salle de bain séparée, atmosphère reposante. Parfaite pour une déconnexion totale au cœur de l\'Anjou.',
+    capacityMin: 1,
+    capacityMax: 2,
+    pricePerNight: 88,
+    features: ['Vue potager', 'SdB séparée', 'Calme absolu', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    images: ['/photos/photo4.jpg', '/photos/photo6.jpg', '/photos/photo8.jpg'],
+    character: 'Tranquille & ressourçante',
+  },
+]
+
+export function getRoomBySlug(slug: string): Room | undefined {
+  return ROOMS.find((r) => r.slug === slug)
+}

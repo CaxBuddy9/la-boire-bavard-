@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Raleway:wght@300;400;500;600&family=EB+Garamond:ital,wght@0,400;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-raleway: 'Raleway', system-ui, sans-serif;
+  --font-garamond: 'EB Garamond', Georgia, serif;
+  --green:    #2d3d2f;
+  --gold:     #c4a050;
+  --gold-dim: #b89a5a;
+  --cream:    #f5f0e8;
+  --white:    #fdfcf9;
+  --ink:      #1e1e1b;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--font-raleway);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-playfair); font-weight: 400; }
+}
+
+@layer utilities {
+  .label-caps {
+    @apply font-sans text-[0.58rem] tracking-[0.42em] uppercase text-gold;
+  }
+  .gold-line {
+    width: 36px;
+    height: 1px;
+    background: rgba(196, 160, 80, 0.4);
+  }
+  .btn-gold {
+    display: inline-block;
+    background: var(--gold);
+    color: white;
+    font-family: var(--font-raleway);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-gold:hover { background: var(--green); }
+  .btn-ghost {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    font-family: var(--font-raleway);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+}
