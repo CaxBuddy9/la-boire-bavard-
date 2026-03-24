@@ -6,3 +6,5 @@ node_modules/
 *.tsbuildinfo
 _archive/
 node_modules
+
+.vercel

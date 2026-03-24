@@ -1,0 +1,80 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getStripe } from '@/lib/stripe'
+import { createClient } from '@supabase/supabase-js'
+
+// Client Supabase avec service_role (accès total, server-side uniquement)
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) throw new Error('Supabase not configured')
+  return createClient(url, key)
+}
+
+// Désactiver le body parser — Stripe a besoin du raw body pour vérifier la signature
+export const config = { api: { bodyParser: false } }
+
+export async function POST(req: NextRequest) {
+  const body      = await req.text()
+  const signature = req.headers.get('stripe-signature') ?? ''
+  const secret    = process.env.STRIPE_WEBHOOK_SECRET ?? ''
+
+  let event: any
+
+  // Vérifie la signature Stripe (sécurité)
+  if (secret) {
+    try {
+      event = getStripe().webhooks.constructEvent(body, signature, secret)
+    } catch (err: any) {
+      console.error('[webhook] Signature invalide:', err.message)
+      return NextResponse.json({ error: 'Signature invalide' }, { status: 400 })
+    }
+  } else {
+    // Mode développement sans secret webhook
+    event = JSON.parse(body)
+  }
+
+  // On écoute uniquement les paiements réussis
+  if (event.type === 'payment_intent.succeeded') {
+    const pi       = event.data.object
+    const meta     = pi.metadata || {}
+
+    // Convertir la date JJ/MM/AAAA → YYYY-MM-DD pour Supabase
+    const parseDate = (s: string) => {
+      if (!s) return null
+      const [d, m, y] = s.split('/')
+      if (!d || !m || !y) return null
+      return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
+    }
+
+    const checkIn  = parseDate(meta.arrive)
+    const checkOut = parseDate(meta.depart)
+
+    if (!checkIn || !checkOut) {
+      console.warn('[webhook] Dates manquantes dans metadata')
+      return NextResponse.json({ received: true })
+    }
+
+    try {
+      const supabase = getSupabaseAdmin()
+      const { error } = await supabase.from('reservations').insert({
+        room_id:               meta.chambre  || 'inconnu',
+        guest_name:            meta.nom      || 'Inconnu',
+        guest_email:           meta.email    || '',
+        guest_phone:           meta.tel      || '',
+        check_in:              checkIn,
+        check_out:             checkOut,
+        guests:                Number(meta.pers) || 2,
+        total_price:           Math.round(pi.amount / 100),
+        status:                'paid',
+        stripe_payment_intent: pi.id,
+      })
+
+      if (error) console.error('[webhook] Supabase insert error:', error)
+      else console.log('[webhook] Réservation sauvegardée ✓', pi.id)
+    } catch (err) {
+      console.error('[webhook] Erreur Supabase:', err)
+    }
+  }
+
+  return NextResponse.json({ received: true })
+}
