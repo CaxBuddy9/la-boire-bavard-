@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import DateRangePicker from '@/components/DateRangePicker'
 
 type Props = {
@@ -8,10 +9,17 @@ type Props = {
   capacityMax: number
 }
 
+function fmtDate(iso: string) {
+  if (!iso) return ''
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
+}
+
 export default function BookingCard({ roomName, capacityMax }: Props) {
   const [checkin, setCheckin]   = useState('')
   const [checkout, setCheckout] = useState('')
   const [persons, setPersons]   = useState(2)
+  const router = useRouter()
 
   const nights = (() => {
     if (!checkin || !checkout) return 0
@@ -150,14 +158,28 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       )}
 
       {/* CTA */}
-      <Link
-        href={`/contact?chambre=${encodeURIComponent(roomName)}&arrivee=${checkin}&depart=${checkout}&personnes=${persons}`}
+      <button
+        onClick={() => {
+          if (nights > 0) {
+            const p = new URLSearchParams({
+              chambre: roomName,
+              arrive:  fmtDate(checkin),
+              depart:  fmtDate(checkout),
+              nuits:   String(nights),
+              pers:    String(persons),
+            })
+            router.push(`/paiement?${p.toString()}`)
+          } else {
+            router.push(`/contact?chambre=${encodeURIComponent(roomName)}`)
+          }
+        }}
         style={{
           display: 'block',
+          width: '100%',
           textAlign: 'center',
           background: '#c4a050',
           color: '#0d110e',
-          textDecoration: 'none',
+          border: 'none',
           fontFamily: 'var(--font-raleway)',
           fontSize: '.6rem',
           letterSpacing: '.28em',
@@ -165,10 +187,11 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
           fontWeight: 600,
           padding: '14px 24px',
           marginBottom: 8,
+          cursor: 'pointer',
         }}
       >
         {nights > 0 ? `Réserver · ${total} €` : 'Demander une réservation'}
-      </Link>
+      </button>
 
       <p style={{
         textAlign: 'center',
@@ -177,7 +200,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         color: 'rgba(255,255,255,.18)',
         marginBottom: 20,
       }}>
-        Réponse sous 24h · Sans engagement
+        {nights > 0 ? 'Paiement sécurisé · Annulation gratuite 48h avant' : 'Réponse sous 24h · Sans engagement'}
       </p>
 
       {/* Separator */}
