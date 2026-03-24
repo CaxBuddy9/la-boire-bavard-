@@ -1,0 +1,35 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { stripe, PRICE_PER_NIGHT } from '@/lib/stripe'
+
+export async function POST(req: NextRequest) {
+  try {
+    const { nuits, chambre, arrive, depart, pers, nom, email } = await req.json()
+
+    if (!nuits || nuits < 1) {
+      return NextResponse.json({ error: 'Nombre de nuits invalide' }, { status: 400 })
+    }
+
+    const amount = Math.round(nuits * PRICE_PER_NIGHT * 100) // en centimes
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'eur',
+      automatic_payment_methods: { enabled: true },
+      metadata: {
+        chambre:  chambre  || '',
+        arrive:   arrive   || '',
+        depart:   depart   || '',
+        pers:     String(pers || 2),
+        nom:      nom      || '',
+        email:    email    || '',
+      },
+      description: `La Boire Bavard — ${chambre} · ${nuits} nuit${nuits > 1 ? 's' : ''} · ${arrive} → ${depart}`,
+      receipt_email: email || undefined,
+    })
+
+    return NextResponse.json({ clientSecret: paymentIntent.client_secret })
+  } catch (err: any) {
+    console.error('[checkout]', err)
+    return NextResponse.json({ error: err.message || 'Erreur serveur' }, { status: 500 })
+  }
+}
