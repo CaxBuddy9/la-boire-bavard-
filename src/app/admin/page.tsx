@@ -1,16 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import type { Reservation } from '@/lib/supabase'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sandrine2026'
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-}
 
 const STATUS_LABEL: Record<string, string> = {
   pending:   'En attente',
@@ -350,19 +342,25 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const load = async () => {
     setLoading(true)
     setDbError('')
-    const { data, error } = await getSupabase()
-      .from('reservations')
-      .select('*')
-      .order('check_in', { ascending: true })
-    if (error) setDbError(error.message)
-    setReservations(data || [])
+    try {
+      const res = await fetch('/api/admin/reservations')
+      const json = await res.json()
+      if (json.error) setDbError(json.error)
+      else setReservations(json.data || [])
+    } catch (err: any) {
+      setDbError(err.message)
+    }
     setLoading(false)
   }
 
   useEffect(() => { load() }, [])
 
   const updateStatus = async (id: string, status: string) => {
-    await getSupabase().from('reservations').update({ status }).eq('id', id)
+    await fetch('/api/admin/reservations', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    })
     setReservations(r => r.map(x => x.id === id ? { ...x, status: status as any } : x))
     if (selected?.id === id) setSelected(s => s ? { ...s, status: status as any } : null)
   }
@@ -428,11 +426,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <button style={tabBtn(tab === 'planning')} onClick={() => setTab('planning')}>
             Planning
           </button>
-        </div>
-
-        {/* Debug temporaire */}
-        <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.3)', marginBottom: 10, padding: '8px 12px', background: 'rgba(255,255,255,.03)', borderRadius: 4 }}>
-          URL: {process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0,30) || '⚠ manquante'} · Key: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0,10) || '⚠ manquante'} · Lignes: {reservations.length}
         </div>
 
         {/* Erreur Supabase */}
