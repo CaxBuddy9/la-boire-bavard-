@@ -45,6 +45,188 @@ function isoDate(y: number, m: number, d: number) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
 }
 
+// ── KPIs ───────────────────────────────────────────────────────────────────
+function KPIs({ reservations }: { reservations: Reservation[] }) {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = now.getMonth()
+  const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
+
+  const active = reservations.filter(r => r.status !== 'cancelled')
+  const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
+
+  // Nuits occupées ce mois
+  const daysInMonth = new Date(y, m+1, 0).getDate()
+  let nightsOccupied = 0
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = isoDate(y, m, d)
+    const occupied = active.some(r => iso >= r.check_in && iso < r.check_out)
+    if (occupied) nightsOccupied++
+  }
+  const occupancy = Math.round((nightsOccupied / (daysInMonth * 4)) * 100) // 4 chambres
+
+  // CA ce mois
+  const revenueMonth = thisMonth.reduce((s, r) => s + r.total_price, 0)
+  // CA année
+  const revenueYear  = active.filter(r => r.check_in.startsWith(String(y))).reduce((s, r) => s + r.total_price, 0)
+  // Durée moy
+  const avgNights = active.length
+    ? Math.round(active.reduce((s, r) => s + nights(r.check_in, r.check_out), 0) / active.length * 10) / 10
+    : 0
+  // Chambre star
+  const roomCount: Record<string,number> = {}
+  active.forEach(r => { roomCount[r.room_id] = (roomCount[r.room_id] || 0) + 1 })
+  const topRoom = Object.entries(roomCount).sort((a,b) => b[1]-a[1])[0]
+
+  const kpis = [
+    { label: 'Taux occupation', value: `${occupancy} %`, sub: `ce mois (4 chambres)`, color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(255,255,255,.5)' },
+    { label: 'CA ce mois',     value: `${revenueMonth} €`, sub: MONTHS_FR[m], color: '#c4a050' },
+    { label: `CA ${y}`,        value: `${revenueYear} €`,  sub: 'année en cours', color: '#c4a050' },
+    { label: 'Durée moy.',     value: `${avgNights} nuits`, sub: 'par séjour', color: 'rgba(255,255,255,.7)' },
+    { label: 'Chambre ★',      value: topRoom ? topRoom[0].replace('Côté ','') : '—', sub: topRoom ? `${topRoom[1]} résa` : '', color: topRoom ? ROOM_COLOR[topRoom[0]] : 'rgba(255,255,255,.5)' },
+    { label: 'Résa totales',   value: String(active.length), sub: 'toutes périodes', color: 'rgba(255,255,255,.7)' },
+  ]
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
+      {kpis.map(k => (
+        <div key={k.label} style={{ background: '#131a13', border: '1px solid rgba(255,255,255,.07)', borderRadius: 4, padding: '14px 16px' }}>
+          <div style={{ fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)', marginBottom: 6 }}>{k.label}</div>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: k.color, marginBottom: 2 }}>{k.value}</div>
+          <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,.25)' }}>{k.sub}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── Modal ajout réservation manuelle ───────────────────────────────────────
+function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSaved: () => void }) {
+  const today = new Date().toISOString().split('T')[0]
+  const [form, setForm] = useState({
+    room_id: 'Côté Jardin', guest_name: '', guest_email: '', guest_phone: '',
+    check_in: today, check_out: today, guests: 2, status: 'confirmed', table_hotes: false,
+  })
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const n = nights(form.check_in, form.check_out)
+  const price = n * 88
+
+  const F = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.guest_name || n <= 0) { setErr('Nom et dates valides requis.'); return }
+    setSaving(true)
+    const res = await fetch('/api/admin/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, total_price: price }),
+    })
+    const d = await res.json()
+    if (d.error) { setErr(d.error); setSaving(false) }
+    else { onSaved(); onClose() }
+  }
+
+  const inp: React.CSSProperties = {
+    background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)',
+    color: '#f5f0e8', padding: '9px 12px', fontSize: '0.85rem',
+    fontFamily: 'system-ui', outline: 'none', width: '100%',
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <div style={{ background: '#131a13', border: '1px solid rgba(196,160,80,.2)', padding: '32px 28px', width: '100%', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f5f0e8' }}>Ajouter une réservation</div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.4)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+        </div>
+
+        <form onSubmit={save} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* Chambre */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Chambre</label>
+            <select value={form.room_id} onChange={e => F('room_id', e.target.value)} style={{ ...inp }}>
+              {ROOMS.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+
+          {/* Nom */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Nom *</label>
+            <input value={form.guest_name} onChange={e => F('guest_name', e.target.value)} placeholder="Marie Dupont" required style={inp} />
+          </div>
+
+          {/* Email + Tel */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Email</label>
+              <input type="email" value={form.guest_email} onChange={e => F('guest_email', e.target.value)} style={inp} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Téléphone</label>
+              <input type="tel" value={form.guest_phone} onChange={e => F('guest_phone', e.target.value)} style={inp} />
+            </div>
+          </div>
+
+          {/* Dates */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Arrivée *</label>
+              <input type="date" value={form.check_in} onChange={e => F('check_in', e.target.value)} required style={inp} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Départ *</label>
+              <input type="date" value={form.check_out} onChange={e => F('check_out', e.target.value)} required style={inp} />
+            </div>
+          </div>
+
+          {/* Voyageurs + Statut */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Voyageurs</label>
+              <input type="number" min={1} max={4} value={form.guests} onChange={e => F('guests', Number(e.target.value))} style={inp} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 6 }}>Statut</label>
+              <select value={form.status} onChange={e => F('status', e.target.value)} style={inp}>
+                <option value="confirmed">Confirmée</option>
+                <option value="pending">En attente</option>
+                <option value="paid">Payée</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Table d'hôtes */}
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: '0.82rem', color: 'rgba(255,255,255,.6)' }}>
+            <input type="checkbox" checked={form.table_hotes} onChange={e => F('table_hotes', e.target.checked)} style={{ accentColor: '#c4a050', width: 16, height: 16 }} />
+            Table d'hôtes
+          </label>
+
+          {/* Prix calculé */}
+          {n > 0 && (
+            <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '10px 14px', fontSize: '0.82rem', color: '#c4a050' }}>
+              {n} nuit{n>1?'s':''} × 88 € = <strong>{price} €</strong>
+            </div>
+          )}
+
+          {err && <div style={{ color: '#e07070', fontSize: '0.78rem' }}>{err}</div>}
+
+          <button type="submit" disabled={saving} style={{
+            background: '#c4a050', color: '#0a0f0a', border: 'none', padding: '12px',
+            fontFamily: 'system-ui', fontSize: '0.65rem', letterSpacing: '0.15em',
+            textTransform: 'uppercase', fontWeight: 600, cursor: saving ? 'default' : 'pointer',
+            opacity: saving ? 0.6 : 1,
+          }}>
+            {saving ? 'Enregistrement…' : 'Enregistrer la réservation'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 // ── Login ──────────────────────────────────────────────────────────────────
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [pwd, setPwd] = useState('')
@@ -335,6 +517,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
+  const [showAdd, setShowAdd] = useState(false)
   const [tab, setTab] = useState<'reservations'|'planning'>('reservations')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
@@ -411,12 +594,20 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <span style={{ fontSize: '0.6rem', color: 'rgba(196,160,80,.55)', letterSpacing: '0.2em', textTransform: 'uppercase', marginLeft: 12 }}>Dashboard</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button onClick={() => setShowAdd(true)} style={S.btnGold}>+ Ajouter</button>
           <button onClick={load} style={S.btn}>↻ Actualiser</button>
           <button onClick={onLogout} style={S.btn}>Déconnexion</button>
         </div>
       </div>
 
+      {showAdd && (
+        <AddReservationModal onClose={() => setShowAdd(false)} onSaved={load} />
+      )}
+
       <div style={S.main}>
+
+        {/* KPIs */}
+        {!loading && <KPIs reservations={reservations} />}
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>

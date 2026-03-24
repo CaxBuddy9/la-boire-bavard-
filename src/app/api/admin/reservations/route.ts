@@ -22,6 +22,31 @@ export async function GET() {
   }
 }
 
+export async function POST(req: Request) {
+  try {
+    const body = await req.json()
+    const { error } = await getSupabaseAdmin()
+      .from('reservations')
+      .insert({
+        room_id:     body.room_id,
+        guest_name:  body.guest_name,
+        guest_email: body.guest_email || '',
+        guest_phone: body.guest_phone || '',
+        check_in:    body.check_in,
+        check_out:   body.check_out,
+        guests:      Number(body.guests) || 2,
+        total_price: Number(body.total_price) || 0,
+        status:      body.status || 'confirmed',
+        table_hotes: body.table_hotes || false,
+      })
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
 export async function PATCH(req: Request) {
   try {
     const { id, status } = await req.json()
