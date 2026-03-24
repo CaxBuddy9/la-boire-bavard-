@@ -1,18 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#0a0f0a"/>
-  <rect x="24" y="24" width="464" height="464" fill="none" stroke="#c4a050" stroke-width="10" opacity="0.4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320">
+  <rect width="200" height="320" fill="#0a0f0a"/>
 
-  <!-- B gauche — spine -->
-  <rect x="100" y="116" width="34" height="280" fill="#c4a050"/>
-  <!-- B gauche — bosse haute -->
-  <path d="M134 116 Q238 116 238 174 Q238 232 134 232 Z" fill="#c4a050"/>
-  <!-- B gauche — bosse basse -->
-  <path d="M134 232 Q252 232 252 312 Q252 396 134 396 Z" fill="#c4a050"/>
+  <!-- B gauche -->
+  <rect x="78" y="18" width="8" height="118" rx="2" fill="#b8922a"/>
+  <rect x="60" y="18"  width="20" height="6"  rx="1.5" fill="#b8922a"/>
+  <rect x="60" y="76"  width="20" height="5"  rx="1.5" fill="#b8922a"/>
+  <rect x="60" y="130" width="20" height="6"  rx="1.5" fill="#b8922a"/>
+  <path d="M86,18 Q44,18 44,47 Q44,76 86,76" stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M86,76 Q36,76 36,103 Q36,136 86,136" stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- B droit — spine -->
-  <rect x="265" y="116" width="34" height="280" fill="#c4a050"/>
-  <!-- B droit — bosse haute -->
-  <path d="M299 116 Q403 116 403 174 Q403 232 299 232 Z" fill="#c4a050"/>
-  <!-- B droit — bosse basse -->
-  <path d="M299 232 Q417 232 417 312 Q417 396 299 396 Z" fill="#c4a050"/>
+  <!-- B droit -->
+  <rect x="114" y="18" width="8" height="118" rx="2" fill="#b8922a"/>
+  <rect x="120" y="18"  width="20" height="6"  rx="1.5" fill="#b8922a"/>
+  <rect x="120" y="76"  width="20" height="5"  rx="1.5" fill="#b8922a"/>
+  <rect x="120" y="130" width="20" height="6"  rx="1.5" fill="#b8922a"/>
+  <path d="M114,18 Q156,18 156,47 Q156,76 114,76" stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M114,76 Q164,76 164,103 Q164,136 114,136" stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Séparateur -->
+  <rect x="94" y="14" width="12" height="4" rx="2" fill="#b8922a" opacity=".6"/>
+  <rect x="94" y="128" width="12" height="4" rx="2" fill="#b8922a" opacity=".6"/>
+
+  <!-- Tige -->
+  <rect x="97" y="142" width="6" height="6" rx="2" fill="#b8922a"/>
+  <rect x="98" y="148" width="4" height="150" rx="2" fill="#b8922a"/>
+  <rect x="90" y="198" width="20" height="4" rx="2" fill="#b8922a"/>
+  <circle cx="100" cy="232" r="7" fill="#b8922a"/>
+
+  <!-- Feuilles gauches -->
+  <path d="M98,155 C82,142 60,128 46,104 C32,78 38,50 56,42 C68,38 78,46 82,60" stroke="#3d6b28" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M82,60 C68,50 60,36 68,26 C78,28 82,44 82,60Z" fill="#3d6b28" opacity=".9"/>
+  <path d="M46,92 C34,84 28,70 34,58 C46,62 52,78 46,92Z" fill="#3d6b28" opacity=".8"/>
+  <path d="M98,162 C74,172 52,196 46,226 C40,254 50,276 66,278" stroke="#3d6b28" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M50,210 C38,204 32,190 38,178 C50,182 56,196 50,210Z" fill="#3d6b28" opacity=".75"/>
+
+  <!-- Feuilles droites -->
+  <path d="M102,155 C118,142 140,126 154,102 C168,76 162,48 144,40 C132,36 122,44 118,58" stroke="#3d6b28" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M118,58 C132,48 140,34 132,24 C122,26 118,42 118,58Z" fill="#3d6b28" opacity=".9"/>
+  <path d="M154,90 C166,82 172,68 166,56 C154,60 148,76 154,90Z" fill="#3d6b28" opacity=".8"/>
+  <path d="M102,162 C126,172 148,198 154,228 C160,256 150,278 134,280" stroke="#3d6b28" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M150,212 C162,206 168,192 162,180 C150,184 144,198 150,212Z" fill="#3d6b28" opacity=".75"/>
 </svg>
