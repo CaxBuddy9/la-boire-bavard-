@@ -1,0 +1,5 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192'>
+  <rect width='192' height='192' fill='#0a0f0a'/>
+  <rect x='16' y='16' width='160' height='160' fill='none' stroke='%23c4a050' stroke-width='3' opacity='0.4'/>
+  <text x='96' y='118' font-family='Georgia,serif' font-size='72' fill='%23c4a050' text-anchor='middle' opacity='0.9'>BB</text>
+</svg>
