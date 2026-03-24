@@ -342,16 +342,19 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
+  const [dbError, setDbError] = useState('')
   const [tab, setTab] = useState<'reservations'|'planning'>('reservations')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
 
   const load = async () => {
     setLoading(true)
-    const { data } = await getSupabase()
+    setDbError('')
+    const { data, error } = await getSupabase()
       .from('reservations')
       .select('*')
       .order('check_in', { ascending: true })
+    if (error) setDbError(error.message)
     setReservations(data || [])
     setLoading(false)
   }
@@ -426,6 +429,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             Planning
           </button>
         </div>
+
+        {/* Erreur Supabase */}
+        {dbError && (
+          <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '14px 18px', marginBottom: 20, borderRadius: 4, fontSize: '0.82rem', color: '#e07070' }}>
+            ⚠ Erreur Supabase : {dbError}
+          </div>
+        )}
 
         {/* Alerte arrivées imminentes */}
         {arriving.length > 0 && (
