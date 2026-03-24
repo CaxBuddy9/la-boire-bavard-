@@ -430,6 +430,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           </button>
         </div>
 
+        {/* Debug temporaire */}
+        <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.3)', marginBottom: 10, padding: '8px 12px', background: 'rgba(255,255,255,.03)', borderRadius: 4 }}>
+          URL: {process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0,30) || '⚠ manquante'} · Key: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0,10) || '⚠ manquante'} · Lignes: {reservations.length}
+        </div>
+
         {/* Erreur Supabase */}
         {dbError && (
           <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '14px 18px', marginBottom: 20, borderRadius: 4, fontSize: '0.82rem', color: '#e07070' }}>
