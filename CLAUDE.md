@@ -1,7 +1,10 @@
 # CLAUDE.md — La Boire Bavard
 
 ## Rôle
-Tu es l'assistant développeur du site web de **La Boire Bavard**, une maison d'hôtes en Anjou. Le site est un SPA (Single Page Application) en un seul fichier HTML vanilla. Tu travailles directement sur `index.html`.
+Tu es l'assistant développeur du site web de **La Boire Bavard**, une maison d'hôtes en Anjou.
+Le site est une **application Next.js 16 (App Router)** avec React 19, TypeScript et Tailwind CSS v4.
+Tu travailles exclusivement dans `src/app/` et `src/components/`.
+**L'ancien index.html vanilla est obsolète — ne jamais y toucher ni s'en inspirer pour le code.**
 
 ---
 
@@ -11,17 +14,17 @@ Tu es l'assistant développeur du site web de **La Boire Bavard**, une maison d'
 |-------|--------|
 | Nom | La Boire Bavard |
 | Propriétaire | **Sandrine** (ne jamais écrire Maryline) |
-| Adresse | 4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice |
+| Adresse | 4 chemin de la Boire Bavard, Lieu-dit La Hutte, 49320 Blaison-Saint-Sulpice |
 | Téléphone | 06 75 78 63 35 |
 | Email | laboirebavard@gmail.com |
 | WhatsApp | https://wa.me/33675786335 |
 | Note Booking | 9.9/10 — Exceptionnel |
-| Tarif | 88€/nuit petit-déjeuner inclus |
-| Table d'hôtes | 25€/pers. sur réservation |
+| Tarif | 88 €/nuit petit-déjeuner inclus |
+| Table d'hôtes | 25 €/pers. sur réservation |
 
 ### 4 Chambres
-| ID | Nom | Capacité | Caractère |
-|----|-----|----------|-----------|
+| Slug | Nom | Capacité | Caractère |
+|------|-----|----------|-----------|
 | `jardin` | Côté Jardin | 1–4 pers. | Cheminée, terrasse directe |
 | `cedre` | Côté Cèdre | 1–2 pers. | Romantique, accès piscine direct |
 | `vallee` | Côté Vallée | 1–4 pers. | Vue Loire, escalier privé |
@@ -29,197 +32,194 @@ Tu es l'assistant développeur du site web de **La Boire Bavard**, une maison d'
 
 ---
 
-## Architecture du fichier
+## Architecture Next.js (App Router)
 
-### Pages SPA
 ```
-showPage(id)  →  affiche #p-{id}, masque les autres
+src/
+  app/
+    layout.tsx              ← Root layout : Nav + Footer + WhatsAppFloat + MeteoWidget
+    page.tsx                ← Accueil
+    chambres/
+      page.tsx              ← Listing 4 chambres
+      [slug]/page.tsx       ← Détail chambre (jardin | cedre | vallee | potager)
+    bienetre/page.tsx       ← Piscine, spa, sauna, nature, saisons
+    petitdej/page.tsx       ← Petit-déjeuner + table d'hôtes
+    avis/page.tsx           ← Avis 9.9/10 + témoignages
+    contact/page.tsx        ← Formulaire + accès + carte
+    paiement/page.tsx       ← Récapitulatif + paiement Stripe
+    propriete/page.tsx      ← Histoire + galerie + localisation
+    mentions-legales/page.tsx
+  components/
+    sections/
+      Nav.tsx               ← Navbar fixe globale (use client)
+      Footer.tsx            ← Footer unifié global
+    BookingCard.tsx         ← Carte réservation sticky (use client)
+    DateRangePicker.tsx     ← Calendrier custom (use client)
+    RoomPicker.tsx          ← Select chambre custom (use client)
+    Logo.tsx                ← LogoSVG + LogoWatermark
+    MeteoWidget.tsx         ← Open-Meteo temps réel (use client)
+    WhatsAppFloat.tsx       ← Bouton flottant WhatsApp
+    TourismLogos.tsx        ← Logos partenaires SVG
+  context/
+    LangContext.tsx         ← FR/EN toggle (use client, localStorage)
+  lib/
+    rooms.ts                ← Données des 4 chambres
+    stripe.ts               ← Config Stripe server-side
+    supabase.ts             ← Config Supabase client
 ```
 
-| ID page | Contenu | Style |
-|---------|---------|-------|
-| `index` | Hero, intro, chambres teaser, quote, previews | Playfair / Raleway, vert foncé |
-| `chambres` | 4 chambres en layout alterné | DM Serif Display, noir & crème |
-| `bienetre` | Piscine, spa, sauna, nature, saisons | Libre Baskerville, vert forêt |
-| `petitdej` | Petit-déjeuner, produits, table d'hôtes | Lora, terracotta |
-| `avis` | Score 9.9, témoignages masonry, chiffres | EB Garamond, blanc épuré |
-| `contact` | Info + formulaire 2 colonnes + map | Cormorant/Montserrat, ardoise |
-| `jardin` | Page détail chambre + réservation | Raleway |
-| `cedre` | Page détail chambre + réservation | Raleway |
-| `vallee` | Page détail chambre + réservation | Raleway |
-| `potager` | Page détail chambre + réservation | Raleway |
-| `paiement` | Récapitulatif + formulaire carte | Raleway, fond sombre |
-
-### allPages (obligatoire dans showPage)
-```js
-var allPages = ['index','chambres','bienetre','petitdej','avis','contact',
-                'jardin','cedre','vallee','potager','paiement'];
-```
+### Pages et leur police titre (respecter BRANDING.md)
+| Page | Police titre | Fond dominant |
+|------|-------------|---------------|
+| Accueil | Playfair Display | `#1a2e1a` vert foncé |
+| Chambres | DM Serif Display | `#f5f0e8` crème |
+| Bien-être | Libre Baskerville | `#1e3320` vert forêt |
+| Petit-déjeuner | Lora | terracotta `#c4603a` |
+| Avis | EB Garamond | `#f5f0e8` blanc épuré |
+| Contact | Cormorant Garamond | `#2a3540` ardoise |
+| Chambres (détail) | Playfair Display + Raleway | `#0e130e` vert nuit |
+| Paiement | Raleway | `#0e1510` sombre |
 
 ---
 
-## NAV globale (`#gnav`)
+## Règles de développement (OBLIGATOIRES)
 
-```html
-<nav id="gnav">
-  <!-- Logo SVG BB inline -->
-  <!-- Nav links avec data-page + data-fr + data-en -->
-  <!-- Switch langue : btn-fr / btn-en -->
-  <!-- Bouton Réserver -->
-  <!-- Burger mobile -->
-</nav>
-```
-
-**CSS clés :**
-- Fond fixe : `rgba(20,28,22,.88)` + `backdrop-filter:blur(14px)`
-- Liens : `color:rgba(240,235,225,.75)` → hover/active : `#c4a050`
-- `.scrolled` : padding réduit au scroll
+1. **Jamais de HTML brut** — pas de `dangerouslySetInnerHTML`, pas de `<style>` global inline, pas de `<script>` vanilla
+2. **Server Components par défaut** — `"use client"` uniquement pour : Nav, modals, formulaires avec état, calendrier, MeteoWidget
+3. **Ne jamais écrire Maryline** — c'est Sandrine
+4. **Ne jamais dupliquer le footer** — il est dans `layout.tsx`, pas dans les pages
+5. **Toujours exporter `metadata`** sur chaque page (title, description, og:image)
+6. **Couleur gold** = `#c4a050` (nav/accent) | `#b89a5a` (pages claires) | `#b8922a` (logo SVG uniquement)
+7. **Police par page** — respecter le tableau ci-dessus, ne pas mélanger les familles
+8. **next/image** pour toutes les photos (jamais `<img>` direct)
+9. **next/link** pour tous les liens internes (jamais `<a href="/">`)
+10. **Données chambres** → toujours lire depuis `src/lib/rooms.ts`, ne pas hardcoder
 
 ---
 
-## Footer unifié (`.site-footer`)
+## Navbar (`src/components/sections/Nav.tsx`)
 
-Identique sur **toutes** les pages. Structure :
-```html
-<div class="site-footer">
-  <div class="sf-name">La Boire Bavard</div>
-  <div class="sf-tagline">Chambres d'Hôtes · Anjou</div>
-  <div class="sf-line"></div>
-  <nav class="sf-nav">
-    <!-- 6 liens showPage -->
-  </nav>
-  <div class="sf-contact">
-    <a href="tel:0675786335" class="sf-a">📞 06 75 78 63 35</a>
-    <span class="sf-dot">·</span>
-    <a href="mailto:laboirebavard@gmail.com" class="sf-a">✉ laboirebavard@gmail.com</a>
-    <span class="sf-dot">·</span>
-    <a href="https://wa.me/33675786335" target="_blank" class="sf-wa">💬 WhatsApp</a>
-  </div>
-  <p class="sf-copy">© 2026 La Boire Bavard · 4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice</p>
-</div>
-```
-
-**Règle absolue :** le footer doit toujours être **en dehors** des grilles/layouts internes (ex: page contact a un `.ct-main` en 2 colonnes — le footer vient APRÈS).
+- `"use client"` — gère scroll + menu burger mobile + langue FR/EN
+- Fond fixe : `rgba(20,28,22,.88)` + `backdrop-filter: blur(14px)` → `rgba(14,20,15,.97)` au scroll
+- Logo : `<LogoSVG height={52} />` + "La Boire Bavard" (Playfair) + "Chambres d'Hôtes · Anjou" (Raleway or)
+- Liens actifs : `#c4a050` via `usePathname()`
+- CTA "Réserver" : border `#c4a050` → hover bg `#c4a050`
+- Liens de nav actuels : Accueil · La propriété · Chambres · Bien-être · Petit-déjeuner · Avis · Contact & Accès
 
 ---
 
-## Système de traduction FR/EN
+## Footer (`src/components/sections/Footer.tsx`)
 
-```js
-// Boutons dans la nav
-<button id="btn-fr" onclick="setLang('fr')">FR</button>
-<button id="btn-en" onclick="setLang('en')">EN</button>
-
-// Sur les éléments traduisibles
-<a data-fr="Accueil" data-en="Home">Accueil</a>
-
-// Fonction
-function setLang(l) { ... walkText(document.body, dict) ... }
-```
-
-**Pour ajouter une traduction :** ajouter l'entrée dans `var D = { 'FR': 'EN' }` ET ajouter `data-fr`/`data-en` sur l'élément HTML si c'est un nœud avec attributs, sinon `walkText` le captera automatiquement via les text nodes.
+- Server Component — dans `layout.tsx` (donc présent sur toutes les pages automatiquement)
+- Fond : `#0d110e`
+- Contenu : logo texte · tagline · ligne or · nav links · logos partenaires · contact links · copyright
+- **Règle absolue** : ne jamais remettre un footer dans une page individuelle
 
 ---
 
-## Tunnel de réservation (pages chambre détail)
+## Système FR/EN (`src/context/LangContext.tsx`)
 
-**Flux :**
-1. `showPage('jardin')` → page détail avec formulaire
-2. Calendrier custom : `openCal(id, 'in'/'out')` → `selectDay()` → `calcCR(id, 88)`
-3. Validation : `goToPayment(id, prix, nom, img)` → vérifie champs → `showPage('paiement')`
-4. Page paiement : `processPayment()` → simulation (Stripe à brancher)
+```tsx
+// Hook dans un composant client
+const { lang, setLang } = useLang()
+const t = useT()
 
-**IDs des champs (pattern) :**
-```
-in-{id}        date arrivée (hidden)
-out-{id}       date départ (hidden)
-disp-{id}-in   date arrivée affichée
-disp-{id}-out  date départ affichée
-pers-{id}      nombre personnes
-nom-{id}       nom du client
-email-{id}     email
-tel-{id}       téléphone
+// Utilisation
+<h1>{t('Bienvenue', 'Welcome')}</h1>
 ```
 
-**Validation erreurs :**
-```js
-showFieldError('field-id', 'Message')  // bordure rouge + message
-clearFieldError('field-id')            // reset
-```
+- `useLang()` → `{ lang: 'fr'|'en', setLang }`
+- `useT()` → `(fr: string, en: string) => string`
+- Persisté dans `localStorage`
 
 ---
 
-## Formulaire Contact (`#p-contact`)
+## Tunnel de réservation
 
-**Champs :**
-- Arrivée / Départ (type date)
-- Adultes (select, obligatoire) / Enfants (select)
-- Chambre : menu custom `.csel-wrap` avec `toggleCsel()` / `pickCsel()`
-- Nom*, Prénom*, Email*, Téléphone*
-- Message (textarea)
+**Flux Next.js :**
+1. `/chambres/[slug]` → `BookingCard` (sticky sidebar) → `DateRangePicker` + nb personnes
+2. Bouton "Réserver" → `router.push('/paiement?chambre=jardin&arrive=...&depart=...&nuits=2&pers=2')`
+3. `/paiement` lit `useSearchParams()` → affiche récap + formulaire carte
+4. `processPayment()` → **TODO : Stripe PaymentIntent** (clé `STRIPE_SECRET_KEY` dans `.env.local`)
 
-**Validation :** `submitContactForm()` → `cfError(id, msg)` / `cfClear(id)` → `mailto:` pré-rempli
+---
+
+## Formulaire Contact (`/contact`)
+
+**Champs :** Prénom* · Nom* · Email* · Téléphone · Arrivée · Départ · Nb personnes · Chambre (RoomPicker) · Message
+
+**Soumission :**
+- **TODO : brancher Formspree** → `fetch('https://formspree.io/f/XXXXX', { method:'POST', body: formData })`
+- En attendant : simulation avec `setTimeout`
 
 ---
 
 ## Ce qu'il reste à faire
 
 ### 🔴 Prioritaire
-- [ ] **Stripe** : remplacer `processPayment()` simulation par vrai Stripe.js
-  ```js
-  // Quand la clé pk_live_... est dispo :
-  const stripe = Stripe('pk_live_...');
-  // Créer PaymentIntent côté serveur ou utiliser Stripe Checkout
-  ```
-- [ ] **Formspree** : remplacer `mailto:` du formulaire contact par fetch POST
-  ```js
-  fetch('https://formspree.io/f/XXXXX', { method:'POST', body: formData })
-  ```
-- [ ] **Photos réelles** : remplacer toutes les URLs Unsplash par les vraies photos de Sandrine
+- [ ] **Stripe** : créer route API `/api/checkout` → PaymentIntent + brancher `/paiement`
+- [ ] **Formspree** : remplacer simulation contact par vrai `fetch` POST
+- [ ] **Photos réelles** : remplacer `/photos/photo*.jpg` par les vraies photos de Sandrine
 
 ### 🟡 Améliorations
-- [ ] Switch FR/EN : couvrir plus de textes (descriptions longues des chambres)
-- [ ] Mobile : tester et corriger les pages détail chambre sur petit écran
-- [ ] Google Maps : mettre les vraies coordonnées GPS dans l'iframe
-- [ ] SEO : meta description, og:image, og:title
+- [ ] Ajouter "Bien-être" dans les liens Nav + Footer
+- [ ] Couverture FR/EN plus complète (descriptions longues des chambres)
+- [ ] Google Maps : vraies coordonnées GPS (lat 47.368, lon -0.511)
+- [ ] Page propriété : compléter galerie
 
-### 🟢 Optionnel / Idées
-- [ ] Galerie lightbox sur les pages chambre (clic photo = plein écran)
-- [ ] Disponibilités visuelles (calendrier global sur la page d'accueil)
-- [ ] Section "Offres spéciales" (pack romantique, séjour 3 nuits = 1 offerte)
-- [ ] Bouton WhatsApp flottant sur toutes les pages
-
----
-
-## Règles de développement
-
-1. **Ne jamais dupliquer le footer** — un seul `.site-footer` par page, toujours en dehors des grilles
-2. **Ne jamais écrire Maryline** — c'est Sandrine
-3. **Toujours mettre à jour `allPages`** si une nouvelle page est ajoutée
-4. **Couleur gold** = `#c4a050` (nav) ou `#b89a5a` (pages claires)
-5. **Police principale** selon la page — ne pas mélanger les familles entre pages
-6. **Tester showPage('contact')** après chaque modif du formulaire
-7. **Le footer de contact** doit être APRÈS `</div><!-- fin ct-main -->` pas dedans
+### 🟢 Optionnel
+- [ ] Galerie lightbox (composant LightboxModal)
+- [ ] Framer-motion pour transitions de pages
+- [ ] Supabase : table `reservations` + gestion disponibilités
 
 ---
 
 ## Stack technique
 
-| Outil | Usage |
-|-------|-------|
-| HTML/CSS/JS vanilla | Tout le site |
-| Google Fonts | Playfair Display, Raleway, DM Serif, Lora, EB Garamond, Cormorant, Montserrat |
-| Open-Meteo API | Météo temps réel (lat:47.368, lon:-0.511) — gratuit, sans clé |
-| Stripe.js | Paiement carte — **à brancher** |
-| Formspree | Formulaire contact — **à brancher** |
-| Netlify | Hébergement (déposer index.html dans le dossier) |
+| Outil | Version | Usage |
+|-------|---------|-------|
+| Next.js | 16.2.1 | Framework App Router |
+| React | 19 | UI |
+| TypeScript | 5 | Types |
+| Tailwind CSS | v4 | Styles |
+| next/font | — | Google Fonts (Playfair, Raleway, etc.) |
+| Stripe.js + stripe | latest | Paiement — **à brancher** |
+| Supabase | latest | BDD réservations — **à brancher** |
+| Open-Meteo API | — | Météo (lat:47.368, lon:-0.511), sans clé |
+| Vercel | — | Hébergement + déploiement auto depuis GitHub |
 
 ---
 
-## Mise en ligne (Netlify)
+## Déploiement (Vercel)
 
-1. Renommer `site_final.html` → `index.html`
-2. Glisser le fichier sur app.netlify.com/drop
-3. Domaine actuel chez Wix → mettre à jour les DNS vers Netlify
-4. HTTPS activé automatiquement par Netlify
+- **Repo GitHub** : `https://github.com/CaxBuddy9/la-boire-bavard-`
+- Push sur `master` → déploiement automatique Vercel
+- Variables d'environnement à ajouter dans Vercel Dashboard :
+  - `STRIPE_SECRET_KEY`
+  - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
+---
+
+## Migration HTML → Next.js (NOUVELLES RÈGLES)
+
+- Ce projet est maintenant une vraie app **Next.js 16.2.1** (App Router) avec React 19, TypeScript et Tailwind CSS v4.
+- Tu travailles exclusivement dans le dossier `src/app/` (et `src/components/`).
+- N'utilise **JAMAIS** de HTML brut, de `dangerouslySetInnerHTML`, ni de grands blocs `<style>` ou `<script>` comme dans l'ancien `index.html`.
+- Convertis tout en **composants React Server Components** par défaut. Utilise `"use client"` uniquement pour l'interactivité (nav, modals, formulaires avec état, calendrier, etc.).
+- Respecte à 100% le branding de `BRANDING.md` (couleurs exactes, polices par page, tone of voice, logo SVG, etc.).
+- Utilise les couleurs définies dans `tailwind.config.ts` (`gold`, `cream`, `forest-dark`, etc.).
+- Charge les polices avec `next/font` (Playfair Display, Raleway, DM Serif Display, Libre Baskerville, Lora, EB Garamond, Cormorant Garamond, Montserrat).
+- Toutes les pages doivent être des Server Components avec metadata SEO correcte.
+- Le site doit rester une SPA-like avec navigation fluide (utilise `next/navigation` → `useRouter` ou `Link`).
+
+### Plan de reconstruction (5 étapes)
+
+| Étape | Action | Statut |
+|-------|--------|--------|
+| 1 | Mettre à jour les dépendances React 19 + Next.js 16.2.1 | ⬜ |
+| 2 | Supprimer `index.html` racine + nettoyage | ⬜ |
+| 3 | Compléter pages manquantes + Nav (ajouter Bien-être) | 🔄 |
+| 4 | Brancher Stripe (route API `/api/checkout`) | ⬜ |
+| 5 | Brancher Formspree + vraies photos | ⬜ |

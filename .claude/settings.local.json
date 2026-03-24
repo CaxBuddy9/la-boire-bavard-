@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(mkdir:*)",
+      "Bash(grep -n \"^</div>$\\\\|^</div>\" \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/index.html\")",
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(npx create-next-app@latest la-boire-bavard-next --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint --no-git)",
+      "Bash(printf 'n\\\\n')",
+      "Bash(npx create-next-app@14 la-boire-bavard-next --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-eslint)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(cp -r \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard-next/src\" \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/\")",
+      "Bash(cp -r \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard-next/public\" \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/\")",
+      "Bash(xargs grep:*)",
+      "Bash(head -15 grep -n \"bg-cream\\\\|bg-white\\\\|min-h-screen bg\" \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/app/petitdej/page.tsx\")",
+      "Bash(head -10 grep -n \"bg-cream\\\\|bg-white\\\\|min-h-screen bg\" \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/app/avis/page.tsx\")",
+      "Bash(file \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/public/logos/\"*.png)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"require\\(''''./node_modules/next/dist/bin/next''''\\)\")",
+      "Bash(npx next:*)",
+      "Bash(next build:*)",
+      "Bash(./node_modules/.bin/next build:*)",
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(ls \"C:/Projects/la-boire-bavard/src/app/\\(site\\)\")",
+      "Bash(node -e \"const p=require\\(''./package.json''\\); console.log\\(''next:'', p.dependencies.next\\); console.log\\(''react:'', p.dependencies.react\\); console.log\\(''react-dom:'', p.dependencies[''react-dom'']\\);\")"
+    ]
+  }
+}

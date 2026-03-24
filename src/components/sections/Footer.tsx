@@ -7,12 +7,14 @@ import {
 } from '@/components/TourismLogos'
 
 const NAV = [
-  { href: '/',          label: 'Accueil' },
-  { href: '/propriete', label: 'La propriété' },
-  { href: '/chambres',  label: 'Chambres' },
-  { href: '/petitdej',  label: 'Petit-déjeuner' },
-  { href: '/avis',      label: 'Avis' },
-  { href: '/contact',   label: 'Contact & Accès' },
+  { href: '/',                label: 'Accueil' },
+  { href: '/propriete',       label: 'La propriété' },
+  { href: '/chambres',        label: 'Chambres' },
+  { href: '/bienetre',        label: 'Bien-être' },
+  { href: '/petitdej',        label: 'Petit-déjeuner' },
+  { href: '/avis',            label: 'Avis' },
+  { href: '/contact',         label: 'Contact & Accès' },
+  { href: '/mentions-legales',label: 'Mentions légales' },
 ]
 
 const LABELS = [

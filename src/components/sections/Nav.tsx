@@ -9,6 +9,7 @@ const links = [
   { href: '/',          fr: 'Accueil',         en: 'Home' },
   { href: '/propriete', fr: 'La propriété',     en: 'The Estate' },
   { href: '/chambres',  fr: 'Chambres',         en: 'Rooms' },
+  { href: '/bienetre',  fr: 'Bien-être',        en: 'Wellness' },
   { href: '/petitdej',  fr: 'Petit-déjeuner',   en: 'Breakfast' },
   { href: '/avis',      fr: 'Avis',             en: 'Reviews' },
   { href: '/contact',   fr: 'Contact & Accès',  en: 'Contact & Access' },
