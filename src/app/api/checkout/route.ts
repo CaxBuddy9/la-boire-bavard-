@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret })
   } catch (err: any) {
-    console.error('[checkout]', err)
+    console.error('[checkout] Error:', err.message)
     return NextResponse.json({ error: err.message || 'Erreur serveur' }, { status: 500 })
   }
 }

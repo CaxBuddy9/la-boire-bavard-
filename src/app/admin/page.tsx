@@ -2,8 +2,6 @@
 import { useState, useEffect } from 'react'
 import type { Reservation } from '@/lib/supabase'
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'sandrine2026'
-
 const STATUS_LABEL: Record<string, string> = {
   pending:   'En attente',
   confirmed: 'Confirmée',
@@ -231,11 +229,30 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [pwd, setPwd] = useState('')
   const [err, setErr] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (pwd === ADMIN_PASSWORD) { onLogin() }
-    else { setErr(true); setPwd('') }
+    setLoading(true)
+    setErr(false)
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        onLogin()
+      } else {
+        setErr(true)
+        setPwd('')
+      }
+    } catch {
+      setErr(true)
+      setPwd('')
+    }
+    setLoading(false)
   }
 
   return (
@@ -278,13 +295,14 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
             />
             {err && <p style={{ color: '#e07070', fontSize: '0.75rem', marginTop: 6 }}>Mot de passe incorrect</p>}
           </div>
-          <button type="submit" style={{
+          <button type="submit" disabled={loading} style={{
             width: '100%', background: '#c4a050', color: '#0a0f0a',
-            border: 'none', padding: '13px', cursor: 'pointer',
+            border: 'none', padding: '13px', cursor: loading ? 'default' : 'pointer',
             fontSize: '0.65rem', letterSpacing: '0.22em', textTransform: 'uppercase',
             fontFamily: 'system-ui, sans-serif', fontWeight: 600,
+            opacity: loading ? 0.7 : 1,
           }}>
-            Accéder au dashboard
+            {loading ? 'Vérification…' : 'Accéder au dashboard'}
           </button>
         </form>
       </div>
@@ -756,13 +774,27 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 // ── Page principale ────────────────────────────────────────────────────────
 export default function AdminPage() {
   const [auth, setAuth] = useState(false)
+  const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    if (sessionStorage.getItem('admin_auth') === '1') setAuth(true)
+    // Check auth status by probing the protected API
+    fetch('/api/admin/reservations')
+      .then(res => {
+        if (res.status === 200) setAuth(true)
+        else setAuth(false)
+      })
+      .catch(() => setAuth(false))
+      .finally(() => setChecking(false))
   }, [])
 
-  const login  = () => { sessionStorage.setItem('admin_auth', '1'); setAuth(true) }
-  const logout = () => { sessionStorage.removeItem('admin_auth'); setAuth(false) }
+  const login = () => { setAuth(true) }
+
+  const logout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' })
+    setAuth(false)
+  }
+
+  if (checking) return null
 
   return auth ? <Dashboard onLogout={logout} /> : <LoginScreen onLogin={login} />
 }

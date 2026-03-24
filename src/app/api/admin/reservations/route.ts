@@ -50,6 +50,12 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const { id, status } = await req.json()
+
+    const VALID_STATUSES = ['pending', 'confirmed', 'paid', 'cancelled']
+    if (!VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    }
+
     const { error } = await getSupabaseAdmin()
       .from('reservations')
       .update({ status })

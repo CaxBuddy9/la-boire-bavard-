@@ -70,10 +70,9 @@ export async function POST(req: NextRequest) {
         table_hotes:           meta.tableHotes === 'oui',
       })
 
-      if (error) console.error('[webhook] Supabase insert error:', error)
-      else console.log('[webhook] Réservation sauvegardée ✓', pi.id)
-    } catch (err) {
-      console.error('[webhook] Erreur Supabase:', err)
+      if (error) console.error('[webhook] Supabase insert error:', error.message)
+    } catch (err: any) {
+      console.error('[webhook] Erreur Supabase:', err.message)
     }
   }
 
