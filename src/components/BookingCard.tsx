@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import DateRangePicker from '@/components/DateRangePicker'
 
@@ -19,6 +18,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   const [checkin, setCheckin]   = useState('')
   const [checkout, setCheckout] = useState('')
   const [persons, setPersons]   = useState(2)
+  const [shake, setShake]       = useState(false)
   const router = useRouter()
 
   const nights = (() => {
@@ -27,7 +27,23 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
     return d > 0 ? d : 0
   })()
   const total = nights * 88
-  const today = new Date().toISOString().split('T')[0]
+
+  const handleReserve = () => {
+    if (nights <= 0) {
+      // Shake + scroll vers le calendrier pour indiquer qu'il faut des dates
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
+      return
+    }
+    const p = new URLSearchParams({
+      chambre: roomName,
+      arrive:  fmtDate(checkin),
+      depart:  fmtDate(checkout),
+      nuits:   String(nights),
+      pers:    String(persons),
+    })
+    router.push(`/paiement?${p.toString()}`)
+  }
 
   return (
     <div style={{
@@ -45,169 +61,178 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         letterSpacing: '.32em',
         textTransform: 'uppercase',
         color: 'rgba(196,160,80,.55)',
-        marginBottom: 12,
+        marginBottom: 8,
       }}>
         Réservation
       </p>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 22 }}>
         <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '2rem', color: '#c4a050' }}>88 €</span>
         <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.3)' }}>
           / nuit · petit-déjeuner inclus
         </span>
       </div>
 
-      {/* Separator */}
-      <div style={{ height: 1, background: 'rgba(196,160,80,.12)', marginBottom: 22 }}/>
+      <div style={{ height: 1, background: 'rgba(196,160,80,.12)', marginBottom: 20 }}/>
 
-      {/* Dates — calendrier custom */}
-      <div style={{ marginBottom: 10 }}>
-        <DateRangePicker
-          checkin={checkin}
-          checkout={checkout}
-          onCheckin={setCheckin}
-          onCheckout={setCheckout}
-        />
-      </div>
-
-      {/* Personnes */}
-      <div style={{ marginBottom: 22 }}>
-        <label style={{
-          display: 'block',
+      {/* Étape 1 — Dates */}
+      <div style={{ marginBottom: 4 }}>
+        <p style={{
           fontFamily: 'var(--font-raleway)',
-          fontSize: '.48rem',
+          fontSize: '.44rem',
           letterSpacing: '.28em',
           textTransform: 'uppercase',
           color: 'rgba(196,160,80,.5)',
-          marginBottom: 6,
+          marginBottom: 8,
         }}>
-          Voyageurs
-        </label>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          borderBottom: '1px solid rgba(196,160,80,.3)',
-        }}>
-          <button
-            onClick={() => setPersons(Math.max(1, persons - 1))}
-            style={{
-              background: 'none', border: 'none',
-              color: persons > 1 ? '#c4a050' : 'rgba(255,255,255,.15)',
-              width: 36, height: 40, fontSize: '1.1rem',
-              cursor: persons > 1 ? 'pointer' : 'default',
-              padding: 0,
-            }}
-          >−</button>
-          <span style={{
-            flex: 1, textAlign: 'center',
-            fontFamily: 'var(--font-raleway)',
-            fontSize: '.85rem',
-            color: 'rgba(255,255,255,.8)',
-          }}>
-            {persons} pers.
-          </span>
-          <button
-            onClick={() => setPersons(Math.min(capacityMax, persons + 1))}
-            style={{
-              background: 'none', border: 'none',
-              color: persons < capacityMax ? '#c4a050' : 'rgba(255,255,255,.15)',
-              width: 36, height: 40, fontSize: '1.1rem',
-              cursor: persons < capacityMax ? 'pointer' : 'default',
-              padding: 0,
-            }}
-          >+</button>
-        </div>
-        <p style={{
-          fontFamily: 'var(--font-raleway)',
-          fontSize: '.58rem',
-          color: 'rgba(255,255,255,.2)',
-          marginTop: 4,
-        }}>
-          Capacité max · {capacityMax} personne{capacityMax > 1 ? 's' : ''}
+          1 · Choisir les dates
         </p>
+        <div style={{
+          animation: shake ? 'shake .4s ease' : 'none',
+        }}>
+          <style>{`@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}`}</style>
+          <DateRangePicker
+            checkin={checkin}
+            checkout={checkout}
+            onCheckin={setCheckin}
+            onCheckout={setCheckout}
+          />
+        </div>
+        {!checkin && (
+          <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.58rem', color: 'rgba(196,160,80,.45)', marginTop: 8 }}>
+            ↑ Cliquez sur Arrivée pour ouvrir le calendrier
+          </p>
+        )}
       </div>
 
-      {/* Récapitulatif */}
-      {nights > 0 && (
-        <div style={{
-          background: 'rgba(196,160,80,.05)',
-          borderTop: '1px solid rgba(196,160,80,.15)',
-          borderBottom: '1px solid rgba(196,160,80,.15)',
-          padding: '14px 0',
-          marginBottom: 18,
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.35)' }}>
-              88 € × {nights} nuit{nights > 1 ? 's' : ''}
-            </span>
-            <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.5)' }}>
-              {total} €
-            </span>
+      {/* Étape 2 — Voyageurs (visible seulement si dates ok) */}
+      {checkin && checkout && nights > 0 && (
+        <>
+          <div style={{ height: 1, background: 'rgba(196,160,80,.08)', margin: '18px 0' }}/>
+          <div style={{ marginBottom: 18 }}>
+            <p style={{
+              fontFamily: 'var(--font-raleway)',
+              fontSize: '.44rem',
+              letterSpacing: '.28em',
+              textTransform: 'uppercase',
+              color: 'rgba(196,160,80,.5)',
+              marginBottom: 10,
+            }}>
+              2 · Voyageurs
+            </p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0,
+              background: 'rgba(196,160,80,.05)',
+              border: '1px solid rgba(196,160,80,.2)',
+              borderRadius: 2,
+            }}>
+              <button
+                onClick={() => setPersons(Math.max(1, persons - 1))}
+                style={{
+                  background: 'none', border: 'none',
+                  color: persons > 1 ? '#c4a050' : 'rgba(255,255,255,.15)',
+                  width: 40, height: 42, fontSize: '1.2rem',
+                  cursor: persons > 1 ? 'pointer' : 'default',
+                }}
+              >−</button>
+              <span style={{
+                flex: 1, textAlign: 'center',
+                fontFamily: 'var(--font-raleway)',
+                fontSize: '.9rem',
+                color: 'rgba(255,255,255,.85)',
+              }}>
+                {persons} pers.
+              </span>
+              <button
+                onClick={() => setPersons(Math.min(capacityMax, persons + 1))}
+                style={{
+                  background: 'none', border: 'none',
+                  color: persons < capacityMax ? '#c4a050' : 'rgba(255,255,255,.15)',
+                  width: 40, height: 42, fontSize: '1.2rem',
+                  cursor: persons < capacityMax ? 'pointer' : 'default',
+                }}
+              >+</button>
+            </div>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.56rem', color: 'rgba(255,255,255,.2)', marginTop: 4 }}>
+              Max {capacityMax} personne{capacityMax > 1 ? 's' : ''}
+            </p>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>
-              Total
-            </span>
-            <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.25rem', color: '#c4a050' }}>
-              {total} €
-            </span>
+
+          {/* Récap prix */}
+          <div style={{
+            background: 'rgba(196,160,80,.05)',
+            border: '1px solid rgba(196,160,80,.15)',
+            padding: '14px 16px',
+            marginBottom: 18,
+            borderRadius: 2,
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+              <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.35)' }}>
+                88 € × {nights} nuit{nights > 1 ? 's' : ''}
+              </span>
+              <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.5)' }}>
+                {total} €
+              </span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>
+                Total
+              </span>
+              <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.3rem', color: '#c4a050' }}>
+                {total} €
+              </span>
+            </div>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.55rem', color: 'rgba(255,255,255,.2)', marginTop: 5 }}>
+              Petit-déjeuner inclus · toutes taxes comprises
+            </p>
           </div>
-          <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.56rem', color: 'rgba(255,255,255,.2)', marginTop: 6 }}>
-            Petit-déjeuner inclus · toutes taxes comprises
-          </p>
-        </div>
+        </>
       )}
 
-      {/* CTA */}
+      {/* CTA principal */}
       <button
-        onClick={() => {
-          if (nights > 0) {
-            const p = new URLSearchParams({
-              chambre: roomName,
-              arrive:  fmtDate(checkin),
-              depart:  fmtDate(checkout),
-              nuits:   String(nights),
-              pers:    String(persons),
-            })
-            router.push(`/paiement?${p.toString()}`)
-          } else {
-            router.push(`/contact?chambre=${encodeURIComponent(roomName)}`)
-          }
-        }}
+        onClick={handleReserve}
         style={{
           display: 'block',
           width: '100%',
           textAlign: 'center',
-          background: '#c4a050',
-          color: '#0d110e',
-          border: 'none',
+          background: nights > 0 ? '#c4a050' : 'rgba(196,160,80,.2)',
+          color: nights > 0 ? '#0d110e' : 'rgba(196,160,80,.5)',
+          border: nights > 0 ? 'none' : '1px solid rgba(196,160,80,.25)',
           fontFamily: 'var(--font-raleway)',
           fontSize: '.6rem',
           letterSpacing: '.28em',
           textTransform: 'uppercase',
           fontWeight: 600,
           padding: '14px 24px',
-          marginBottom: 8,
+          marginBottom: 6,
           cursor: 'pointer',
+          transition: 'all .2s',
         }}
       >
-        {nights > 0 ? `Réserver · ${total} €` : 'Demander une réservation'}
+        {nights > 0 ? `Payer · ${total} €` : 'Sélectionner des dates'}
       </button>
 
-      <p style={{
-        textAlign: 'center',
-        fontFamily: 'var(--font-raleway)',
-        fontSize: '.55rem',
-        color: 'rgba(255,255,255,.18)',
-        marginBottom: 20,
-      }}>
-        {nights > 0 ? 'Paiement sécurisé · Annulation gratuite 48h avant' : 'Réponse sous 24h · Sans engagement'}
+      {nights > 0 && (
+        <p style={{
+          textAlign: 'center',
+          fontFamily: 'var(--font-raleway)',
+          fontSize: '.55rem',
+          color: 'rgba(255,255,255,.18)',
+          marginBottom: 18,
+        }}>
+          Paiement sécurisé · Annulation gratuite 48h avant
+        </p>
+      )}
+
+      <div style={{ height: 1, background: 'rgba(255,255,255,.05)', margin: '16px 0' }}/>
+
+      {/* Contact secondaire */}
+      <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.55rem', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.2)', marginBottom: 10 }}>
+        Une question ?
       </p>
-
-      {/* Separator */}
-      <div style={{ height: 1, background: 'rgba(255,255,255,.05)', marginBottom: 18 }}/>
-
-      {/* Contacts */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[
           { href: 'tel:0675786335',                icon: '✆', label: '06 75 78 63 35' },
           { href: 'mailto:laboirebavard@gmail.com', icon: '✉', label: 'laboirebavard@gmail.com' },
