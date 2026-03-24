@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, PRICE_PER_NIGHT } from '@/lib/stripe'
+import { getStripe, PRICE_PER_NIGHT } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const amount = Math.round(nuits * PRICE_PER_NIGHT * 100) // en centimes
 
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
