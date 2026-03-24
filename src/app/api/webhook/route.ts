@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 
 // Client Supabase avec service_role (accès total, server-side uniquement)
 function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) throw new Error('Supabase not configured')
   return createClient(url, key)
@@ -57,16 +57,17 @@ export async function POST(req: NextRequest) {
     try {
       const supabase = getSupabaseAdmin()
       const { error } = await supabase.from('reservations').insert({
-        room_id:               meta.chambre  || 'inconnu',
-        guest_name:            meta.nom      || 'Inconnu',
-        guest_email:           meta.email    || '',
-        guest_phone:           meta.tel      || '',
+        room_id:               meta.chambre        || 'inconnu',
+        guest_name:            meta.nom            || 'Inconnu',
+        guest_email:           meta.email          || '',
+        guest_phone:           meta.tel            || '',
         check_in:              checkIn,
         check_out:             checkOut,
-        guests:                Number(meta.pers) || 2,
+        guests:                Number(meta.pers)   || 2,
         total_price:           Math.round(pi.amount / 100),
         status:                'paid',
         stripe_payment_intent: pi.id,
+        table_hotes:           meta.tableHotes === 'oui',
       })
 
       if (error) console.error('[webhook] Supabase insert error:', error)
