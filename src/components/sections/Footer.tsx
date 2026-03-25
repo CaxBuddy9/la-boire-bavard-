@@ -31,7 +31,7 @@ const LABELS = [
 export default function Footer() {
   return (
     <footer style={{ background: '#0d110e' }} className="font-sans">
-      <div className="max-w-5xl mx-auto px-8 py-12 text-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-12 text-center">
 
         <div className="font-serif text-white text-xl tracking-wide mb-1">La Boire Bavard</div>
         <div className="text-[0.52rem] tracking-[0.38em] uppercase mb-8" style={{ color: 'rgba(196,160,80,.5)' }}>
@@ -41,7 +41,7 @@ export default function Footer() {
         {/* Gold line */}
         <div style={{ width: 48, height: 1, background: 'rgba(196,160,80,.5)', margin: '0 auto 32px' }} />
 
-        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10">
+        <nav className="flex flex-wrap justify-center gap-x-3 sm:gap-x-6 gap-y-2 mb-10">
           {NAV.map((l) => (
             <Link key={l.href} href={l.href}
               className="text-[0.58rem] tracking-[0.2em] uppercase text-white/40 hover:text-gold transition-colors"
@@ -52,8 +52,8 @@ export default function Footer() {
         </nav>
 
         {/* Tous les logos — une seule rangée avec barres dorées */}
-        <div className="flex justify-center items-center gap-x-4 mb-10 overflow-x-hidden"
-          style={{ opacity: 0.45, flexWrap: 'nowrap' }}>
+        <div className="flex justify-center items-center gap-x-4 mb-10"
+          style={{ opacity: 0.45, flexWrap: 'nowrap' as const, overflowX: 'auto' as const, paddingBottom: 4 }}>
           <span style={{ width: 32, height: 1, background: 'rgba(196,160,80,.6)', flexShrink: 0 }} />
           {LABELS.map(({ href, C, label }) => href ? (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}

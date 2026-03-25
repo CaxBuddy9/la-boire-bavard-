@@ -60,8 +60,8 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
         </section>
 
         {/* Content */}
-        <div style={{ background: '#192318' }} className="py-20 px-8">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_380px] gap-16">
+        <div style={{ background: '#192318' }} className="py-10 md:py-20 px-4 md:px-8">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_380px] gap-8 md:gap-16">
             {/* Left: description + gallery */}
             <div>
               <p className="label-caps mb-4">La chambre</p>
@@ -99,14 +99,14 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
             </div>
 
             {/* Right: booking card */}
-            <aside>
+            <aside className="md:sticky md:top-[90px] self-start">
               <BookingCard roomName={room.name} capacityMax={room.capacityMax} />
             </aside>
           </div>
         </div>
 
         {/* Other rooms */}
-        <section style={{ background: '#0d110e' }} className="py-20 px-8">
+        <section style={{ background: '#0d110e' }} className="py-10 md:py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto">
             <p className="label-caps mb-3 text-center">Également disponible</p>
             <h2 className="font-serif font-normal text-center mb-12"

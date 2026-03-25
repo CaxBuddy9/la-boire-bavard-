@@ -32,7 +32,13 @@
       "Bash(npm uninstall:*)",
       "Bash(node -e \"const p=require\\(''''./package.json''''\\); console.log\\(''''tailwindcss:'''', p.devDependencies?.tailwindcss\\); console.log\\(''''@tailwindcss/postcss:'''', p.devDependencies?.[''''@tailwindcss/postcss''''] || ''''absent ✓''''\\)\")",
       "Bash(npx vercel:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(grep -r \"NEXT_PUBLIC_ADMIN_PASSWORD\\\\|process.env\" /c/Users/thego/OneDrive/Desktop/la-boire-bavard/src --include=*.ts --include=*.tsx)",
+      "Bash(grep -r \"rate\\\\|limit\\\\|throttle\\\\|honeypot\\\\|csrf\\\\|validation\\\\|sanitize\" /c/Users/thego/OneDrive/Desktop/la-boire-bavard/src --include=*.ts --include=*.tsx)",
+      "Bash(grep -r \"fetch\\\\|axios\\\\|api\\\\|POST\\\\|GET\\\\|PUT\\\\|DELETE\" /c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/components --include=*.tsx --include=*.ts)",
+      "Bash(grep -r \"NextRequest\\\\|NextResponse\\\\|req.json\\\\|req.text\\\\|await.*json\" /c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/app/api --include=*.ts)",
+      "Skill(update-config)",
+      "Bash(node scripts/patch-planning.js)"
     ]
   }
 }

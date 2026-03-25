@@ -223,3 +223,4 @@ const t = useT()
 | 3 | Compléter pages manquantes + Nav (ajouter Bien-être) | 🔄 |
 | 4 | Brancher Stripe (route API `/api/checkout`) | ⬜ |
 | 5 | Brancher Formspree + vraies photos | ⬜ |
+

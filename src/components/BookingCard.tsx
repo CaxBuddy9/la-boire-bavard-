@@ -62,8 +62,6 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       background: '#1e2b1c',
       border: '1px solid rgba(196,160,80,.25)',
       padding: '28px 28px 24px',
-      position: 'sticky',
-      top: 90,
     }}>
 
       {/* Header */}

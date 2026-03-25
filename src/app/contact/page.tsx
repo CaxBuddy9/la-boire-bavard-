@@ -91,8 +91,10 @@ function ContactInner() {
       <Nav />
       <main>
         {/* Hero header — sombre */}
-        <div style={{ background: S.slate, padding: '140px 52px 70px', position: 'relative', overflow: 'hidden' }}>
-          <span style={{ position: 'absolute', bottom: -20, left: -10, fontFamily: 'var(--font-playfair)', fontSize: '18vw', lineHeight: .85, color: 'rgba(255,255,255,.025)', pointerEvents: 'none', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
+        <div style={{ background: S.slate, padding: 'clamp(100px,14vw,140px) clamp(16px,5vw,52px) 70px', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ overflow: 'hidden', position: 'absolute', bottom: -20, left: -10, right: 0, pointerEvents: 'none' }}>
+          <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(6rem,18vw,18vw)', lineHeight: .85, color: 'rgba(255,255,255,.025)', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
+          </div>
           <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Réservation</p>
           <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
             Contact &<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.45)' }}>Disponibilités</em>
@@ -100,8 +102,8 @@ function ContactInner() {
         </div>
 
         {/* Formulaire + sidebar */}
-        <div style={{ background: S.slate2, padding: '70px 52px' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 360px', gap: 60 }}>
+        <div style={{ background: S.slate2, padding: 'clamp(32px,6vw,70px) clamp(16px,5vw,52px)' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%,420px),1fr))', gap: 40 }}>
 
             {/* Formulaire */}
             <div>
@@ -118,7 +120,7 @@ function ContactInner() {
                 </div>
               ) : (
                 <form ref={formRef} onSubmit={handleSubmit}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Prénom *</label>
                       <input name="prenom" required value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Marie"
@@ -132,7 +134,7 @@ function ContactInner() {
                         className={inputCls} />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Email *</label>
                       <input name="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="marie@exemple.fr"
@@ -146,7 +148,7 @@ function ContactInner() {
                         className={inputCls} />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
                       <CustomSelect
@@ -232,7 +234,7 @@ function ContactInner() {
         </div>
 
         {/* ═══ SECTION ACCÈS — sombre avec carte ═══ */}
-        <div style={{ background: '#141c14', padding: '80px 52px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 70, alignItems: 'start', maxWidth: '100%' }}>
+        <div style={{ background: '#141c14', padding: 'clamp(40px,8vw,80px) clamp(16px,5vw,52px)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%,440px),1fr))', gap: 70, alignItems: 'start', maxWidth: '100%' }}>
           {/* Gauche : infos accès */}
           <div>
             <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 16 }}>Comment nous trouver</p>
@@ -284,7 +286,7 @@ function ContactInner() {
               />
             </div>
             {/* Pin card */}
-            <div style={{ position: 'absolute', bottom: 28, left: 28, zIndex: 3, background: 'rgba(12,18,14,.92)', backdropFilter: 'blur(12px)', border: `1px solid rgba(196,160,80,.3)`, padding: '16px 20px', maxWidth: 220 }}>
+            <div style={{ position: 'absolute', bottom: 12, left: 12, zIndex: 3, background: 'rgba(12,18,14,.92)', backdropFilter: 'blur(12px)', border: `1px solid rgba(196,160,80,.3)`, padding: '16px 20px', maxWidth: 220 }}>
               <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', fontWeight: 400, color: '#f4eedf', letterSpacing: '.06em', marginBottom: 6 }}>La Boire Bavard</p>
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.62rem', color: 'rgba(184,192,200,.55)', lineHeight: 1.65, marginBottom: 12 }}>
                 4 chemin de la Boire Bavard<br />49320 Blaison-Saint-Sulpice
@@ -297,7 +299,7 @@ function ContactInner() {
           </div>
         </div>
         {/* ═══ SECTION ACCESSIBILITÉ ═══ */}
-        <div style={{ background: '#111009', padding: '80px 52px' }}>
+        <div style={{ background: '#111009', padding: 'clamp(40px,8vw,80px) clamp(16px,5vw,52px)' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14, textAlign: 'center' }}>Pour tous nos hôtes</p>
             <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.8rem,3vw,2.4rem)', fontWeight: 400, color: 'white', marginBottom: 10, lineHeight: 1.2, textAlign: 'center' }}>
