@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import DateRangePicker from '@/components/DateRangePicker'
 
 type Props = {
@@ -191,28 +192,50 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       )}
 
       {/* CTA principal */}
-      <button
-        onClick={handleReserve}
-        style={{
-          display: 'block',
-          width: '100%',
-          textAlign: 'center',
-          background: nights > 0 ? '#c4a050' : 'rgba(196,160,80,.2)',
-          color: nights > 0 ? '#0d110e' : 'rgba(196,160,80,.5)',
-          border: nights > 0 ? 'none' : '1px solid rgba(196,160,80,.25)',
-          fontFamily: 'var(--font-raleway)',
-          fontSize: '.6rem',
-          letterSpacing: '.28em',
-          textTransform: 'uppercase',
-          fontWeight: 600,
-          padding: '14px 24px',
-          marginBottom: 6,
-          cursor: 'pointer',
-          transition: 'all .2s',
-        }}
-      >
-        {nights > 0 ? `Payer · ${total} €` : 'Sélectionner des dates'}
-      </button>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
+        <Link
+          href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${fmtDate(checkin)}` : ''}${checkout ? `&depart=${fmtDate(checkout)}` : ''}${persons ? `&pers=${persons}` : ''}`}
+          style={{
+            flex: '0 0 auto',
+            textAlign: 'center',
+            background: 'transparent',
+            color: '#c4a050',
+            border: '1px solid rgba(196,160,80,.4)',
+            fontFamily: 'var(--font-raleway)',
+            fontSize: '.58rem',
+            letterSpacing: '.2em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            padding: '14px 16px',
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Contacter
+        </Link>
+        <button
+          onClick={handleReserve}
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            background: nights > 0 ? '#c4a050' : 'rgba(196,160,80,.2)',
+            color: nights > 0 ? '#0d110e' : 'rgba(196,160,80,.5)',
+            border: nights > 0 ? 'none' : '1px solid rgba(196,160,80,.25)',
+            fontFamily: 'var(--font-raleway)',
+            fontSize: '.6rem',
+            letterSpacing: '.28em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            padding: '14px 16px',
+            cursor: 'pointer',
+            transition: 'all .2s',
+          }}
+        >
+          {nights > 0 ? `Payer · ${total} €` : 'Sélectionner des dates'}
+        </button>
+      </div>
 
       {nights > 0 && (
         <p style={{
