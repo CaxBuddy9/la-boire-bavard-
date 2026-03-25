@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import RoomPicker from '@/components/RoomPicker'
+import DateRangePicker from '@/components/DateRangePicker'
 const S = { slate: '#1a2318', slate2: '#222b20', gold: '#c4a050', cream: 'rgba(240,235,225,.75)', dim: 'rgba(184,192,180,.5)', border: 'rgba(196,160,80,.25)' }
 
 const ACCESS = [
@@ -19,19 +20,22 @@ function ContactInner() {
   const formRef = useRef<HTMLFormElement>(null)
   const searchParams = useSearchParams()
 
-  // Pré-remplissage depuis les params URL (venant de /paiement)
+  // Pré-remplissage depuis les params URL (venant de /chambres ou /paiement)
   const defaultArrivee = searchParams.get('arrive') || ''
   const defaultDepart  = searchParams.get('depart')  || ''
   const defaultChambre = searchParams.get('chambre') || ''
-  const defaultPers    = searchParams.get('pers')    || '2'
+
+  const [arrivee, setArrivee] = useState(defaultArrivee)
+  const [depart,  setDepart]  = useState(defaultDepart)
 
   function buildPaiementUrl() {
-    const form = formRef.current
-    const arrivee = (form?.elements.namedItem('arrivee') as HTMLInputElement)?.value || ''
-    const depart  = (form?.elements.namedItem('depart')  as HTMLInputElement)?.value || ''
-    const chambre = (form?.elements.namedItem('chambre') as HTMLInputElement)?.value || ''
+    const form    = formRef.current
+    const chambre = (form?.elements.namedItem('chambre') as HTMLInputElement)?.value || defaultChambre
     const adultes = (form?.elements.namedItem('adultes') as HTMLSelectElement)?.value || '2'
-    const params  = new URLSearchParams({ chambre, arrive: arrivee, depart, pers: adultes })
+    const nuits   = arrivee && depart
+      ? Math.max(1, Math.round((new Date(depart).getTime() - new Date(arrivee).getTime()) / 86400000))
+      : 1
+    const params = new URLSearchParams({ chambre, arrive: arrivee, depart, nuits: String(nuits), pers: adultes })
     return `/paiement?${params.toString()}`
   }
 
@@ -98,15 +102,16 @@ function ContactInner() {
                       </div>
                     ))}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-                    {([['arrivee','Arrivée souhaitée', defaultArrivee],['depart','Départ souhaité', defaultDepart]] as [string,string,string][]).map(([name,label,def]) => (
-                      <div key={name}>
-                        <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>{label}</label>
-                        <input name={name} type="date" defaultValue={def}
-                          style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.6)', borderBottom: `1px solid ${S.border}`, colorScheme: 'dark' }}
-                          className={inputCls} />
-                      </div>
-                    ))}
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Dates souhaitées</label>
+                    <input type="hidden" name="arrivee" value={arrivee} />
+                    <input type="hidden" name="depart"  value={depart} />
+                    <DateRangePicker
+                      checkin={arrivee}
+                      checkout={depart}
+                      onCheckin={setArrivee}
+                      onCheckout={setDepart}
+                    />
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
                     <div>
