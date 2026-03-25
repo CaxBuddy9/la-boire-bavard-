@@ -117,6 +117,18 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
     e.preventDefault()
     if (!form.guest_name || n <= 0) { setErr('Nom et dates valides requis.'); return }
     setSaving(true)
+    setErr('')
+
+    // Vérifier les conflits avant d'insérer
+    try {
+      const avail = await fetch(`/api/availability?arrive=${form.check_in}&depart=${form.check_out}`).then(r => r.json())
+      if (avail.taken?.includes(form.room_id)) {
+        setErr(`${form.room_id} est déjà réservée sur ces dates.`)
+        setSaving(false)
+        return
+      }
+    } catch {}
+
     const res = await fetch('/api/admin/reservations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -570,6 +582,17 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     if (selected?.id === id) setSelected(s => s ? { ...s, status: status as any } : null)
   }
 
+  const deleteReservation = async (id: string) => {
+    if (!confirm('Supprimer définitivement cette réservation ?')) return
+    await fetch('/api/admin/reservations', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    setReservations(r => r.filter(x => x.id !== id))
+    if (selected?.id === id) setSelected(null)
+  }
+
   const filtered = filter === 'all' ? reservations : reservations.filter(r => r.status === filter)
 
   const counts = {
@@ -755,6 +778,10 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                             Annuler
                           </button>
                         )}
+                        <button style={{ ...S.btn, color: 'rgba(200,80,80,.7)', borderColor: 'rgba(200,80,80,.2)' }}
+                          onClick={e => { e.stopPropagation(); deleteReservation(r.id) }}>
+                          🗑 Supprimer
+                        </button>
                         {r.guest_email && (
                           <a href={`mailto:${r.guest_email}?subject=Votre séjour à La Boire Bavard`}
                             onClick={e => e.stopPropagation()}

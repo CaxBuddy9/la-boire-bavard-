@@ -47,6 +47,23 @@ export async function POST(req: Request) {
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json()
+    if (!id) return NextResponse.json({ error: 'id requis' }, { status: 400 })
+
+    const { error } = await getSupabaseAdmin()
+      .from('reservations')
+      .delete()
+      .eq('id', id)
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
 export async function PATCH(req: Request) {
   try {
     const { id, status } = await req.json()
