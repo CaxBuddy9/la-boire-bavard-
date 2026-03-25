@@ -18,7 +18,7 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
-              "frame-src https://js.stripe.com https://hooks.stripe.com",
+              "frame-src https://js.stripe.com https://hooks.stripe.com https://www.openstreetmap.org",
               "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
               "img-src 'self' data: https:",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
