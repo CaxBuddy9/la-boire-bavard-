@@ -5,6 +5,7 @@ import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import RoomPicker from '@/components/RoomPicker'
 import DateRangePicker from '@/components/DateRangePicker'
+import CustomSelect from '@/components/CustomSelect'
 const S = { slate: '#1a2318', slate2: '#222b20', gold: '#c4a050', cream: 'rgba(240,235,225,.75)', dim: 'rgba(184,192,180,.5)', border: 'rgba(196,160,80,.25)' }
 
 const ACCESS = [
@@ -148,9 +149,12 @@ function ContactInner() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
-                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
-                        {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adulte{n>1?'s':''}</option>)}
-                      </select>
+                      <CustomSelect
+                        name="adultes"
+                        value={adultes}
+                        onChange={setAdultes}
+                        options={[1,2,3,4,5,6].map(n => ({ value: String(n), label: `${n} adulte${n>1?'s':''}` }))}
+                      />
                     </div>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Chambre souhaitée</label>
