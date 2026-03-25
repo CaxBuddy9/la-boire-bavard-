@@ -1,7 +1,6 @@
 'use client'
 import { useState, useRef, Suspense } from 'react'
-import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import RoomPicker from '@/components/RoomPicker'
@@ -19,6 +18,7 @@ function ContactInner() {
   const [sending, setSending] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   // Pré-remplissage depuis les params URL (venant de /chambres ou /paiement)
   const defaultArrivee = searchParams.get('arrive') || ''
@@ -135,10 +135,10 @@ function ContactInner() {
                       style={{ background: S.gold, color: '#111', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', border: 'none', padding: '16px 40px', cursor: 'pointer', opacity: sending ? .6 : 1 }}>
                       {sending ? 'Envoi...' : 'Envoyer le message'}
                     </button>
-                    <Link href={buildPaiementUrl()} onClick={(e) => { e.preventDefault(); window.location.href = buildPaiementUrl() }}
-                      style={{ background: 'transparent', border: `1px solid rgba(196,160,80,.5)`, color: S.gold, fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', textDecoration: 'none', display: 'inline-block', cursor: 'pointer' }}>
+                    <button type="button" onClick={() => router.push(buildPaiementUrl())}
+                      style={{ background: 'transparent', border: `1px solid rgba(196,160,80,.5)`, color: S.gold, fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', cursor: 'pointer' }}>
                       Payer en ligne →
-                    </Link>
+                    </button>
                   </div>
                   <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', color: 'rgba(184,192,180,.3)', marginTop: 12 }}>Réponse sous 24h · Données confidentielles · ou réservation directe par paiement en ligne</p>
                 </form>
