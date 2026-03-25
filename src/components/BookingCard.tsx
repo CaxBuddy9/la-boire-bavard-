@@ -48,8 +48,8 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
 
   return (
     <div style={{
-      background: '#0c0f0d',
-      border: '1px solid rgba(196,160,80,.18)',
+      background: '#1e2b1c',
+      border: '1px solid rgba(196,160,80,.25)',
       padding: '28px 28px 24px',
       position: 'sticky',
       top: 90,

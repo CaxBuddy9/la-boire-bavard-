@@ -30,10 +30,10 @@ type Props = {
 
 export default function DateRangePicker({ checkin, checkout, onCheckin, onCheckout }: Props) {
   const today = new Date(); today.setHours(0,0,0,0)
-  const [open, setOpen]       = useState<'in'|'out'|null>(null)
-  const [year, setYear]       = useState(today.getFullYear())
-  const [month, setMonth]     = useState(today.getMonth())
-  const [hoverDate, setHover] = useState<Date|null>(null)
+  const [open,      setOpen]  = useState<'in'|'out'|null>(null)
+  const [year,      setYear]  = useState(today.getFullYear())
+  const [month,     setMonth] = useState(today.getMonth())
+  const [hoverDay,  setHover] = useState<Date|null>(null)
 
   const checkinDate  = checkin  ? parseISO(checkin)  : null
   const checkoutDate = checkout ? parseISO(checkout) : null
@@ -65,109 +65,123 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
 
   function isInRange(d: Date) {
     if (!checkinDate) return false
-    const end = open === 'out' && hoverDate ? hoverDate : checkoutDate
+    const end = open === 'out' && hoverDay ? hoverDay : checkoutDate
     if (!end) return false
     return d > checkinDate && d < end
   }
-  function isStart(d: Date) { return !!checkinDate && sameDay(d, checkinDate) }
+  function isStart(d: Date) { return !!checkinDate  && sameDay(d, checkinDate) }
   function isEnd(d: Date)   { return !!checkoutDate && sameDay(d, checkoutDate) }
   function isPast(d: Date)  { return d < today }
+  function isHovered(d: Date) { return !!hoverDay && sameDay(d, hoverDay) }
 
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay    = getFirstDayOfWeek(year, month)
-  const cells: (Date | null)[] = [
+  const cells: (Date|null)[] = [
     ...Array(firstDay).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => new Date(year, month, i + 1)),
   ]
   while (cells.length % 7 !== 0) cells.push(null)
 
   function formatDisplay(iso: string) {
-    if (!iso) return null
     const d = parseISO(iso)
     return `${d.getDate()} ${MONTHS_FR[d.getMonth()].slice(0,3)}. ${d.getFullYear()}`
   }
 
-  const gold = '#c4a050'
+  const GOLD = '#c4a050'
 
   return (
     <div style={{ position: 'relative' }}>
 
-      {/* Champs affichage */}
+      {/* ── Champs Arrivée / Départ ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
         {([
-          { key: 'in',  label: 'Arrivée',  value: checkin },
-          { key: 'out', label: 'Départ',   value: checkout },
-        ] as const).map(({ key, label, value }) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setOpen(open === key ? null : key)}
-            style={{
-              textAlign: 'left',
-              background: open === key ? 'rgba(196,160,80,.12)' : 'rgba(255,255,255,.04)',
-              border: `1px solid ${open === key ? 'rgba(196,160,80,.6)' : 'rgba(255,255,255,.1)'}`,
-              padding: '11px 14px',
-              cursor: 'pointer',
-              transition: 'all .15s',
-              borderRadius: 3,
-            }}
-          >
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.42rem', letterSpacing: '.32em', textTransform: 'uppercase', color: open === key ? gold : 'rgba(196,160,80,.45)', marginBottom: 5 }}>
-              {label}
-            </p>
-            <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '.92rem', color: value ? 'rgba(255,255,255,.92)' : 'rgba(255,255,255,.22)' }}>
-              {value ? formatDisplay(value) : '— — —'}
-            </p>
-          </button>
-        ))}
+          { key: 'in'  as const, label: 'Arrivée',  value: checkin },
+          { key: 'out' as const, label: 'Départ',   value: checkout },
+        ]).map(({ key, label, value }) => {
+          const active = open === key
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setOpen(open === key ? null : key)}
+              style={{
+                textAlign: 'left',
+                background: active ? 'rgba(196,160,80,.13)' : 'rgba(255,255,255,.05)',
+                border: `1px solid ${active ? 'rgba(196,160,80,.55)' : 'rgba(255,255,255,.12)'}`,
+                padding: '11px 13px',
+                cursor: 'pointer',
+                transition: 'border-color .15s, background .15s',
+                borderRadius: 2,
+              }}
+            >
+              <p style={{
+                fontFamily: 'var(--font-raleway)', fontSize: '.42rem',
+                letterSpacing: '.3em', textTransform: 'uppercase',
+                color: active ? GOLD : 'rgba(196,160,80,.4)',
+                marginBottom: 5,
+              }}>
+                {label}
+              </p>
+              <p style={{
+                fontFamily: 'var(--font-playfair)', fontSize: '.9rem',
+                color: value ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.2)',
+              }}>
+                {value ? formatDisplay(value) : '— — —'}
+              </p>
+            </button>
+          )
+        })}
       </div>
 
-      {/* Calendrier dropdown */}
+      {/* ── Calendrier ── */}
       {open && (
         <div style={{
-          position: 'absolute', top: 'calc(100% + 10px)', left: 0, right: 0, zIndex: 100,
-          background: 'linear-gradient(160deg, #232b22 0%, #1c2419 100%)',
-          border: '1px solid rgba(196,160,80,.22)',
-          boxShadow: '0 20px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(196,160,80,.06)',
-          padding: '22px 20px 18px',
+          position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0, zIndex: 200,
+          background: '#2c3829',
+          border: '1px solid rgba(196,160,80,.3)',
+          boxShadow: '0 16px 48px rgba(0,0,0,.6)',
+          padding: '20px 18px 16px',
           borderRadius: 4,
         }}>
 
-          {/* Titre */}
+          {/* Indication sélection */}
           <p style={{
-            fontFamily: 'var(--font-raleway)', fontSize: '.42rem', letterSpacing: '.35em',
-            textTransform: 'uppercase', color: 'rgba(196,160,80,.65)',
-            textAlign: 'center', marginBottom: 18,
+            fontFamily: 'var(--font-raleway)', fontSize: '.42rem',
+            letterSpacing: '.3em', textTransform: 'uppercase',
+            color: GOLD, textAlign: 'center', marginBottom: 16,
           }}>
-            {open === 'in' ? 'Date d\'arrivée' : 'Date de départ'}
+            {open === 'in' ? "Choisir l'arrivée" : 'Choisir le départ'}
           </p>
 
-          {/* Navigation mois */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+          {/* ← Mois Année → */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <button type="button" onClick={prevMonth} style={{
-              background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.08)',
-              color: 'rgba(196,160,80,.7)', cursor: 'pointer',
-              fontSize: '1rem', width: 32, height: 32, borderRadius: 3,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(255,255,255,.08)', border: 'none',
+              color: 'rgba(255,255,255,.6)', cursor: 'pointer',
+              width: 30, height: 30, fontSize: '1.1rem', borderRadius: 2,
             }}>‹</button>
-            <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.05rem', color: 'rgba(255,255,255,.88)', letterSpacing: '.03em' }}>
-              {MONTHS_FR[month]} <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.9rem' }}>{year}</span>
+            <p style={{
+              fontFamily: 'var(--font-playfair)', fontSize: '1rem',
+              color: 'rgba(255,255,255,.9)',
+            }}>
+              {MONTHS_FR[month]}{' '}
+              <span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.85rem' }}>{year}</span>
             </p>
             <button type="button" onClick={nextMonth} style={{
-              background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.08)',
-              color: 'rgba(196,160,80,.7)', cursor: 'pointer',
-              fontSize: '1rem', width: 32, height: 32, borderRadius: 3,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(255,255,255,.08)', border: 'none',
+              color: 'rgba(255,255,255,.6)', cursor: 'pointer',
+              width: 30, height: 30, fontSize: '1.1rem', borderRadius: 2,
             }}>›</button>
           </div>
 
-          {/* Jours de semaine */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 8 }}>
+          {/* En-têtes jours */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6 }}>
             {DAYS_FR.map(d => (
               <p key={d} style={{
-                textAlign: 'center', fontFamily: 'var(--font-raleway)',
+                textAlign: 'center',
+                fontFamily: 'var(--font-raleway)',
                 fontSize: '.42rem', letterSpacing: '.12em', textTransform: 'uppercase',
-                color: 'rgba(196,160,80,.35)', padding: '3px 0',
+                color: 'rgba(196,160,80,.5)', paddingBottom: 4,
               }}>
                 {d}
               </p>
@@ -175,44 +189,49 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
           </div>
 
           {/* Grille jours */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
             {cells.map((d, i) => {
               if (!d) return <div key={i} />
+
               const past    = isPast(d)
               const start   = isStart(d)
               const end     = isEnd(d)
               const range   = isInRange(d)
+              const hover   = !past && isHovered(d)
               const isToday = sameDay(d, today)
+
+              let bg = 'transparent'
+              if (start || end) bg = GOLD
+              else if (hover && !range) bg = 'rgba(196,160,80,.25)'
+              else if (range) bg = hover ? 'rgba(196,160,80,.3)' : 'rgba(196,160,80,.15)'
+
+              let color = 'rgba(255,255,255,.78)'
+              if (start || end) color = '#111'
+              else if (past) color = 'rgba(255,255,255,.18)'
+              else if (isToday) color = GOLD
+              else if (hover) color = 'white'
 
               return (
                 <button
                   key={i}
                   type="button"
-                  disabled={past}
-                  onClick={() => !past && selectDay(d)}
-                  onMouseEnter={() => setHover(d)}
+                  onClick={() => { if (!past) selectDay(d) }}
+                  onMouseEnter={() => { if (!past) setHover(d) }}
                   onMouseLeave={() => setHover(null)}
                   style={{
                     padding: '8px 0',
-                    border: isToday && !start && !end ? '1px solid rgba(196,160,80,.35)' : '1px solid transparent',
-                    borderRadius: start || end ? 3 : range ? 0 : 3,
+                    border: isToday && !start && !end
+                      ? '1px solid rgba(196,160,80,.4)'
+                      : '1px solid transparent',
+                    borderRadius: 2,
                     cursor: past ? 'default' : 'pointer',
-                    background: start || end
-                      ? gold
-                      : range
-                        ? 'rgba(196,160,80,.14)'
-                        : 'transparent',
-                    color: start || end
-                      ? '#111'
-                      : past
-                        ? 'rgba(255,255,255,.15)'
-                        : isToday
-                          ? gold
-                          : 'rgba(255,255,255,.75)',
+                    background: bg,
+                    color,
                     fontFamily: 'var(--font-raleway)',
                     fontSize: '.8rem',
-                    fontWeight: start || end ? 700 : isToday ? 600 : 400,
-                    transition: 'background .12s, color .12s',
+                    fontWeight: start || end ? 700 : 400,
+                    transition: 'background .1s, color .1s',
+                    textAlign: 'center',
                   }}
                 >
                   {d.getDate()}
@@ -221,21 +240,19 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
             })}
           </div>
 
-          {/* Résumé dates sélectionnées */}
-          {(checkin || checkout) && (
-            <div style={{
-              marginTop: 16, paddingTop: 14,
-              borderTop: '1px solid rgba(255,255,255,.07)',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            }}>
-              <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', color: 'rgba(255,255,255,.35)' }}>
-                {checkin ? `↗ ${formatDisplay(checkin)}` : ''}
-              </p>
-              <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', color: checkout ? gold : 'rgba(255,255,255,.2)' }}>
-                {checkout ? `↙ ${formatDisplay(checkout)}` : open === 'out' ? 'Choisir le départ…' : ''}
-              </p>
-            </div>
-          )}
+          {/* Résumé en bas */}
+          <div style={{
+            marginTop: 14, paddingTop: 12,
+            borderTop: '1px solid rgba(255,255,255,.08)',
+            display: 'flex', justifyContent: 'space-between',
+          }}>
+            <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', color: checkin ? 'rgba(255,255,255,.5)' : 'rgba(255,255,255,.2)' }}>
+              {checkin ? `↗ ${formatDisplay(checkin)}` : 'Arrivée non définie'}
+            </span>
+            <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', color: checkout ? GOLD : 'rgba(255,255,255,.2)' }}>
+              {checkout ? `↙ ${formatDisplay(checkout)}` : open === 'out' ? 'Cliquez sur le départ…' : ''}
+            </span>
+          </div>
         </div>
       )}
     </div>
