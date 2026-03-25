@@ -322,218 +322,153 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   )
 }
 
-// ── Planning (Calendar) ─────────────────────────────────────────────────────
+// ── Planning Gantt ──────────────────────────────────────────────────────────
 function Planning({ reservations }: { reservations: Reservation[] }) {
   const now = new Date()
   const [year,  setYear]  = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
-  const [hoveredDay, setHoveredDay] = useState<string | null>(null)
+  const [tooltip, setTooltip] = useState<{ r: Reservation, x: number, y: number } | null>(null)
 
   const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y-1) } else setMonth(m => m-1) }
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y+1) } else setMonth(m => m+1) }
 
-  // Build a map: date ISO → list of reservations active that day
-  const dayMap: Record<string, Reservation[]> = {}
-  for (const r of reservations) {
-    if (r.status === 'cancelled') continue
-    const ci = new Date(r.check_in)
-    const co = new Date(r.check_out)
-    const cur = new Date(ci)
-    while (cur < co) {
-      const key = cur.toISOString().split('T')[0]
-      if (!dayMap[key]) dayMap[key] = []
-      dayMap[key].push(r)
-      cur.setDate(cur.getDate() + 1)
-    }
+  const totalDays = new Date(year, month + 1, 0).getDate()
+  const days = Array.from({ length: totalDays }, (_, i) => i + 1)
+  const todayIso = isoDate(now.getFullYear(), now.getMonth(), now.getDate())
+  const CELL = 34
+  const ROW_LABEL = 110
+
+  const active = reservations.filter(r => r.status !== 'cancelled')
+
+  function getBar(r: Reservation) {
+    const monthStart = isoDate(year, month, 1)
+    const monthEnd   = isoDate(year, month, totalDays)
+    if (r.check_out <= monthStart || r.check_in > monthEnd) return null
+    const startDay = r.check_in >= monthStart ? parseInt(r.check_in.split('-')[2]) - 1 : 0
+    const endDay   = r.check_out <= monthEnd  ? parseInt(r.check_out.split('-')[2]) - 1 : totalDays
+    return { startDay, span: Math.max(1, endDay - startDay) }
   }
 
-  // Days in month + offset
-  const firstDay = new Date(year, month, 1)
-  const totalDays = new Date(year, month + 1, 0).getDate()
-  // Monday=0 offset
-  const startOffset = (firstDay.getDay() + 6) % 7
-
-  const todayIso = now.toISOString().split('T')[0]
-
-  const cells: (number | null)[] = [
-    ...Array(startOffset).fill(null),
-    ...Array.from({ length: totalDays }, (_, i) => i + 1),
-  ]
-  // Pad to full weeks
-  while (cells.length % 7 !== 0) cells.push(null)
-
-  // Upcoming tasks / arrivals this month
-  const arrivals = reservations.filter(r => {
-    if (r.status === 'cancelled') return false
-    const ci = r.check_in
-    return ci.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)
-  }).sort((a, b) => a.check_in.localeCompare(b.check_in))
-
-  const departures = reservations.filter(r => {
-    if (r.status === 'cancelled') return false
-    const co = r.check_out
-    return co.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)
-  }).sort((a, b) => a.check_out.localeCompare(b.check_out))
+  const monthPrefix = `${year}-${String(month+1).padStart(2,'0')}`
+  const arrivals   = active.filter(r => r.check_in.startsWith(monthPrefix)).sort((a,b) => a.check_in.localeCompare(b.check_in))
+  const departures = active.filter(r => r.check_out.startsWith(monthPrefix)).sort((a,b) => a.check_out.localeCompare(b.check_out))
 
   return (
     <div>
-      {/* Month nav */}
+      {/* Nav mois */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
         <button onClick={prevMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.5)', padding: '6px 14px', cursor: 'pointer', fontFamily: 'system-ui' }}>←</button>
-        <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f5f0e8' }}>
-          {MONTHS_FR[month]} {year}
-        </div>
+        <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f5f0e8' }}>{MONTHS_FR[month]} {year}</div>
         <button onClick={nextMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.5)', padding: '6px 14px', cursor: 'pointer', fontFamily: 'system-ui' }}>→</button>
       </div>
 
-      {/* Légende chambres */}
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-        {ROOMS.map(r => (
-          <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.7rem', color: 'rgba(255,255,255,.5)' }}>
-            <span style={{ width: 10, height: 10, borderRadius: 2, background: ROOM_COLOR[r], display: 'inline-block' }} />
-            {r}
-          </div>
-        ))}
-      </div>
-
-      {/* Calendar grid */}
-      <div style={{ background: '#131a13', border: '1px solid rgba(255,255,255,.07)', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
-        {/* Day headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-          {DAYS_FR.map(d => (
-            <div key={d} style={{ padding: '8px 0', textAlign: 'center', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.25)' }}>{d}</div>
-          ))}
-        </div>
-        {/* Weeks */}
-        {Array.from({ length: cells.length / 7 }, (_, wi) => (
-          <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)' }}>
-            {cells.slice(wi*7, wi*7+7).map((day, di) => {
-              const iso = day ? isoDate(year, month, day) : null
-              const resos = iso ? (dayMap[iso] || []) : []
+      {/* Gantt */}
+      <div style={{ overflowX: 'auto', marginBottom: 24 }}>
+        <div style={{ minWidth: ROW_LABEL + CELL * totalDays }}>
+          {/* En-tête jours */}
+          <div style={{ display: 'flex', marginLeft: ROW_LABEL }}>
+            {days.map(d => {
+              const iso = isoDate(year, month, d)
               const isToday = iso === todayIso
-              const isHovered = iso === hoveredDay
+              const dow = new Date(year, month, d).getDay()
+              const isWeekend = dow === 0 || dow === 6
               return (
-                <div key={di}
-                  onMouseEnter={() => iso && setHoveredDay(iso)}
-                  onMouseLeave={() => setHoveredDay(null)}
-                  style={{
-                    minHeight: 56,
-                    padding: '6px 5px 4px',
-                    borderRight: di < 6 ? '1px solid rgba(255,255,255,.04)' : 'none',
-                    borderBottom: wi < cells.length/7-1 ? '1px solid rgba(255,255,255,.04)' : 'none',
-                    background: isToday ? 'rgba(196,160,80,.06)' : isHovered && resos.length > 0 ? 'rgba(255,255,255,.03)' : 'transparent',
-                    position: 'relative',
-                    cursor: resos.length > 0 ? 'pointer' : 'default',
-                  }}>
-                  {day && (
-                    <>
-                      <div style={{
-                        fontSize: '0.72rem', fontWeight: isToday ? 700 : 400,
-                        color: isToday ? '#c4a050' : 'rgba(255,255,255,.4)',
-                        marginBottom: 4,
-                      }}>{day}</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {resos.map((r, ri) => (
-                          <div key={ri} style={{
-                            background: ROOM_COLOR[r.room_id] || '#c4a050',
-                            opacity: 0.85,
-                            borderRadius: 2,
-                            padding: '1px 4px',
-                            fontSize: '0.58rem',
-                            color: '#0a0f0a',
-                            fontWeight: 600,
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                          }}>
-                            {r.room_id.replace('Côté ', '')}
-                          </div>
-                        ))}
-                      </div>
-                      {/* Tooltip on hover */}
-                      {isHovered && resos.length > 0 && (
-                        <div style={{
-                          position: 'absolute', zIndex: 20,
-                          top: '100%', left: di > 3 ? 'auto' : 0, right: di > 3 ? 0 : 'auto',
-                          background: '#1e2a1e', border: '1px solid rgba(196,160,80,.25)',
-                          padding: '10px 12px', minWidth: 200,
-                          fontSize: '0.75rem', color: '#f5f0e8',
-                          boxShadow: '0 4px 20px rgba(0,0,0,.5)',
-                        }}>
-                          {resos.map((r, ri) => (
-                            <div key={ri} style={{ marginBottom: ri < resos.length-1 ? 10 : 0 }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                                <span style={{ width: 8, height: 8, borderRadius: 1, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
-                                <strong>{r.guest_name}</strong>
-                              </div>
-                              <div style={{ color: 'rgba(255,255,255,.45)', fontSize: '0.68rem', paddingLeft: 14 }}>
-                                {r.room_id} · {nights(r.check_in, r.check_out)} nuit{nights(r.check_in, r.check_out)>1?'s':''}
-                              </div>
-                              <div style={{ color: 'rgba(255,255,255,.35)', fontSize: '0.65rem', paddingLeft: 14 }}>
-                                {fmtDate(r.check_in)} → {fmtDate(r.check_out)}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
+                <div key={d} style={{ width: CELL, flexShrink: 0, textAlign: 'center', fontSize: '0.6rem', paddingBottom: 6, color: isToday ? '#c4a050' : isWeekend ? 'rgba(255,255,255,.4)' : 'rgba(255,255,255,.25)', fontWeight: isToday ? 700 : 400, borderLeft: isToday ? '1px solid rgba(196,160,80,.4)' : '1px solid transparent' }}>
+                  {d}
                 </div>
               )
             })}
           </div>
-        ))}
+          {/* Lignes chambres */}
+          {ROOMS.map(roomName => {
+            const roomResas = active.filter(r => r.room_id === roomName)
+            return (
+              <div key={roomName} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+                <div style={{ width: ROW_LABEL, flexShrink: 0, paddingRight: 10, fontSize: '0.7rem', color: 'rgba(255,255,255,.55)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: ROOM_COLOR[roomName], flexShrink: 0 }} />
+                  {roomName.replace('Côté ', '')}
+                </div>
+                <div style={{ position: 'relative', height: 36, flex: 1 }}>
+                  <div style={{ display: 'flex', height: '100%' }}>
+                    {days.map(d => {
+                      const iso = isoDate(year, month, d)
+                      const isToday = iso === todayIso
+                      const dow = new Date(year, month, d).getDay()
+                      const isWeekend = dow === 0 || dow === 6
+                      return (
+                        <div key={d} style={{ width: CELL, flexShrink: 0, height: '100%', background: isToday ? 'rgba(196,160,80,.06)' : isWeekend ? 'rgba(255,255,255,.015)' : 'transparent', borderLeft: isToday ? '1px solid rgba(196,160,80,.25)' : '1px solid rgba(255,255,255,.04)', borderTop: '1px solid rgba(255,255,255,.04)', borderBottom: '1px solid rgba(255,255,255,.04)' }} />
+                      )
+                    })}
+                  </div>
+                  {roomResas.map(r => {
+                    const bar = getBar(r)
+                    if (!bar) return null
+                    const isPending = r.status === 'pending'
+                    return (
+                      <div key={r.id}
+                        onMouseEnter={e => setTooltip({ r, x: e.clientX, y: e.clientY })}
+                        onMouseLeave={() => setTooltip(null)}
+                        style={{ position: 'absolute', top: 4, height: 28, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(255,255,255,.4)' : 'none' }}>
+                        <span style={{ fontSize: '0.65rem', fontWeight: 600, color: '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {r.guest_name}{isPending ? ' · en attente' : ''}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
-      {/* À faire ce mois */}
+      {/* Légende */}
+      <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.65rem', color: 'rgba(255,255,255,.4)' }}>
+          <div style={{ width: 24, height: 10, borderRadius: 2, background: 'rgba(109,184,122,.88)' }} /> Confirmée / Payée
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.65rem', color: 'rgba(255,255,255,.4)' }}>
+          <div style={{ width: 24, height: 10, borderRadius: 2, background: 'rgba(255,255,255,.3)', border: '1px dashed rgba(255,255,255,.5)' }} /> En attente
+        </div>
+      </div>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div style={{ position: 'fixed', zIndex: 100, top: tooltip.y + 12, left: Math.min(tooltip.x + 8, window.innerWidth - 230), background: '#1e2a1e', border: '1px solid rgba(196,160,80,.3)', padding: '12px 14px', borderRadius: 4, fontSize: '0.78rem', color: '#f5f0e8', boxShadow: '0 8px 32px rgba(0,0,0,.6)', pointerEvents: 'none', minWidth: 200 }}>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>{tooltip.r.guest_name}</div>
+          <div style={{ color: 'rgba(255,255,255,.5)', fontSize: '0.7rem', marginBottom: 3 }}>{tooltip.r.room_id}</div>
+          <div style={{ color: '#c4a050', fontSize: '0.7rem', marginBottom: 3 }}>{fmtDate(tooltip.r.check_in)} → {fmtDate(tooltip.r.check_out)}</div>
+          <div style={{ color: 'rgba(255,255,255,.4)', fontSize: '0.68rem' }}>{tooltip.r.guests} pers. · {nights(tooltip.r.check_in, tooltip.r.check_out)} nuits · {tooltip.r.total_price} €</div>
+          {tooltip.r.guest_phone && <div style={{ color: 'rgba(196,160,80,.7)', fontSize: '0.68rem', marginTop: 4 }}>{tooltip.r.guest_phone}</div>}
+        </div>
+      )}
+
+      {/* Arrivées / Départs */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        {/* Arrivées */}
         <div style={{ background: '#131a13', border: '1px solid rgba(109,184,122,.15)', borderRadius: 4, padding: '16px 18px' }}>
-          <div style={{ fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6db87a', marginBottom: 12 }}>
-            Arrivées · {MONTHS_FR[month]}
-          </div>
-          {arrivals.length === 0 ? (
-            <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,.25)' }}>Aucune</div>
-          ) : arrivals.map(r => (
-            <div key={r.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <div style={{ fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6db87a', marginBottom: 12 }}>Arrivées · {MONTHS_FR[month]}</div>
+          {arrivals.length === 0 ? <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,.25)' }}>Aucune</div>
+          : arrivals.map(r => (
+            <div key={r.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 1, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.85rem', color: '#f5f0e8', fontWeight: 500 }}>{r.guest_name}</span>
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,.4)', paddingLeft: 16 }}>
-                {fmtDate(r.check_in)} — {r.room_id}
-              </div>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.3)', paddingLeft: 16 }}>
-                {r.guests} pers. · {nights(r.check_in, r.check_out)} nuit{nights(r.check_in, r.check_out)>1?'s':''} · {r.total_price} €
-              </div>
-              {r.guest_phone && (
-                <a href={`tel:${r.guest_phone}`} style={{ display: 'inline-block', paddingLeft: 16, fontSize: '0.68rem', color: '#c4a050', textDecoration: 'none', marginTop: 3 }}>
-                  {r.guest_phone}
-                </a>
-              )}
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', paddingLeft: 16 }}>{fmtDate(r.check_in)} · {r.room_id} · {nights(r.check_in, r.check_out)} nuits</div>
+              {r.guest_phone && <a href={`tel:${r.guest_phone}`} style={{ display: 'block', paddingLeft: 16, fontSize: '0.68rem', color: '#c4a050', textDecoration: 'none', marginTop: 2 }}>{r.guest_phone}</a>}
             </div>
           ))}
         </div>
-
-        {/* Départs */}
         <div style={{ background: '#131a13', border: '1px solid rgba(196,160,80,.15)', borderRadius: 4, padding: '16px 18px' }}>
-          <div style={{ fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c4a050', marginBottom: 12 }}>
-            Départs · {MONTHS_FR[month]}
-          </div>
-          {departures.length === 0 ? (
-            <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,.25)' }}>Aucun</div>
-          ) : departures.map(r => (
-            <div key={r.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <div style={{ fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c4a050', marginBottom: 12 }}>Départs · {MONTHS_FR[month]}</div>
+          {departures.length === 0 ? <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,.25)' }}>Aucun</div>
+          : departures.map(r => (
+            <div key={r.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 1, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
                 <span style={{ fontSize: '0.85rem', color: '#f5f0e8', fontWeight: 500 }}>{r.guest_name}</span>
               </div>
-              <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,.4)', paddingLeft: 16 }}>
-                {fmtDate(r.check_out)} — {r.room_id}
-              </div>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.3)', paddingLeft: 16 }}>
-                {r.guests} pers. · {nights(r.check_in, r.check_out)} nuit{nights(r.check_in, r.check_out)>1?'s':''} · {r.total_price} €
-              </div>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', paddingLeft: 16 }}>{fmtDate(r.check_out)} · {r.room_id}</div>
             </div>
           ))}
         </div>
