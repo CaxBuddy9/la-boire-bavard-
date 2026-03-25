@@ -194,7 +194,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       {/* CTA principal */}
       <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
         <Link
-          href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${fmtDate(checkin)}` : ''}${checkout ? `&depart=${fmtDate(checkout)}` : ''}${persons ? `&pers=${persons}` : ''}`}
+          href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${checkin}` : ''}${checkout ? `&depart=${checkout}` : ''}${persons ? `&pers=${persons}` : ''}`}
           style={{
             flex: '0 0 auto',
             textAlign: 'center',
