@@ -15,7 +15,7 @@ export default function MeteoWidget() {
   const [data, setData] = useState<{ temp: number; icon: string } | null>(null)
 
   useEffect(() => {
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=47.368&longitude=-0.511&current=temperature_2m,weathercode&timezone=Europe%2FParis&forecast_days=1')
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=47.3933&longitude=-0.3710&current=temperature_2m,weathercode&timezone=Europe%2FParis&forecast_days=1')
       .then((r) => r.json())
       .then((d) => {
         setData({

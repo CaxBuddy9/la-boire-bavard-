@@ -256,7 +256,7 @@ function ContactInner() {
             {/* GPS box */}
             <div style={{ marginTop: 8, padding: '16px 20px', background: 'rgba(196,160,80,.07)', borderLeft: `2px solid rgba(196,160,80,.4)` }}>
               <p style={{ fontSize: '.5rem', letterSpacing: '.32em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 6 }}>Coordonnées GPS</p>
-              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.3680° N, 0.5110° O</p>
+              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.3933° N, 0.3710° O</p>
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(184,192,180,.4)', marginTop: 4 }}>4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice</p>
             </div>
           </div>
@@ -276,7 +276,7 @@ function ContactInner() {
             ))}
             <div style={{ padding: 10 }}>
               <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.526%2C47.358%2C-0.496%2C47.378&layer=mapnik&marker=47.368%2C-0.511"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.386%2C47.383%2C-0.356%2C47.403&layer=mapnik&marker=47.3933%2C-0.3710"
                 style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(40%) contrast(0.88) sepia(10%)' }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
