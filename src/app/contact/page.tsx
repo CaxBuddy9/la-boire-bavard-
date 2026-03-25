@@ -40,7 +40,8 @@ function ContactInner() {
       ? Math.max(1, Math.round((new Date(depart).getTime() - new Date(arrivee).getTime()) / 86400000))
       : 1
     const fullNom = `${prenom} ${nom}`.trim()
-    const params = new URLSearchParams({ chambre, arrive: arrivee, depart, nuits: String(nuits), pers: adultes, nom: fullNom, email })
+    const tel = (formRef.current?.elements.namedItem('tel') as HTMLInputElement)?.value || ''
+    const params = new URLSearchParams({ chambre, arrive: arrivee, depart, nuits: String(nuits), pers: adultes, nom: fullNom, email, tel })
     return `/paiement?${params.toString()}`
   }
 

@@ -112,7 +112,7 @@ function PaiementInner() {
   // Étape 1 : infos guest (pré-rempli si venant du formulaire contact)
   const [nom,        setNom]        = useState(params.get('nom')   || '')
   const [email,      setEmail]      = useState(params.get('email') || '')
-  const [tel,        setTel]        = useState('')
+  const [tel,        setTel]        = useState(params.get('tel')   || '')
   const [tableHotes, setTableHotes] = useState(false)
   const [step,       setStep]       = useState<1|2>(1)
 
@@ -237,7 +237,7 @@ function PaiementInner() {
               </div>
             )}
 
-            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}`}
+            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}${nom ? `&nom=${encodeURIComponent(nom)}` : ''}${email ? `&email=${encodeURIComponent(email)}` : ''}`}
               style={{
                 display: 'block', width: '100%', marginBottom: 12, padding: '14px',
                 border: '1px solid rgba(196,160,80,.35)', color: '#c4a050',
