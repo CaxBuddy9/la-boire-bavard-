@@ -18,14 +18,14 @@ const NAV = [
 ]
 
 const LABELS = [
-  { href: 'https://www.loire-layon-aubance.fr',      C: LogoLLA,              label: 'Loire Layon Aubance' },
-  { href: 'https://anjou-vignoble-villages.com',     C: LogoDestinationAnjou, label: 'Destination Anjou' },
-  { href: 'https://www.qualite-tourisme.gouv.fr',    C: LogoQualiteTourisme,  label: 'Qualité Tourisme' },
-  { href: '#',                                       C: LogoOfficeTourisme,   label: 'Office de Tourisme' },
-  { href: 'https://www.vignobles-et-decouvertes.fr', C: LogoVignobles,        label: 'Vignobles & Découvertes' },
-  { href: 'https://www.france-velo-tourisme.com',    C: LogoAccueilVelo,      label: 'Accueil Vélo' },
-  { href: 'https://www.loireavelo.fr',               C: LogoLoireVelo,        label: 'La Loire à Vélo' },
-  { href: '#',                                       C: LogoEcoAttitude,      label: 'Éco Attitude' },
+  { href: 'https://www.loire-layon-aubance.fr', C: LogoLLA,              label: 'Loire Layon Aubance' },
+  { href: 'https://anjou-vignoble-villages.com', C: LogoDestinationAnjou, label: 'Destination Anjou' },
+  { href: null,                                  C: LogoQualiteTourisme,  label: 'Qualité Tourisme' },
+  { href: null,                                  C: LogoOfficeTourisme,   label: 'Office de Tourisme' },
+  { href: null,                                  C: LogoVignobles,        label: 'Vignobles & Découvertes' },
+  { href: null,                                  C: LogoAccueilVelo,      label: 'Accueil Vélo' },
+  { href: 'https://www.loireavelo.fr',           C: LogoLoireVelo,        label: 'La Loire à Vélo' },
+  { href: null,                                  C: LogoEcoAttitude,      label: 'Éco Attitude' },
 ]
 
 export default function Footer() {
@@ -51,29 +51,31 @@ export default function Footer() {
           ))}
         </nav>
 
-        {/* Tous les logos — une seule rangée */}
-        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 mb-10"
-          style={{ opacity: 0.45 }}>
-          {LABELS.map(({ href, C, label }) => (
-            <a key={label} href={href}
-              target={href !== '#' ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              title={label}
+        {/* Tous les logos — une seule rangée avec barres dorées */}
+        <div className="flex justify-center items-center gap-x-4 mb-10 overflow-x-hidden"
+          style={{ opacity: 0.45, flexWrap: 'nowrap' }}>
+          <span style={{ width: 32, height: 1, background: 'rgba(196,160,80,.6)', flexShrink: 0 }} />
+          {LABELS.map(({ href, C, label }) => href ? (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}
               className="hover:opacity-100 transition-opacity"
-              style={{ display: 'flex', alignItems: 'center', height: 40 }}
+              style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
             >
               <C />
             </a>
+          ) : (
+            <span key={label} title={label} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              <C />
+            </span>
           ))}
-          <span style={{ width: 1, height: 28, background: 'rgba(255,255,255,.12)', flexShrink: 0 }} />
           <a href="https://golfangers.fr" target="_blank" rel="noopener noreferrer"
             className="hover:opacity-100 transition-opacity"
-            style={{ display: 'flex', alignItems: 'center', height: 40 }}
+            style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
           >
-            <Image src="/logos/golf-angers.png" alt="Golf d'Angers" height={32} width={110}
-              className="object-contain w-auto" style={{ height: 32, mixBlendMode: 'screen' }}
+            <Image src="/logos/golf-angers.png" alt="Golf d'Angers" height={36} width={120}
+              className="object-contain w-auto" style={{ height: 36, mixBlendMode: 'screen' }}
             />
           </a>
+          <span style={{ width: 32, height: 1, background: 'rgba(196,160,80,.6)', flexShrink: 0 }} />
         </div>
 
         {/* Séparateur gold */}

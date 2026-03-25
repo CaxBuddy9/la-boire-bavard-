@@ -6,7 +6,7 @@ import RoomPicker from '@/components/RoomPicker'
 const S = { slate: '#1a2318', slate2: '#222b20', gold: '#c4a050', cream: 'rgba(240,235,225,.75)', dim: 'rgba(184,192,180,.5)', border: 'rgba(196,160,80,.25)' }
 
 const ACCESS = [
-  { icon: '◇', title: 'En voiture', lines: ['<strong>Depuis Angers</strong> — 25 min via D751', '<strong>Depuis Saumur</strong> — 20 min via D952', '<strong>GPS :</strong> 4 ch. de la Boire Bavard, 49320'] },
+  { icon: '◇', title: 'En voiture', lines: [<><strong>Depuis Angers</strong> — 25 min via D751</>, <><strong>Depuis Saumur</strong> — 20 min via D952</>, <><strong>GPS :</strong> 4 ch. de la Boire Bavard, 49320</>] },
   { icon: '❧', title: 'En train', lines: ['Gare d\'Angers-Saint-Laud (TGV)', 'Puis taxi ou location de vélo', 'Navette possible sur demande à Sandrine'] },
   { icon: '≋', title: 'À vélo', lines: ['Loire à Vélo — itinéraire EV6 à 2 km', 'Anjou à Vélo accessible directement', 'Stationnement vélos sécurisé sur place'] },
 ]
@@ -165,7 +165,7 @@ export default function ContactPage() {
                 <div>
                   <p style={{ fontSize: '.56rem', letterSpacing: '.28em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 8 }}>{a.title}</p>
                   {a.lines.map((l, i) => (
-                    <p key={i} style={{ color: 'rgba(184,192,180,.6)', fontFamily: 'var(--font-raleway)', fontSize: '.82rem', lineHeight: 1.75 }} dangerouslySetInnerHTML={{ __html: l }} />
+                    <p key={i} style={{ color: 'rgba(184,192,180,.6)', fontFamily: 'var(--font-raleway)', fontSize: '.82rem', lineHeight: 1.75 }}>{l}</p>
                   ))}
                 </div>
               </div>
