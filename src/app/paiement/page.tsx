@@ -109,9 +109,9 @@ function PaiementInner() {
   const nuits   = Number(params.get('nuits') || 1)
   const pers    = Number(params.get('pers')  || 2)
 
-  // Étape 1 : infos guest
-  const [nom,        setNom]        = useState('')
-  const [email,      setEmail]      = useState('')
+  // Étape 1 : infos guest (pré-rempli si venant du formulaire contact)
+  const [nom,        setNom]        = useState(params.get('nom')   || '')
+  const [email,      setEmail]      = useState(params.get('email') || '')
   const [tel,        setTel]        = useState('')
   const [tableHotes, setTableHotes] = useState(false)
   const [step,       setStep]       = useState<1|2>(1)

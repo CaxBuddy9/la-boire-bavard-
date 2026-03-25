@@ -38,9 +38,16 @@ export async function POST(req: NextRequest) {
     const pi       = event.data.object
     const meta     = pi.metadata || {}
 
-    // Convertir la date JJ/MM/AAAA → YYYY-MM-DD pour Supabase
+    // Convertir la date vers YYYY-MM-DD pour Supabase (supporte DD/MM/YYYY et YYYY-MM-DD)
     const parseDate = (s: string) => {
       if (!s) return null
+      if (s.includes('-')) {
+        // Format ISO yyyy-mm-dd (venant du formulaire contact)
+        const parts = s.split('-')
+        if (parts.length === 3 && parts[0].length === 4) return s
+        return null
+      }
+      // Format dd/mm/yyyy (venant de BookingCard)
       const [d, m, y] = s.split('/')
       if (!d || !m || !y) return null
       return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
