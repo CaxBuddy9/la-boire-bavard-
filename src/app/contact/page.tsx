@@ -46,7 +46,16 @@ function ContactInner() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setSending(true)
-    await new Promise((r) => setTimeout(r, 800))
+    const form = formRef.current!
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement)?.value || ''
+    const tel     = (form.elements.namedItem('tel')     as HTMLInputElement)?.value || ''
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom, nom, email, tel, arrivee, depart, adultes, chambre, message }),
+      })
+    } catch {}
     setSent(true)
     setSending(false)
   }

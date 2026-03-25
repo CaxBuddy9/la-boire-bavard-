@@ -734,6 +734,14 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                         ))}
                       </div>
 
+                      {/* Message du client */}
+                      {r.message && (
+                        <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.18)', padding: '12px 14px', marginBottom: 14, borderRadius: 3 }}>
+                          <span style={{ color: 'rgba(196,160,80,.6)', fontSize: '0.6rem', textTransform: 'uppercase' as const, letterSpacing: '0.15em', display: 'block', marginBottom: 6 }}>Message</span>
+                          <p style={{ color: 'rgba(255,255,255,.75)', fontSize: '0.82rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' as const }}>{r.message}</p>
+                        </div>
+                      )}
+
                       {/* Actions */}
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
                         {r.status === 'pending' && (
