@@ -43,7 +43,7 @@ function ContactInner() {
     setSending(false)
   }
 
-  const inputCls = 'w-full px-4 py-3 font-sans text-sm focus:outline-none transition-colors'
+  const inputCls = 'w-full px-3 py-2 font-sans text-sm focus:outline-none transition-colors'
   const labelCls = 'block font-sans text-[0.58rem] tracking-[0.28em] uppercase mb-2'
 
   return (

@@ -108,22 +108,22 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
                 textAlign: 'left',
                 background: active ? 'rgba(196,160,80,.13)' : 'rgba(255,255,255,.05)',
                 border: `1px solid ${active ? 'rgba(196,160,80,.55)' : 'rgba(255,255,255,.12)'}`,
-                padding: '11px 13px',
+                padding: '7px 10px',
                 cursor: 'pointer',
                 transition: 'border-color .15s, background .15s',
                 borderRadius: 2,
               }}
             >
               <p style={{
-                fontFamily: 'var(--font-raleway)', fontSize: '.42rem',
-                letterSpacing: '.3em', textTransform: 'uppercase',
+                fontFamily: 'var(--font-raleway)', fontSize: '.38rem',
+                letterSpacing: '.28em', textTransform: 'uppercase',
                 color: active ? GOLD : 'rgba(196,160,80,.4)',
-                marginBottom: 5,
+                marginBottom: 3,
               }}>
                 {label}
               </p>
               <p style={{
-                fontFamily: 'var(--font-playfair)', fontSize: '.9rem',
+                fontFamily: 'var(--font-playfair)', fontSize: '.78rem',
                 color: value ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.2)',
               }}>
                 {value ? formatDisplay(value) : '— — —'}
