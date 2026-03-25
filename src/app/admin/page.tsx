@@ -554,7 +554,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+    const interval = setInterval(load, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   const updateStatus = async (id: string, status: string) => {
     await fetch('/api/admin/reservations', {
