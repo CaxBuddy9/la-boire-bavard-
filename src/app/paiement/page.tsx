@@ -237,6 +237,26 @@ function PaiementInner() {
               </div>
             )}
 
+            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}`}
+              style={{
+                display: 'block', width: '100%', marginBottom: 12, padding: '14px',
+                border: '1px solid rgba(196,160,80,.35)', color: '#c4a050',
+                fontFamily: 'Raleway, sans-serif', fontSize: '0.63rem',
+                letterSpacing: '0.2em', textTransform: 'uppercase', textAlign: 'center',
+                textDecoration: 'none', background: 'transparent',
+              }}>
+              Contacter Sandrine sans payer en ligne
+            </Link>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 16 }}>
+              Réservation par échange direct · virement ou chèque
+            </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
+              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.2)' }}>ou payer en ligne</span>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
+            </div>
+
             <button type="submit" style={{
               width: '100%', background: '#c4a050', color: '#0d110e',
               border: 'none', padding: '15px', cursor: 'pointer',
@@ -245,26 +265,6 @@ function PaiementInner() {
             }}>
               Continuer vers le paiement →
             </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '20px 0 0' }}>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
-              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.2)' }}>ou</span>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
-            </div>
-
-            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}`}
-              style={{
-                display: 'block', width: '100%', marginTop: 12, padding: '14px',
-                border: '1px solid rgba(196,160,80,.35)', color: '#c4a050',
-                fontFamily: 'Raleway, sans-serif', fontSize: '0.63rem',
-                letterSpacing: '0.2em', textTransform: 'uppercase', textAlign: 'center',
-                textDecoration: 'none', background: 'transparent',
-              }}>
-              Contacter Sandrine sans payer en ligne
-            </Link>
-            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginTop: 8 }}>
-              Réservation par échange direct · virement ou chèque
-            </p>
           </form>
         )}
 
