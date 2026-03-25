@@ -27,12 +27,11 @@ function ContactInner() {
 
   const [arrivee, setArrivee] = useState(defaultArrivee)
   const [depart,  setDepart]  = useState(defaultDepart)
+  const [chambre, setChambre] = useState(defaultChambre)
+  const [adultes, setAdultes] = useState('2')
 
   function buildPaiementUrl() {
-    const form    = formRef.current
-    const chambre = (form?.elements.namedItem('chambre') as HTMLInputElement)?.value || defaultChambre
-    const adultes = (form?.elements.namedItem('adultes') as HTMLSelectElement)?.value || '2'
-    const nuits   = arrivee && depart
+    const nuits = arrivee && depart
       ? Math.max(1, Math.round((new Date(depart).getTime() - new Date(arrivee).getTime()) / 86400000))
       : 1
     const params = new URLSearchParams({ chambre, arrive: arrivee, depart, nuits: String(nuits), pers: adultes })
@@ -116,13 +115,13 @@ function ContactInner() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
-                      <select name="adultes" required style={{ background: '#1e2a1c', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.7)', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
+                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: '#1e2a1c', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.7)', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
                         {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adulte{n>1?'s':''}</option>)}
                       </select>
                     </div>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Chambre souhaitée</label>
-                      <RoomPicker name="chambre" />
+                      <RoomPicker name="chambre" onSelect={setChambre} />
                     </div>
                   </div>
                   <div style={{ marginBottom: 28 }}>

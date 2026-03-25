@@ -8,7 +8,7 @@ const ALL = [
   ...ROOMS.map(r => ({ value: r.name, label: r.name, image: r.images[0], features: r.features.slice(0, 4), tagline: r.tagline, capacity: `${r.capacityMin}–${r.capacityMax} pers.` }))
 ]
 
-export default function RoomPicker({ name = 'chambre' }: { name?: string }) {
+export default function RoomPicker({ name = 'chambre', onSelect }: { name?: string, onSelect?: (value: string) => void }) {
   const [open, setOpen]     = useState(false)
   const [hovered, setHovered] = useState<number | null>(null)
   const [selected, setSelected] = useState(0)
@@ -46,7 +46,7 @@ export default function RoomPicker({ name = 'chambre' }: { name?: string }) {
               key={room.value || 'any'}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => { setSelected(i); setOpen(false) }}
+              onClick={() => { setSelected(i); setOpen(false); onSelect?.(ALL[i].value) }}
               style={{
                 padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12,
                 background: hovered === i ? 'rgba(196,160,80,.08)' : selected === i ? 'rgba(196,160,80,.05)' : 'transparent',
