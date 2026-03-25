@@ -148,7 +148,7 @@ function ContactInner() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
                     <div>
                       <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
-                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: '#1e2a1c', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.7)', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
+                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
                         {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adulte{n>1?'s':''}</option>)}
                       </select>
                     </div>
