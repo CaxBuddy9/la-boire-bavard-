@@ -1,5 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, Suspense } from 'react'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import RoomPicker from '@/components/RoomPicker'
@@ -11,9 +13,27 @@ const ACCESS = [
   { icon: '≋', title: 'À vélo', lines: ['Loire à Vélo — itinéraire EV6 à 2 km', 'Anjou à Vélo accessible directement', 'Stationnement vélos sécurisé sur place'] },
 ]
 
-export default function ContactPage() {
+function ContactInner() {
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+  const searchParams = useSearchParams()
+
+  // Pré-remplissage depuis les params URL (venant de /paiement)
+  const defaultArrivee = searchParams.get('arrive') || ''
+  const defaultDepart  = searchParams.get('depart')  || ''
+  const defaultChambre = searchParams.get('chambre') || ''
+  const defaultPers    = searchParams.get('pers')    || '2'
+
+  function buildPaiementUrl() {
+    const form = formRef.current
+    const arrivee = (form?.elements.namedItem('arrivee') as HTMLInputElement)?.value || ''
+    const depart  = (form?.elements.namedItem('depart')  as HTMLInputElement)?.value || ''
+    const chambre = (form?.elements.namedItem('chambre') as HTMLInputElement)?.value || ''
+    const adultes = (form?.elements.namedItem('adultes') as HTMLSelectElement)?.value || '2'
+    const params  = new URLSearchParams({ chambre, arrive: arrivee, depart, pers: adultes })
+    return `/paiement?${params.toString()}`
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -57,7 +77,7 @@ export default function ContactPage() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
+                <form ref={formRef} onSubmit={handleSubmit}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
                     {[['prenom','Prénom *','Marie',true],['nom','Nom *','Dupont',true]].map(([name,label,ph,req]) => (
                       <div key={name as string}>
@@ -79,10 +99,10 @@ export default function ContactPage() {
                     ))}
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-                    {[['arrivee','Arrivée souhaitée'],['depart','Départ souhaité']].map(([name,label]) => (
-                      <div key={name as string}>
+                    {([['arrivee','Arrivée souhaitée', defaultArrivee],['depart','Départ souhaité', defaultDepart]] as [string,string,string][]).map(([name,label,def]) => (
+                      <div key={name}>
                         <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>{label}</label>
-                        <input name={name as string} type="date"
+                        <input name={name} type="date" defaultValue={def}
                           style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.6)', borderBottom: `1px solid ${S.border}`, colorScheme: 'dark' }}
                           className={inputCls} />
                       </div>
@@ -105,11 +125,17 @@ export default function ContactPage() {
                     <textarea name="message" rows={4} placeholder="Questions, occasions spéciales, demandes particulières..."
                       style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}`, resize: 'vertical', width: '100%', padding: '12px 16px', fontFamily: 'var(--font-raleway)', fontSize: '.9rem' }} />
                   </div>
-                  <button type="submit" disabled={sending}
-                    style={{ background: S.gold, color: '#111', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', border: 'none', padding: '16px 40px', cursor: 'pointer', opacity: sending ? .6 : 1 }}>
-                    {sending ? 'Envoi...' : 'Envoyer le message'}
-                  </button>
-                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', color: 'rgba(184,192,180,.3)', marginTop: 12 }}>Réponse sous 24h · Données confidentielles</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+                    <button type="submit" disabled={sending}
+                      style={{ background: S.gold, color: '#111', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', border: 'none', padding: '16px 40px', cursor: 'pointer', opacity: sending ? .6 : 1 }}>
+                      {sending ? 'Envoi...' : 'Envoyer le message'}
+                    </button>
+                    <Link href={buildPaiementUrl()} onClick={(e) => { e.preventDefault(); window.location.href = buildPaiementUrl() }}
+                      style={{ background: 'transparent', border: `1px solid rgba(196,160,80,.5)`, color: S.gold, fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', textDecoration: 'none', display: 'inline-block', cursor: 'pointer' }}>
+                      Payer en ligne →
+                    </Link>
+                  </div>
+                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', color: 'rgba(184,192,180,.3)', marginTop: 12 }}>Réponse sous 24h · Données confidentielles · ou réservation directe par paiement en ligne</p>
                 </form>
               )}
             </div>
@@ -302,5 +328,13 @@ export default function ContactPage() {
       </main>
       <Footer />
     </>
+  )
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#1a2318' }} />}>
+      <ContactInner />
+    </Suspense>
   )
 }
