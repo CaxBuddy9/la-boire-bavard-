@@ -1,8 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import DateRangePicker from '@/components/DateRangePicker'
+
+type BookedRange = { check_in: string; check_out: string }
 
 type Props = {
   roomName: string
@@ -16,11 +18,19 @@ function fmtDate(iso: string) {
 }
 
 export default function BookingCard({ roomName, capacityMax }: Props) {
-  const [checkin,  setCheckin]  = useState('')
-  const [checkout, setCheckout] = useState('')
-  const [persons,  setPersons]  = useState(2)
-  const [shake,    setShake]    = useState(false)
+  const [checkin,      setCheckin]      = useState('')
+  const [checkout,     setCheckout]     = useState('')
+  const [persons,      setPersons]      = useState(2)
+  const [shake,        setShake]        = useState(false)
+  const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([])
   const router = useRouter()
+
+  useEffect(() => {
+    fetch(`/api/availability?chambre=${encodeURIComponent(roomName)}`)
+      .then(r => r.json())
+      .then(d => { if (d.booked) setBookedRanges(d.booked) })
+      .catch(() => {})
+  }, [roomName])
 
   const nights = (() => {
     if (!checkin || !checkout) return 0
@@ -95,6 +105,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             checkout={checkout}
             onCheckin={setCheckin}
             onCheckout={setCheckout}
+            bookedRanges={bookedRanges}
           />
         </div>
         {!checkin && (

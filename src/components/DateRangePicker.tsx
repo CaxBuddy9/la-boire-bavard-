@@ -21,14 +21,17 @@ function sameDay(a: Date, b: Date) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 }
 
+type BookedRange = { check_in: string; check_out: string }
+
 type Props = {
   checkin: string
   checkout: string
   onCheckin: (v: string) => void
   onCheckout: (v: string) => void
+  bookedRanges?: BookedRange[]
 }
 
-export default function DateRangePicker({ checkin, checkout, onCheckin, onCheckout }: Props) {
+export default function DateRangePicker({ checkin, checkout, onCheckin, onCheckout, bookedRanges = [] }: Props) {
   const today = new Date(); today.setHours(0,0,0,0)
   const [open,      setOpen]  = useState<'in'|'out'|null>(null)
   const [year,      setYear]  = useState(today.getFullYear())
@@ -37,6 +40,22 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
 
   const checkinDate  = checkin  ? parseISO(checkin)  : null
   const checkoutDate = checkout ? parseISO(checkout) : null
+
+  // Plages réservées parsées une fois
+  const parsedBooked = bookedRanges.map(r => ({
+    from: parseISO(r.check_in),
+    to:   parseISO(r.check_out),
+  }))
+
+  // Un jour est bloqué s'il est dans [check_in, check_out[
+  function isBooked(d: Date) {
+    return parsedBooked.some(r => d >= r.from && d < r.to)
+  }
+
+  // Une sélection de range serait-elle valide ? (pas de jour bloqué entre checkin et d)
+  function rangeHasConflict(from: Date, to: Date) {
+    return parsedBooked.some(r => r.from < to && r.to > from)
+  }
 
   function prevMonth() {
     if (month === 0) { setMonth(11); setYear(y => y - 1) }
@@ -56,6 +75,10 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
       if (checkinDate && d <= checkinDate) {
         onCheckin(toISO(d))
         onCheckout('')
+      } else if (checkinDate && rangeHasConflict(checkinDate, d)) {
+        // conflit : on recommence la sélection depuis ce jour
+        onCheckin(toISO(d))
+        onCheckout('')
       } else {
         onCheckout(toISO(d))
         setOpen(null)
@@ -69,10 +92,16 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
     if (!end) return false
     return d > checkinDate && d < end
   }
-  function isStart(d: Date) { return !!checkinDate  && sameDay(d, checkinDate) }
-  function isEnd(d: Date)   { return !!checkoutDate && sameDay(d, checkoutDate) }
-  function isPast(d: Date)  { return d < today }
-  function isHovered(d: Date) { return !!hoverDay && sameDay(d, hoverDay) }
+  function isStart(d: Date)  { return !!checkinDate  && sameDay(d, checkinDate) }
+  function isEnd(d: Date)    { return !!checkoutDate && sameDay(d, checkoutDate) }
+  function isPast(d: Date)   { return d < today }
+  function isHovered(d: Date){ return !!hoverDay && sameDay(d, hoverDay) }
+
+  // Hover preview invalide s'il y a un conflit de range
+  function hoverConflict(d: Date) {
+    if (!checkinDate || open !== 'out') return false
+    return rangeHasConflict(checkinDate, d)
+  }
 
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay    = getFirstDayOfWeek(year, month)
@@ -174,6 +203,16 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
             }}>›</button>
           </div>
 
+          {/* Légende */}
+          {parsedBooked.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, justifyContent: 'center' }}>
+              <div style={{ width: 10, height: 10, background: 'rgba(180,80,80,.5)', borderRadius: 2 }} />
+              <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.38rem', letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>
+                Indisponible
+              </span>
+            </div>
+          )}
+
           {/* En-têtes jours */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6 }}>
             {DAYS_FR.map(d => (
@@ -193,38 +232,45 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
             {cells.map((d, i) => {
               if (!d) return <div key={i} />
 
-              const past    = isPast(d)
-              const start   = isStart(d)
-              const end     = isEnd(d)
-              const range   = isInRange(d)
-              const hover   = !past && isHovered(d)
-              const isToday = sameDay(d, today)
+              const past     = isPast(d)
+              const booked   = isBooked(d)
+              const disabled = past || booked
+              const start    = isStart(d)
+              const end      = isEnd(d)
+              const range    = isInRange(d)
+              const hover    = !disabled && isHovered(d)
+              const isToday  = sameDay(d, today)
+              const conflict = hoverConflict(d)
 
               let bg = 'transparent'
-              if (start || end) bg = GOLD
+              if (booked)          bg = 'rgba(180,80,80,.18)'
+              else if (start || end) bg = GOLD
               else if (hover && !range) bg = 'rgba(196,160,80,.25)'
-              else if (range) bg = hover ? 'rgba(196,160,80,.3)' : 'rgba(196,160,80,.15)'
+              else if (range)      bg = hover ? 'rgba(196,160,80,.3)' : 'rgba(196,160,80,.15)'
 
               let color = 'rgba(255,255,255,.78)'
-              if (start || end) color = '#111'
-              else if (past) color = 'rgba(255,255,255,.18)'
-              else if (isToday) color = GOLD
-              else if (hover) color = 'white'
+              if (booked)          color = 'rgba(200,80,80,.45)'
+              else if (start || end) color = '#111'
+              else if (past)       color = 'rgba(255,255,255,.18)'
+              else if (isToday)    color = GOLD
+              else if (hover)      color = 'white'
+              else if (conflict)   color = 'rgba(255,255,255,.3)'
 
               return (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => { if (!past) selectDay(d) }}
-                  onMouseEnter={() => { if (!past) setHover(d) }}
+                  onClick={() => { if (!disabled) selectDay(d) }}
+                  onMouseEnter={() => { if (!disabled) setHover(d) }}
                   onMouseLeave={() => setHover(null)}
+                  title={booked ? 'Chambre non disponible' : undefined}
                   style={{
                     padding: '8px 0',
                     border: isToday && !start && !end
                       ? '1px solid rgba(196,160,80,.4)'
                       : '1px solid transparent',
                     borderRadius: 2,
-                    cursor: past ? 'default' : 'pointer',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
                     background: bg,
                     color,
                     fontFamily: 'var(--font-raleway)',
@@ -232,6 +278,8 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
                     fontWeight: start || end ? 700 : 400,
                     transition: 'background .1s, color .1s',
                     textAlign: 'center',
+                    textDecoration: booked ? 'line-through' : 'none',
+                    position: 'relative',
                   }}
                 >
                   {d.getDate()}

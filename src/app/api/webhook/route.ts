@@ -63,21 +63,33 @@ export async function POST(req: NextRequest) {
 
     try {
       const supabase = getSupabaseAdmin()
-      const { error } = await supabase.from('reservations').insert({
-        room_id:               meta.chambre        || 'inconnu',
-        guest_name:            meta.nom            || 'Inconnu',
-        guest_email:           meta.email          || '',
-        guest_phone:           meta.tel            || '',
-        check_in:              checkIn,
-        check_out:             checkOut,
-        guests:                Number(meta.pers)   || 2,
-        total_price:           Math.round(pi.amount / 100),
-        status:                'paid',
-        stripe_payment_intent: pi.id,
-        table_hotes:           meta.tableHotes === 'oui',
-      })
 
-      if (error) console.error('[webhook] Supabase insert error:', error.message)
+      // Tenter de mettre à jour la ligne "pending" créée par /api/checkout
+      const { data: existing } = await supabase
+        .from('reservations')
+        .select('id')
+        .eq('stripe_payment_intent', pi.id)
+        .maybeSingle()
+
+      if (existing?.id) {
+        await supabase.from('reservations').update({ status: 'paid' }).eq('id', existing.id)
+      } else {
+        // Fallback : insérer si la ligne n'existe pas encore
+        const { error } = await supabase.from('reservations').insert({
+          room_id:               meta.chambre        || 'inconnu',
+          guest_name:            meta.nom            || 'Inconnu',
+          guest_email:           meta.email          || '',
+          guest_phone:           meta.tel            || '',
+          check_in:              checkIn,
+          check_out:             checkOut,
+          guests:                Number(meta.pers)   || 2,
+          total_price:           Math.round(pi.amount / 100),
+          status:                'paid',
+          stripe_payment_intent: pi.id,
+          table_hotes:           meta.tableHotes === 'oui',
+        })
+        if (error) console.error('[webhook] Supabase insert error:', error.message)
+      }
     } catch (err: any) {
       console.error('[webhook] Erreur Supabase:', err.message)
     }

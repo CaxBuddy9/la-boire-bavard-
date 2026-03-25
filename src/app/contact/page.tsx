@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, Suspense } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
@@ -25,13 +25,22 @@ function ContactInner() {
   const defaultDepart  = searchParams.get('depart')  || ''
   const defaultChambre = searchParams.get('chambre') || ''
 
-  const [arrivee, setArrivee] = useState(defaultArrivee)
-  const [depart,  setDepart]  = useState(defaultDepart)
-  const [chambre, setChambre] = useState(defaultChambre)
-  const [adultes, setAdultes] = useState('2')
-  const [prenom,  setPrenom]  = useState('')
-  const [nom,     setNom]     = useState('')
-  const [email,   setEmail]   = useState('')
+  const [arrivee,      setArrivee]      = useState(defaultArrivee)
+  const [depart,       setDepart]       = useState(defaultDepart)
+  const [chambre,      setChambre]      = useState(defaultChambre)
+  const [adultes,      setAdultes]      = useState('2')
+  const [prenom,       setPrenom]       = useState('')
+  const [nom,          setNom]          = useState('')
+  const [email,        setEmail]        = useState('')
+  const [bookedRanges, setBookedRanges] = useState<{check_in:string,check_out:string}[]>([])
+
+  useEffect(() => {
+    if (!chambre) { setBookedRanges([]); return }
+    fetch(`/api/availability?chambre=${encodeURIComponent(chambre)}`)
+      .then(r => r.json())
+      .then(d => { if (d.booked) setBookedRanges(d.booked) })
+      .catch(() => {})
+  }, [chambre])
 
   const formValid = prenom.trim() !== '' && nom.trim() !== '' && email.trim() !== ''
 
@@ -134,6 +143,7 @@ function ContactInner() {
                       checkout={depart}
                       onCheckin={setArrivee}
                       onCheckout={setDepart}
+                      bookedRanges={bookedRanges}
                     />
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
@@ -251,7 +261,7 @@ function ContactInner() {
             ))}
             <div style={{ padding: 10 }}>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2719.8!2d-0.5134!3d47.3672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4817c5e7e7e7e7e7%3A0x0!2zNDcuMzY3MiwgLTAuNTEzNA!5e0!3m2!1sfr!2sfr!4v1711234567890!5m2!1sfr!2sfr"
+                src="https://maps.google.com/maps?q=4+chemin+de+la+Boire+Bavard,+49320+Blaison-Saint-Sulpice,+France&output=embed&hl=fr&z=14"
                 style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(40%) contrast(0.88) sepia(10%)' }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
