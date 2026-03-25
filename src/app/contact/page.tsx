@@ -33,7 +33,9 @@ function ContactInner() {
   const [nom,          setNom]          = useState('')
   const [email,        setEmail]        = useState('')
   const [bookedRanges, setBookedRanges] = useState<{check_in:string,check_out:string}[]>([])
+  const [takenRooms,   setTakenRooms]   = useState<string[]>([])
 
+  // Quand la chambre change → charge les dates bloquées pour ce calendrier
   useEffect(() => {
     if (!chambre) { setBookedRanges([]); return }
     fetch(`/api/availability?chambre=${encodeURIComponent(chambre)}`)
@@ -41,6 +43,15 @@ function ContactInner() {
       .then(d => { if (d.booked) setBookedRanges(d.booked) })
       .catch(() => {})
   }, [chambre])
+
+  // Quand les dates changent → charge quelles chambres sont prises
+  useEffect(() => {
+    if (!arrivee || !depart) { setTakenRooms([]); return }
+    fetch(`/api/availability?arrive=${arrivee}&depart=${depart}`)
+      .then(r => r.json())
+      .then(d => { if (d.taken) setTakenRooms(d.taken) })
+      .catch(() => {})
+  }, [arrivee, depart])
 
   const formValid = prenom.trim() !== '' && nom.trim() !== '' && email.trim() !== ''
 
@@ -134,6 +145,18 @@ function ContactInner() {
                         className={inputCls} />
                     </div>
                   </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
+                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: '#1e2a1c', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.7)', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
+                        {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adulte{n>1?'s':''}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Chambre souhaitée</label>
+                      <RoomPicker name="chambre" onSelect={setChambre} takenRooms={takenRooms} />
+                    </div>
+                  </div>
                   <div style={{ marginBottom: 20 }}>
                     <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Dates souhaitées</label>
                     <input type="hidden" name="arrivee" value={arrivee} />
@@ -145,18 +168,6 @@ function ContactInner() {
                       onCheckout={setDepart}
                       bookedRanges={bookedRanges}
                     />
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-                    <div>
-                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Adultes *</label>
-                      <select name="adultes" required value={adultes} onChange={e => setAdultes(e.target.value)} style={{ background: '#1e2a1c', border: `1px solid rgba(255,255,255,.1)`, color: 'rgba(255,255,255,.7)', borderBottom: `1px solid ${S.border}` }} className={inputCls}>
-                        {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} adulte{n>1?'s':''}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Chambre souhaitée</label>
-                      <RoomPicker name="chambre" onSelect={setChambre} />
-                    </div>
                   </div>
                   <div style={{ marginBottom: 28 }}>
                     <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Message</label>

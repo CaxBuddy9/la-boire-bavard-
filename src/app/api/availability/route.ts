@@ -10,20 +10,38 @@ function getSupabase() {
 
 export async function GET(req: NextRequest) {
   const chambre = req.nextUrl.searchParams.get('chambre')
-  if (!chambre) return NextResponse.json({ error: 'chambre requis' }, { status: 400 })
+  const arrive  = req.nextUrl.searchParams.get('arrive')
+  const depart  = req.nextUrl.searchParams.get('depart')
 
   try {
     const supabase = getSupabase()
-    const { data, error } = await supabase
-      .from('reservations')
-      .select('check_in, check_out')
-      .eq('room_id', chambre)
-      .in('status', ['pending', 'paid', 'confirmed'])
 
-    if (error) throw error
+    // Mode 1 : ?chambre=X → plages réservées pour une chambre (calendrier)
+    if (chambre) {
+      const { data, error } = await supabase
+        .from('reservations')
+        .select('check_in, check_out')
+        .eq('room_id', chambre)
+        .in('status', ['pending', 'paid', 'confirmed'])
+      if (error) throw error
+      return NextResponse.json({ booked: data ?? [] })
+    }
 
-    return NextResponse.json({ booked: data ?? [] })
-  } catch (err: any) {
-    return NextResponse.json({ booked: [] })
+    // Mode 2 : ?arrive=X&depart=Y → quelles chambres sont prises sur cette période
+    if (arrive && depart) {
+      const { data, error } = await supabase
+        .from('reservations')
+        .select('room_id')
+        .in('status', ['pending', 'paid', 'confirmed'])
+        .lt('check_in', depart)   // check_in < depart
+        .gt('check_out', arrive)  // check_out > arrive
+      if (error) throw error
+      const taken = [...new Set((data ?? []).map((r: any) => r.room_id))]
+      return NextResponse.json({ taken })
+    }
+
+    return NextResponse.json({ error: 'chambre ou arrive+depart requis' }, { status: 400 })
+  } catch {
+    return NextResponse.json({ booked: [], taken: [] })
   }
 }

@@ -8,7 +8,7 @@ const ALL = [
   ...ROOMS.map(r => ({ value: r.name, label: r.name, image: r.images[0], features: r.features.slice(0, 4), tagline: r.tagline, capacity: `${r.capacityMin}–${r.capacityMax} pers.` }))
 ]
 
-export default function RoomPicker({ name = 'chambre', onSelect }: { name?: string, onSelect?: (value: string) => void }) {
+export default function RoomPicker({ name = 'chambre', onSelect, takenRooms = [] }: { name?: string, onSelect?: (value: string) => void, takenRooms?: string[] }) {
   const [open, setOpen]     = useState(false)
   const [hovered, setHovered] = useState<number | null>(null)
   const [selected, setSelected] = useState(0)
@@ -63,9 +63,22 @@ export default function RoomPicker({ name = 'chambre', onSelect }: { name?: stri
               {!room.image && <div style={{ width: 48, height: 36, background: 'rgba(255,255,255,.04)', flexShrink: 0 }} />}
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.82rem', color: selected === i ? S.gold : 'rgba(255,255,255,.75)', fontWeight: selected === i ? 600 : 400 }}>
-                  {room.label}
-                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.82rem', color: selected === i ? S.gold : 'rgba(255,255,255,.75)', fontWeight: selected === i ? 600 : 400 }}>
+                    {room.label}
+                  </p>
+                  {room.value && takenRooms.length > 0 && (
+                    <span style={{
+                      fontSize: '.48rem', letterSpacing: '.12em', textTransform: 'uppercase',
+                      padding: '2px 6px', borderRadius: 2, fontFamily: 'var(--font-raleway)',
+                      background: takenRooms.includes(room.value) ? 'rgba(200,80,80,.15)' : 'rgba(80,180,80,.12)',
+                      color: takenRooms.includes(room.value) ? '#e07070' : '#6db87a',
+                      border: `1px solid ${takenRooms.includes(room.value) ? 'rgba(200,80,80,.3)' : 'rgba(80,180,80,.25)'}`,
+                    }}>
+                      {takenRooms.includes(room.value) ? 'Indisponible' : 'Disponible'}
+                    </span>
+                  )}
+                </div>
                 {'tagline' in room && (
                   <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', color: 'rgba(184,192,180,.4)', marginTop: 2 }}>
                     {room.tagline} · {room.capacity}
