@@ -29,6 +29,11 @@ function ContactInner() {
   const [depart,  setDepart]  = useState(defaultDepart)
   const [chambre, setChambre] = useState(defaultChambre)
   const [adultes, setAdultes] = useState('2')
+  const [prenom,  setPrenom]  = useState('')
+  const [nom,     setNom]     = useState('')
+  const [email,   setEmail]   = useState('')
+
+  const formValid = prenom.trim() !== '' && nom.trim() !== '' && email.trim() !== ''
 
   function buildPaiementUrl() {
     const nuits = arrivee && depart
@@ -82,24 +87,32 @@ function ContactInner() {
               ) : (
                 <form ref={formRef} onSubmit={handleSubmit}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-                    {[['prenom','Prénom *','Marie',true],['nom','Nom *','Dupont',true]].map(([name,label,ph,req]) => (
-                      <div key={name as string}>
-                        <label style={{ ...{ color: S.dim }, fontFamily: 'var(--font-raleway)' }} className={labelCls}>{label}</label>
-                        <input name={name as string} required={!!req} placeholder={ph as string}
-                          style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
-                          className={inputCls} />
-                      </div>
-                    ))}
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Prénom *</label>
+                      <input name="prenom" required value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Marie"
+                        style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
+                        className={inputCls} />
+                    </div>
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Nom *</label>
+                      <input name="nom" required value={nom} onChange={e => setNom(e.target.value)} placeholder="Dupont"
+                        style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
+                        className={inputCls} />
+                    </div>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-                    {[['email','Email *','marie@exemple.fr',true,'email'],['tel','Téléphone','06 XX XX XX XX',false,'tel']].map(([name,label,ph,req,type]) => (
-                      <div key={name as string}>
-                        <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>{label}</label>
-                        <input name={name as string} type={type as string} required={!!req} placeholder={ph as string}
-                          style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
-                          className={inputCls} />
-                      </div>
-                    ))}
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Email *</label>
+                      <input name="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="marie@exemple.fr"
+                        style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
+                        className={inputCls} />
+                    </div>
+                    <div>
+                      <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Téléphone</label>
+                      <input name="tel" type="tel" placeholder="06 XX XX XX XX"
+                        style={{ background: 'rgba(255,255,255,.06)', border: `1px solid rgba(255,255,255,.1)`, color: 'white', borderBottom: `1px solid ${S.border}` }}
+                        className={inputCls} />
+                    </div>
                   </div>
                   <div style={{ marginBottom: 20 }}>
                     <label style={{ color: S.dim, fontFamily: 'var(--font-raleway)' }} className={labelCls}>Dates souhaitées</label>
@@ -134,8 +147,11 @@ function ContactInner() {
                       style={{ background: S.gold, color: '#111', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', border: 'none', padding: '16px 40px', cursor: 'pointer', opacity: sending ? .6 : 1 }}>
                       {sending ? 'Envoi...' : 'Envoyer le message'}
                     </button>
-                    <button type="button" onClick={() => router.push(buildPaiementUrl())}
-                      style={{ background: 'transparent', border: `1px solid rgba(196,160,80,.5)`, color: S.gold, fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', cursor: 'pointer' }}>
+                    <button type="button"
+                      disabled={!formValid}
+                      onClick={() => formValid && router.push(buildPaiementUrl())}
+                      title={!formValid ? 'Remplissez prénom, nom et email d\'abord' : ''}
+                      style={{ background: 'transparent', border: `1px solid ${formValid ? 'rgba(196,160,80,.5)' : 'rgba(255,255,255,.12)'}`, color: formValid ? S.gold : 'rgba(255,255,255,.2)', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', cursor: formValid ? 'pointer' : 'default', transition: 'all .2s' }}>
                       Payer en ligne →
                     </button>
                   </div>

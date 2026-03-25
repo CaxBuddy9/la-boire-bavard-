@@ -16,10 +16,12 @@ function fmtDate(iso: string) {
 }
 
 export default function BookingCard({ roomName, capacityMax }: Props) {
-  const [checkin, setCheckin]   = useState('')
+  const [checkin,  setCheckin]  = useState('')
   const [checkout, setCheckout] = useState('')
-  const [persons, setPersons]   = useState(2)
-  const [shake, setShake]       = useState(false)
+  const [persons,  setPersons]  = useState(2)
+  const [shake,    setShake]    = useState(false)
+  const [nom,      setNom]      = useState('')
+  const [email,    setEmail]    = useState('')
   const router = useRouter()
 
   const nights = (() => {
@@ -29,19 +31,23 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   })()
   const total = nights * 88
 
+  const formReady = nights > 0 && nom.trim() !== '' && email.trim() !== ''
+
   const handleReserve = () => {
     if (nights <= 0) {
-      // Shake + scroll vers le calendrier pour indiquer qu'il faut des dates
       setShake(true)
       setTimeout(() => setShake(false), 500)
       return
     }
+    if (!nom.trim() || !email.trim()) return
     const p = new URLSearchParams({
       chambre: roomName,
       arrive:  fmtDate(checkin),
       depart:  fmtDate(checkout),
       nuits:   String(nights),
       pers:    String(persons),
+      nom,
+      email,
     })
     router.push(`/paiement?${p.toString()}`)
   }
@@ -160,6 +166,35 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             </p>
           </div>
 
+          {/* Étape 3 — Coordonnées */}
+          <div style={{ height: 1, background: 'rgba(196,160,80,.08)', margin: '18px 0' }}/>
+          <div style={{ marginBottom: 18 }}>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.44rem', letterSpacing: '.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.5)', marginBottom: 10 }}>
+              3 · Vos coordonnées
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {[
+                { label: 'Nom complet *', value: nom,   set: setNom,   ph: 'Marie Dupont' },
+                { label: 'Email *',       value: email, set: setEmail, ph: 'marie@email.fr' },
+              ].map(({ label, value, set, ph }) => (
+                <div key={label}>
+                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.4rem', letterSpacing: '.24em', textTransform: 'uppercase', color: 'rgba(196,160,80,.4)', marginBottom: 4 }}>{label}</p>
+                  <input
+                    value={value}
+                    onChange={e => set(e.target.value)}
+                    placeholder={ph}
+                    style={{
+                      width: '100%', background: 'rgba(255,255,255,.05)',
+                      border: `1px solid ${value.trim() ? 'rgba(196,160,80,.35)' : 'rgba(255,255,255,.1)'}`,
+                      color: '#f5f0e8', padding: '9px 12px',
+                      fontFamily: 'var(--font-raleway)', fontSize: '.78rem', outline: 'none',
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Récap prix */}
           <div style={{
             background: 'rgba(196,160,80,.05)',
@@ -220,9 +255,9 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
           style={{
             flex: 1,
             textAlign: 'center',
-            background: nights > 0 ? '#c4a050' : 'rgba(196,160,80,.2)',
-            color: nights > 0 ? '#0d110e' : 'rgba(196,160,80,.5)',
-            border: nights > 0 ? 'none' : '1px solid rgba(196,160,80,.25)',
+            background: formReady ? '#c4a050' : 'rgba(196,160,80,.2)',
+            color: formReady ? '#0d110e' : 'rgba(196,160,80,.5)',
+            border: formReady ? 'none' : '1px solid rgba(196,160,80,.25)',
             fontFamily: 'var(--font-raleway)',
             fontSize: '.6rem',
             letterSpacing: '.28em',
@@ -233,7 +268,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             transition: 'all .2s',
           }}
         >
-          {nights > 0 ? `Payer · ${total} €` : 'Sélectionner des dates'}
+          {!checkin || !checkout ? 'Sélectionner des dates' : !nom.trim() || !email.trim() ? 'Remplir vos coordonnées' : `Payer · ${total} €`}
         </button>
       </div>
 
