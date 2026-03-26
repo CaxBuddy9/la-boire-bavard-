@@ -1,8 +1,8 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import DateRangePicker from '@/components/DateRangePicker'
+import DateRangePicker, { DateRangePickerHandle } from '@/components/DateRangePicker'
 
 type BookedRange = { check_in: string; check_out: string }
 
@@ -23,6 +23,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   const [persons,      setPersons]      = useState(2)
   const [shake,        setShake]        = useState(false)
   const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([])
+  const pickerRef = useRef<DateRangePickerHandle>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
 
   const handleReserve = () => {
     if (nights <= 0) {
+      pickerRef.current?.openCheckin()
       setShake(true)
       setTimeout(() => setShake(false), 500)
       return
@@ -99,6 +101,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         <div style={{ animation: shake ? 'shake .4s ease' : 'none' }}>
           <style>{`@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}`}</style>
           <DateRangePicker
+            ref={pickerRef}
             checkin={checkin}
             checkout={checkout}
             onCheckin={setCheckin}

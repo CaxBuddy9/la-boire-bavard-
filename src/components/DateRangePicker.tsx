@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react'
 
 const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
 const DAYS_FR   = ['Lu','Ma','Me','Je','Ve','Sa','Di']
@@ -31,9 +31,19 @@ type Props = {
   bookedRanges?: BookedRange[]
 }
 
-export default function DateRangePicker({ checkin, checkout, onCheckin, onCheckout, bookedRanges = [] }: Props) {
+export interface DateRangePickerHandle {
+  openCheckin: () => void
+}
+
+const DateRangePicker = forwardRef<DateRangePickerHandle, Props>(function DateRangePicker(
+  { checkin, checkout, onCheckin, onCheckout, bookedRanges = [] }, ref
+) {
   const today = new Date(); today.setHours(0,0,0,0)
   const [open,      setOpen]  = useState<'in'|'out'|null>(null)
+
+  useImperativeHandle(ref, () => ({
+    openCheckin: () => setOpen('in'),
+  }))
   const [year,      setYear]  = useState(today.getFullYear())
   const [month,     setMonth] = useState(today.getMonth())
   const [hoverDay,  setHover] = useState<Date|null>(null)
@@ -305,4 +315,6 @@ export default function DateRangePicker({ checkin, checkout, onCheckin, onChecko
       )}
     </div>
   )
-}
+})
+
+export default DateRangePicker
