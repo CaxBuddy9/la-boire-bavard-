@@ -1,4 +1,4 @@
-const CACHE = 'lbb-v1'
+const CACHE = 'lbb-v2'
 
 self.addEventListener('install', e => {
   self.skipWaiting()
