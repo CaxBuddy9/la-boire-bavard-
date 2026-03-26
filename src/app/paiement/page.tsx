@@ -62,6 +62,18 @@ function CardForm({
     }
   }
 
+  // Diagnostic visible — à supprimer une fois le problème résolu
+  if (!stripe) {
+    return (
+      <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.8rem', color: '#e07070', padding: 20, border: '1px solid rgba(224,112,112,.3)', background: 'rgba(224,112,112,.05)' }}>
+        <strong>Stripe non initialisé.</strong><br/>
+        Clé publiable : {process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+          ? `✓ présente (${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.slice(0,10)}...)`
+          : '✗ MANQUANTE — ajouter NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY dans Vercel et redéployer'}
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={submit}>
       <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 20 }}>
