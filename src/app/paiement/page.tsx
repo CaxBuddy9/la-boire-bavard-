@@ -2,138 +2,11 @@
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { loadStripe } from '@stripe/stripe-js'
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 
-// Lazy init — évite les problèmes SSR de Next.js App Router
-let stripePromise: ReturnType<typeof loadStripe> | null = null
-function getStripe() {
-  if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
-  }
-  return stripePromise
-}
-
 const TABLE_HOTES_PRICE = 25
 
-// ── Formulaire carte (étape 2) ─────────────────────────────────────────────
-function CardForm({
-  total, chambre, arrive, depart, nom, email,
-}: {
-  total: number
-  chambre: string
-  arrive: string
-  depart: string
-  nom: string
-  email: string
-}) {
-  const stripe   = useStripe()
-  const elements = useElements()
-  const [status,  setStatus] = useState<'idle'|'loading'|'error'>('idle')
-  const [errMsg,  setErrMsg] = useState('')
-  const [ready,   setReady]  = useState(false)
-  const [timedOut, setTimedOut] = useState(false)
-
-  // Si Stripe ne répond pas en 10s → afficher un message d'aide
-  useEffect(() => {
-    const t = setTimeout(() => { if (!ready) setTimedOut(true) }, 10000)
-    return () => clearTimeout(t)
-  }, [ready])
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!stripe || !elements) return
-    setStatus('loading')
-    setErrMsg('')
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/paiement/confirmation?nom=${encodeURIComponent(nom)}&chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}`,
-        payment_method_data: {
-          billing_details: { name: nom, email },
-        },
-      },
-    })
-
-    if (error) {
-      setStatus('error')
-      setErrMsg(error.message || 'Paiement refusé.')
-    }
-  }
-
-  return (
-    <form onSubmit={submit}>
-      <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 20 }}>
-        Paiement sécurisé
-      </p>
-      <div style={{ marginBottom: 24 }}>
-        {timedOut ? (
-          <div style={{ background: 'rgba(224,112,112,.08)', border: '1px solid rgba(224,112,112,.25)', padding: '20px', borderRadius: 2 }}>
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.8rem', color: '#e07070', marginBottom: 12 }}>
-              Le formulaire de paiement ne se charge pas.
-            </p>
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.75rem', color: 'rgba(255,255,255,.4)', marginBottom: 8 }}>
-              Merci de contacter Sandrine directement pour finaliser votre réservation :
-            </p>
-            <a href="tel:0675786335" style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.85rem', color: '#c4a050', textDecoration: 'none', marginBottom: 4 }}>
-              📞 06 75 78 63 35
-            </a>
-            <a href="mailto:laboirebavard@gmail.com" style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.85rem', color: '#c4a050', textDecoration: 'none' }}>
-              ✉ laboirebavard@gmail.com
-            </a>
-          </div>
-        ) : (
-          <>
-            <PaymentElement
-              onReady={() => setReady(true)}
-              options={{ layout: 'tabs' }}
-            />
-            {!ready && (
-              <div style={{ color: 'rgba(255,255,255,.3)', fontSize: '0.8rem', padding: '16px 0' }}>Chargement…</div>
-            )}
-          </>
-        )}
-      </div>
-
-      <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '12px 16px', marginBottom: 24, fontSize: '0.75rem', color: 'rgba(255,255,255,.4)', display: 'flex', gap: 10, alignItems: 'center' }}>
-        <span>🔒</span>
-        <span>Paiement sécurisé par Stripe · vos données bancaires ne transitent pas par nos serveurs.</span>
-      </div>
-
-      {errMsg && (
-        <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '12px 16px', marginBottom: 20, fontSize: '0.82rem', color: '#e07070' }}>
-          {errMsg}
-        </div>
-      )}
-
-      <button type="submit" disabled={!stripe || !ready || status === 'loading'} style={{
-        width: '100%',
-        background: (!stripe || !ready || status === 'loading') ? 'rgba(196,160,80,.4)' : '#c4a050',
-        color: '#111', border: 'none', padding: '16px',
-        fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
-        letterSpacing: '0.2em', textTransform: 'uppercase' as const,
-        cursor: (!stripe || !ready || status === 'loading') ? 'default' : 'pointer',
-      }}>
-        {status === 'loading' ? 'Traitement…' : `Payer ${total} €`}
-      </button>
-
-      <p style={{ textAlign: 'center', fontFamily: 'var(--font-raleway)', fontSize: '0.7rem', color: 'rgba(255,255,255,.2)', marginTop: 12 }}>
-        En validant, vous acceptez nos{' '}
-        <Link href="/mentions-legales" style={{ color: 'rgba(196,160,80,.5)', textDecoration: 'underline' }}>conditions générales</Link>
-      </p>
-    </form>
-  )
-}
-
-// ── Page paiement principale ───────────────────────────────────────────────
 function PaiementInner() {
   const params  = useSearchParams()
   const chambre = params.get('chambre') || 'Côté Jardin'
@@ -142,59 +15,53 @@ function PaiementInner() {
   const nuits   = Number(params.get('nuits') || 1)
   const pers    = Number(params.get('pers')  || 2)
 
-  // Étape 1 : infos guest (pré-rempli si venant du formulaire contact)
   const [nom,        setNom]        = useState(params.get('nom')   || '')
   const [email,      setEmail]      = useState(params.get('email') || '')
   const [tel,        setTel]        = useState(params.get('tel')   || '')
   const [tableHotes, setTableHotes] = useState(false)
-  const [step,       setStep]       = useState<1|2>(1)
-
-  // Étape 2 : paiement
-  const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [fetchError,   setFetchError]   = useState('')
+  const [loading,    setLoading]    = useState(false)
+  const [fetchError, setFetchError] = useState('')
   const called = useRef(false)
 
   const tableHotesTotal = tableHotes ? pers * TABLE_HOTES_PRICE * nuits : 0
   const total = nuits * 88 + tableHotesTotal
 
-  // Venant du BookingCard (go=1) : appeler l'API directement et passer à l'étape 2
-  useEffect(() => {
-    const go = params.get('go')
-    if (go !== '1' || called.current) return
-    called.current = true
-    fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nuits, chambre, arrive, depart, pers, nom, email, tel }),
-    })
-      .then(r => r.json())
-      .then(d => {
-        if (d.error) { setFetchError(d.error); return }
-        setClientSecret(d.clientSecret)
-        setStep(2)
-      })
-      .catch(() => setFetchError('Impossible de contacter le serveur.'))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const goToPayment = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!nom.trim() || !email.trim()) return
-
+  const callCheckout = async (opts: { nom: string; email: string; tel: string; tableHotes: boolean }) => {
+    setLoading(true)
     setFetchError('')
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nuits, chambre, arrive, depart, pers, nom, email, tel, tableHotes }),
+        body: JSON.stringify({
+          nuits, chambre, arrive, depart, pers,
+          nom: opts.nom, email: opts.email, tel: opts.tel,
+          tableHotes: opts.tableHotes,
+        }),
       })
       const d = await res.json()
-      if (d.error) { setFetchError(d.error); return }
-      setClientSecret(d.clientSecret)
-      setStep(2)
+      if (d.error) { setFetchError(d.error); setLoading(false); return }
+      if (d.url) { window.location.href = d.url; return }
+      setFetchError('Erreur inattendue. Veuillez réessayer.')
+      setLoading(false)
     } catch {
-      setFetchError('Impossible de contacter le serveur.')
+      setFetchError('Impossible de contacter le serveur. Vérifiez votre connexion.')
+      setLoading(false)
     }
+  }
+
+  // Auto-redirect si go=1 (venant de BookingCard avec toutes les infos)
+  useEffect(() => {
+    if (params.get('go') !== '1' || called.current) return
+    called.current = true
+    callCheckout({ nom, email, tel, tableHotes: false })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!nom.trim() || !email.trim()) return
+    callCheckout({ nom, email, tel, tableHotes })
   }
 
   const inputBase: React.CSSProperties = {
@@ -202,6 +69,8 @@ function PaiementInner() {
     color: '#f5f0e8', padding: '13px 16px', fontSize: '0.9rem',
     fontFamily: 'var(--font-raleway)', fontWeight: 300, outline: 'none', width: '100%',
   }
+
+  const isAutoMode = params.get('go') === '1'
 
   return (
     <div className="max-w-6xl mx-auto px-8 py-16 grid md:grid-cols-[5fr_7fr] gap-0 items-start">
@@ -230,41 +99,68 @@ function PaiementInner() {
         <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.7rem', color: 'rgba(255,255,255,.25)', marginTop: 10 }}>Annulation gratuite jusqu'à 48h avant l'arrivée.</p>
       </div>
 
-      {/* Formulaire */}
+      {/* Partie droite */}
       <div style={{ background: 'rgba(255,255,255,.025)', border: '1px solid rgba(255,255,255,.06)', padding: '40px' }}>
 
-        {/* Chargement auto depuis BookingCard */}
-        {params.get('go') === '1' && step === 1 && !fetchError && (
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(196,160,80,.7)' }}>
-              Préparation du paiement…
+        {/* Mode auto (go=1) : chargement + redirection */}
+        {isAutoMode && (
+          <>
+            {!fetchError && (
+              <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(196,160,80,.7)', marginBottom: 16 }}>
+                  {loading ? 'Redirection vers le paiement sécurisé Stripe…' : 'Préparation du paiement…'}
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 6 }}>
+                  {[0,1,2].map(i => (
+                    <div key={i} style={{
+                      width: 6, height: 6, borderRadius: '50%',
+                      background: 'rgba(196,160,80,.5)',
+                      animation: `pulse 1.2s ease-in-out ${i*0.2}s infinite`,
+                    }} />
+                  ))}
+                </div>
+                <style>{`@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}`}</style>
+              </div>
+            )}
+
+            {fetchError && (
+              <>
+                <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '16px', marginBottom: 24, fontFamily: 'var(--font-raleway)', fontSize: '0.82rem', color: '#e07070' }}>
+                  {fetchError}
+                </div>
+                <button
+                  onClick={() => { called.current = false; callCheckout({ nom, email, tel, tableHotes: false }) }}
+                  style={{
+                    width: '100%', background: '#c4a050', color: '#0d110e',
+                    border: 'none', padding: '14px', cursor: 'pointer',
+                    fontFamily: 'var(--font-raleway)', fontSize: '0.62rem',
+                    letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
+                    marginBottom: 12,
+                  }}
+                >
+                  Réessayer
+                </button>
+                <Link href="/chambres" style={{
+                  display: 'block', width: '100%', padding: '12px',
+                  border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.35)',
+                  fontFamily: 'var(--font-raleway)', fontSize: '0.58rem',
+                  letterSpacing: '0.15em', textTransform: 'uppercase', textAlign: 'center',
+                  textDecoration: 'none', background: 'transparent',
+                }}>
+                  Retour aux chambres
+                </Link>
+              </>
+            )}
+          </>
+        )}
+
+        {/* Mode manuel (pas de go=1) : formulaire complet */}
+        {!isAutoMode && (
+          <form onSubmit={handleSubmit}>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 24 }}>
+              Vos coordonnées
             </p>
-          </div>
-        )}
 
-        {fetchError && (
-          <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '16px', marginBottom: 24, fontFamily: 'var(--font-raleway)', fontSize: '0.82rem', color: '#e07070' }}>
-            {fetchError}
-          </div>
-        )}
-
-        {/* Indicateur étapes (masqué pendant auto-chargement) */}
-        {!(params.get('go') === '1' && step === 1) && (
-          <div style={{ display: 'flex', gap: 0, marginBottom: 32 }}>
-            {(['1 · Vos informations', '2 · Paiement'] as const).map((label, i) => (
-              <div key={i} style={{
-                flex: 1, textAlign: 'center', padding: '10px',
-                fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase',
-                color: step === i+1 ? '#c4a050' : 'rgba(255,255,255,.25)',
-                borderBottom: `2px solid ${step === i+1 ? '#c4a050' : 'rgba(255,255,255,.08)'}`,
-              }}>{label}</div>
-            ))}
-          </div>
-        )}
-
-        {/* Étape 1 — Informations (seulement si pas de go=1) */}
-        {step === 1 && params.get('go') !== '1' && (
-          <form onSubmit={goToPayment}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 24 }}>
               <div>
                 <label style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Nom complet *</label>
@@ -296,7 +192,7 @@ function PaiementInner() {
                     Table d'hôtes <span style={{ color: '#c4a050' }}>+{TABLE_HOTES_PRICE} €/pers./soir</span>
                   </div>
                   <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.72rem', color: 'rgba(255,255,255,.4)' }}>
-                    Dîner maison avec Sandrine · sur réservation · {pers} pers. × {nuits} soir{nuits>1?'s':''} = {tableHotesTotal > 0 ? tableHotesTotal : pers * TABLE_HOTES_PRICE * nuits} €
+                    Dîner maison avec Sandrine · sur réservation · {pers} pers. × {nuits} soir{nuits>1?'s':''} = {pers * TABLE_HOTES_PRICE * nuits} €
                   </div>
                 </div>
               </label>
@@ -308,17 +204,17 @@ function PaiementInner() {
               </div>
             )}
 
-            <button type="submit" style={{
-              width: '100%', background: '#c4a050', color: '#0d110e',
-              border: 'none', padding: '16px', cursor: 'pointer',
+            <button type="submit" disabled={loading} style={{
+              width: '100%', background: loading ? 'rgba(196,160,80,.4)' : '#c4a050', color: '#0d110e',
+              border: 'none', padding: '16px', cursor: loading ? 'default' : 'pointer',
               fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
               letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
               marginBottom: 16,
             }}>
-              Payer en ligne — {total} €
+              {loading ? 'Redirection…' : `Payer en ligne — ${total} €`}
             </button>
 
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 10 }}>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 16 }}>
               Paiement sécurisé Stripe · Annulation gratuite 48h avant
             </p>
 
@@ -339,17 +235,6 @@ function PaiementInner() {
               Contacter Sandrine (virement / chèque)
             </Link>
           </form>
-        )}
-
-        {/* Étape 2 — Paiement */}
-        {step === 2 && clientSecret && (
-          <Elements stripe={getStripe()} options={{ clientSecret }}>
-            <CardForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />
-          </Elements>
-        )}
-
-        {step === 2 && !clientSecret && (
-          <div style={{ textAlign: 'center', color: 'rgba(255,255,255,.3)', padding: 40 }}>Chargement…</div>
         )}
       </div>
     </div>

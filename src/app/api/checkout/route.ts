@@ -9,7 +9,6 @@ function getSupabaseAdmin() {
   return createClient(url, key)
 }
 
-// Convertit DD/MM/YYYY ou YYYY-MM-DD → YYYY-MM-DD (avec validation)
 function toISO(s: string): string | null {
   if (!s) return null
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
@@ -43,46 +42,82 @@ export async function POST(req: NextRequest) {
     const email   = sanitize(body.email, 200)
     const tel     = sanitize(body.tel, 30)
 
-    // Validation des inputs
     const nuitsNum = Number(nuits)
-    if (!nuitsNum || nuitsNum < 1 || nuitsNum > 365) {
+    if (!nuitsNum || nuitsNum < 1 || nuitsNum > 365)
       return NextResponse.json({ error: 'Nombre de nuits invalide' }, { status: 400 })
-    }
-    if (!chambre) {
+    if (!chambre)
       return NextResponse.json({ error: 'Chambre requise' }, { status: 400 })
-    }
-    if (email && !isValidEmail(email)) {
+    if (email && !isValidEmail(email))
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
-    }
+
     const checkIn  = toISO(arrive)
     const checkOut = toISO(depart)
-    if (!checkIn || !checkOut || checkOut <= checkIn) {
+    if (!checkIn || !checkOut || checkOut <= checkIn)
       return NextResponse.json({ error: 'Dates invalides' }, { status: 400 })
-    }
+
     const persNum = Math.max(1, Math.min(10, Number(pers) || 2))
+    const tableHotesBool = tableHotes === true
+    const tableHotesTotal = tableHotesBool ? persNum * TABLE_HOTES_PRICE * nuitsNum : 0
+    const totalAmount = Math.round(nuitsNum * PRICE_PER_NIGHT * 100) + tableHotesTotal * 100
 
-    const tableHotesTotal = tableHotes ? persNum * TABLE_HOTES_PRICE * nuitsNum : 0
-    const amount = Math.round(nuitsNum * PRICE_PER_NIGHT * 100) + tableHotesTotal * 100
+    // Origine pour les URLs de retour
+    const origin = req.headers.get('origin')
+      || (req.headers.get('host') ? `https://${req.headers.get('host')}` : 'https://la-boire-bavard.vercel.app')
 
-    const paymentIntent = await getStripe().paymentIntents.create({
-      amount,
-      currency: 'eur',
-      automatic_payment_methods: { enabled: true },
-      metadata: {
-        chambre,
-        arrive:     arrive     || '',
-        depart:     depart     || '',
-        pers:       String(persNum),
-        nom:        nom        || '',
-        email:      email      || '',
-        tel:        tel        || '',
-        tableHotes: tableHotes ? 'oui' : 'non',
+    const lineItems: any[] = [
+      {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `La Boire Bavard — ${chambre}`,
+            description: `${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart} · ${persNum} pers. · Petit-déjeuner inclus`,
+          },
+          unit_amount: Math.round(PRICE_PER_NIGHT * 100),
+        },
+        quantity: nuitsNum,
       },
-      description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
-      receipt_email: email && isValidEmail(email) ? email : undefined,
+    ]
+
+    if (tableHotesBool) {
+      lineItems.push({
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: `Table d'hôtes`,
+            description: `${persNum} pers. × ${nuitsNum} soir${nuitsNum > 1 ? 's' : ''}`,
+          },
+          unit_amount: TABLE_HOTES_PRICE * 100,
+        },
+        quantity: persNum * nuitsNum,
+      })
+    }
+
+    const metadata = {
+      chambre,
+      arrive:     arrive     || '',
+      depart:     depart     || '',
+      pers:       String(persNum),
+      nom:        nom        || '',
+      email:      email      || '',
+      tel:        tel        || '',
+      tableHotes: tableHotesBool ? 'oui' : 'non',
+    }
+
+    const session = await getStripe().checkout.sessions.create({
+      mode: 'payment',
+      line_items: lineItems,
+      customer_email: email && isValidEmail(email) ? email : undefined,
+      payment_intent_data: {
+        metadata,
+        description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
+        receipt_email: email && isValidEmail(email) ? email : undefined,
+      },
+      success_url: `${origin}/paiement/confirmation?nom=${encodeURIComponent(nom)}&chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}`,
+      cancel_url: `${origin}/chambres`,
+      locale: 'fr',
     })
 
-    // Insérer immédiatement en "pending" pour bloquer les dates
+    // Insérer en "pending" pour bloquer les dates
     const supabase = getSupabaseAdmin()
     if (supabase) {
       await supabase.from('reservations').insert({
@@ -93,14 +128,14 @@ export async function POST(req: NextRequest) {
         check_in:              checkIn,
         check_out:             checkOut,
         guests:                persNum,
-        total_price:           Math.round(amount / 100),
+        total_price:           Math.round(totalAmount / 100),
         status:                'pending',
-        stripe_payment_intent: paymentIntent.id,
-        table_hotes:           tableHotes === true,
+        stripe_payment_intent: (session.payment_intent as string) || session.id,
+        table_hotes:           tableHotesBool,
       })
     }
 
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret })
+    return NextResponse.json({ url: session.url })
   } catch (err: any) {
     console.error('[checkout] Error:', err.message)
     return NextResponse.json({ error: 'Erreur lors de la création du paiement' }, { status: 500 })
