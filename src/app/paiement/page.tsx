@@ -300,7 +300,7 @@ function PaiementInner() {
 
         {/* Formulaire carte Stripe — CardElement classique */}
         {clientSecret && stripePromise && (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <Elements stripe={stripePromise}>
             <CardForm
               total={total} chambre={chambre} arrive={arrive}
               depart={depart} nom={nom} email={email}
