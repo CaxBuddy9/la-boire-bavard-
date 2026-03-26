@@ -1,5 +1,5 @@
 'use client'
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadStripe } from '@stripe/stripe-js'
@@ -122,6 +122,17 @@ function PaiementInner() {
 
   const tableHotesTotal = tableHotes ? pers * TABLE_HOTES_PRICE * nuits : 0
   const total = nuits * 88 + tableHotesTotal
+
+  // Si on vient du BookingCard (clientSecret déjà créé), sauter directement à l'étape 2
+  useEffect(() => {
+    const stored = sessionStorage.getItem('lbb_clientSecret')
+    if (stored) {
+      sessionStorage.removeItem('lbb_clientSecret')
+      sessionStorage.removeItem('lbb_total')
+      setClientSecret(stored)
+      setStep(2)
+    }
+  }, [])
 
   const goToPayment = async (e: React.FormEvent) => {
     e.preventDefault()

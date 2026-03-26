@@ -17,12 +17,29 @@ function fmtDate(iso: string) {
   return `${d}/${m}/${y}`
 }
 
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,.05)',
+  border: '1px solid rgba(255,255,255,.1)',
+  color: '#f5f0e8',
+  padding: '11px 14px',
+  fontSize: '0.85rem',
+  fontFamily: 'var(--font-raleway)',
+  fontWeight: 300,
+  outline: 'none',
+  width: '100%',
+}
+
 export default function BookingCard({ roomName, capacityMax }: Props) {
   const [checkin,      setCheckin]      = useState('')
   const [checkout,     setCheckout]     = useState('')
   const [persons,      setPersons]      = useState(2)
+  const [nom,          setNom]          = useState('')
+  const [email,        setEmail]        = useState('')
+  const [tel,          setTel]          = useState('')
   const [shake,        setShake]        = useState(false)
   const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([])
+  const [loading,      setLoading]      = useState(false)
+  const [error,        setError]        = useState('')
   const pickerRef = useRef<DateRangePickerHandle>(null)
   const router = useRouter()
 
@@ -40,24 +57,58 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   })()
   const total = nights * 88
 
-  const handleReserve = () => {
-    if (nights <= 0) {
+  const datesOk   = nights > 0
+  const contactOk = nom.trim().length > 0 && email.trim().includes('@')
+
+  const handleReserve = async () => {
+    if (!datesOk) {
       pickerRef.current?.openCheckin()
       setShake(true)
       setTimeout(() => setShake(false), 500)
       return
     }
-    const p = new URLSearchParams({
-      chambre: roomName,
-      arrive:  fmtDate(checkin),
-      depart:  fmtDate(checkout),
-      nuits:   String(nights),
-      pers:    String(persons),
-    })
-    router.push(`/paiement?${p.toString()}`)
-  }
+    if (!contactOk) return
 
-  const datesOk = nights > 0
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chambre: roomName,
+          arrive:  fmtDate(checkin),
+          depart:  fmtDate(checkout),
+          nuits:   nights,
+          pers:    persons,
+          nom,
+          email,
+          tel,
+        }),
+      })
+      const data = await res.json()
+      if (data.error) { setError(data.error); setLoading(false); return }
+
+      // Stocker le clientSecret en session pour que /paiement saute l'étape 1
+      sessionStorage.setItem('lbb_clientSecret', data.clientSecret)
+      sessionStorage.setItem('lbb_total', String(total))
+
+      const p = new URLSearchParams({
+        chambre: roomName,
+        arrive:  fmtDate(checkin),
+        depart:  fmtDate(checkout),
+        nuits:   String(nights),
+        pers:    String(persons),
+        nom,
+        email,
+        tel,
+      })
+      router.push(`/paiement?${p.toString()}`)
+    } catch {
+      setError('Impossible de contacter le serveur.')
+      setLoading(false)
+    }
+  }
 
   return (
     <div style={{
@@ -86,7 +137,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
 
       <div style={{ height: 1, background: 'rgba(196,160,80,.12)', marginBottom: 20 }}/>
 
-      {/* Dates */}
+      {/* 1 · Dates */}
       <div style={{ marginBottom: 4 }}>
         <p style={{
           fontFamily: 'var(--font-raleway)',
@@ -116,10 +167,11 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         )}
       </div>
 
-      {/* Voyageurs */}
       {datesOk && (
         <>
           <div style={{ height: 1, background: 'rgba(196,160,80,.08)', margin: '18px 0' }}/>
+
+          {/* 2 · Voyageurs */}
           <div style={{ marginBottom: 18 }}>
             <p style={{
               fontFamily: 'var(--font-raleway)',
@@ -169,6 +221,48 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             </p>
           </div>
 
+          {/* 3 · Vos coordonnées */}
+          <div style={{ marginBottom: 18 }}>
+            <p style={{
+              fontFamily: 'var(--font-raleway)',
+              fontSize: '.44rem',
+              letterSpacing: '.28em',
+              textTransform: 'uppercase',
+              color: 'rgba(196,160,80,.5)',
+              marginBottom: 10,
+            }}>
+              3 · Vos coordonnées
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <input
+                value={nom}
+                onChange={e => setNom(e.target.value)}
+                placeholder="Nom complet *"
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
+                onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')}
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Email *"
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
+                onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')}
+              />
+              <input
+                type="tel"
+                value={tel}
+                onChange={e => setTel(e.target.value)}
+                placeholder="Téléphone"
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
+                onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')}
+              />
+            </div>
+          </div>
+
           {/* Récap prix */}
           <div style={{
             background: 'rgba(196,160,80,.05)',
@@ -200,14 +294,26 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         </>
       )}
 
+      {/* Erreur API */}
+      {error && (
+        <div style={{
+          background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)',
+          padding: '10px 14px', marginBottom: 14,
+          fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: '#e07070',
+        }}>
+          {error}
+        </div>
+      )}
+
       {/* CTAs */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 6 }}>
         <button
           onClick={handleReserve}
+          disabled={loading || (datesOk && !contactOk)}
           style={{
             width: '100%',
             textAlign: 'center',
-            background: '#c4a050',
+            background: (datesOk && !contactOk) ? 'rgba(196,160,80,.35)' : loading ? 'rgba(196,160,80,.6)' : '#c4a050',
             color: '#0d110e',
             border: 'none',
             fontFamily: 'var(--font-raleway)',
@@ -216,11 +322,15 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             textTransform: 'uppercase',
             fontWeight: 700,
             padding: '16px',
-            cursor: 'pointer',
+            cursor: (loading || (datesOk && !contactOk)) ? 'default' : 'pointer',
             transition: 'all .2s',
           }}
         >
-          {datesOk ? `Réserver · ${total} €` : 'Réserver cette chambre'}
+          {loading
+            ? 'Chargement…'
+            : datesOk
+              ? (contactOk ? `Payer · ${total} €` : 'Remplissez vos coordonnées ↑')
+              : 'Réserver cette chambre'}
         </button>
         <Link
           href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${checkin}` : ''}${checkout ? `&depart=${checkout}` : ''}${persons ? `&pers=${persons}` : ''}`}
