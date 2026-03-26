@@ -60,39 +60,7 @@ export async function POST(req: NextRequest) {
     const tableHotesTotal = tableHotesBool ? persNum * TABLE_HOTES_PRICE * nuitsNum : 0
     const totalAmount = Math.round(nuitsNum * PRICE_PER_NIGHT * 100) + tableHotesTotal * 100
 
-    // Origine pour les URLs de retour
-    const origin = req.headers.get('origin')
-      || (req.headers.get('host') ? `https://${req.headers.get('host')}` : 'https://la-boire-bavard.vercel.app')
-
-    const lineItems: any[] = [
-      {
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: `La Boire Bavard — ${chambre}`,
-            description: `${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart} · ${persNum} pers. · Petit-déjeuner inclus`,
-          },
-          unit_amount: Math.round(PRICE_PER_NIGHT * 100),
-        },
-        quantity: nuitsNum,
-      },
-    ]
-
-    if (tableHotesBool) {
-      lineItems.push({
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: `Table d'hôtes`,
-            description: `${persNum} pers. × ${nuitsNum} soir${nuitsNum > 1 ? 's' : ''}`,
-          },
-          unit_amount: TABLE_HOTES_PRICE * 100,
-        },
-        quantity: persNum * nuitsNum,
-      })
-    }
-
-    const metadata = {
+    const metadata: Record<string, string> = {
       chambre,
       arrive:     arrive     || '',
       depart:     depart     || '',
@@ -103,18 +71,12 @@ export async function POST(req: NextRequest) {
       tableHotes: tableHotesBool ? 'oui' : 'non',
     }
 
-    const session = await getStripe().checkout.sessions.create({
-      mode: 'payment',
-      line_items: lineItems,
-      customer_email: email && isValidEmail(email) ? email : undefined,
-      payment_intent_data: {
-        metadata,
-        description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
-        receipt_email: email && isValidEmail(email) ? email : undefined,
-      },
-      success_url: `${origin}/paiement/confirmation?nom=${encodeURIComponent(nom)}&chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}`,
-      cancel_url: `${origin}/chambres`,
-      locale: 'fr',
+    const paymentIntent = await getStripe().paymentIntents.create({
+      amount: totalAmount,
+      currency: 'eur',
+      metadata,
+      description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
+      receipt_email: email && isValidEmail(email) ? email : undefined,
     })
 
     // Insérer en "pending" pour bloquer les dates
@@ -130,12 +92,12 @@ export async function POST(req: NextRequest) {
         guests:                persNum,
         total_price:           Math.round(totalAmount / 100),
         status:                'pending',
-        stripe_payment_intent: (session.payment_intent as string) || session.id,
+        stripe_payment_intent: paymentIntent.id,
         table_hotes:           tableHotesBool,
       })
     }
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ clientSecret: paymentIntent.client_secret })
   } catch (err: any) {
     console.error('[checkout] Error:', err.message)
     return NextResponse.json({ error: 'Erreur lors de la création du paiement' }, { status: 500 })
