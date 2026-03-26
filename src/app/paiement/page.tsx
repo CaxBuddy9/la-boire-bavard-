@@ -57,7 +57,7 @@ function CardForm({
 
   return (
     <form onSubmit={submit}>
-      <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 20 }}>
+      <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 20 }}>
         Paiement sécurisé
       </p>
       <div style={{ marginBottom: 24 }}>
@@ -85,14 +85,14 @@ function CardForm({
         width: '100%',
         background: (!stripe || !ready || status === 'loading') ? 'rgba(196,160,80,.4)' : '#c4a050',
         color: '#111', border: 'none', padding: '16px',
-        fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem',
+        fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
         letterSpacing: '0.2em', textTransform: 'uppercase' as const,
         cursor: (!stripe || !ready || status === 'loading') ? 'default' : 'pointer',
       }}>
         {status === 'loading' ? 'Traitement…' : `Payer ${total} €`}
       </button>
 
-      <p style={{ textAlign: 'center', fontFamily: 'Raleway, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,.2)', marginTop: 12 }}>
+      <p style={{ textAlign: 'center', fontFamily: 'var(--font-raleway)', fontSize: '0.7rem', color: 'rgba(255,255,255,.2)', marginTop: 12 }}>
         En validant, vous acceptez nos{' '}
         <Link href="/mentions-legales" style={{ color: 'rgba(196,160,80,.5)', textDecoration: 'underline' }}>conditions générales</Link>
       </p>
@@ -146,7 +146,7 @@ function PaiementInner() {
   const inputBase: React.CSSProperties = {
     background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)',
     color: '#f5f0e8', padding: '13px 16px', fontSize: '0.9rem',
-    fontFamily: 'Raleway, sans-serif', fontWeight: 300, outline: 'none', width: '100%',
+    fontFamily: 'var(--font-raleway)', fontWeight: 300, outline: 'none', width: '100%',
   }
 
   return (
@@ -155,10 +155,10 @@ function PaiementInner() {
       {/* Récapitulatif */}
       <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(196,160,80,.18)', padding: '36px' }}
         className="md:sticky top-32">
-        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 16 }}>Récapitulatif</p>
-        <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: '#f5f0e8', marginBottom: 4 }}>{chambre}</h2>
+        <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 16 }}>Récapitulatif</p>
+        <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.4rem', color: '#f5f0e8', marginBottom: 4 }}>{chambre}</h2>
         <div style={{ height: 1, background: 'rgba(196,160,80,.2)', margin: '18px 0' }} />
-        <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.85rem', color: 'rgba(255,255,255,.5)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.85rem', color: 'rgba(255,255,255,.5)', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {arrive && <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Arrivée</span><span style={{ color: 'rgba(255,255,255,.85)' }}>{arrive}</span></div>}
           {depart && <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Départ</span><span style={{ color: 'rgba(255,255,255,.85)' }}>{depart}</span></div>}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Personnes</span><span style={{ color: 'rgba(255,255,255,.85)' }}>{pers}</span></div>
@@ -170,10 +170,10 @@ function PaiementInner() {
         </div>
         <div style={{ height: 1, background: 'rgba(196,160,80,.2)', margin: '18px 0' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-          <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.35)' }}>Total</span>
-          <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', color: '#c4a050' }}>{total} €</span>
+          <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.35)' }}>Total</span>
+          <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.8rem', color: '#c4a050' }}>{total} €</span>
         </div>
-        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,.25)', marginTop: 10 }}>Annulation gratuite jusqu'à 48h avant l'arrivée.</p>
+        <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.7rem', color: 'rgba(255,255,255,.25)', marginTop: 10 }}>Annulation gratuite jusqu'à 48h avant l'arrivée.</p>
       </div>
 
       {/* Formulaire */}
@@ -184,7 +184,7 @@ function PaiementInner() {
           {(['1 · Vos informations', '2 · Paiement'] as const).map((label, i) => (
             <div key={i} style={{
               flex: 1, textAlign: 'center', padding: '10px',
-              fontFamily: 'Raleway, sans-serif', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase',
+              fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase',
               color: step === i+1 ? '#c4a050' : 'rgba(255,255,255,.25)',
               borderBottom: `2px solid ${step === i+1 ? '#c4a050' : 'rgba(255,255,255,.08)'}`,
             }}>{label}</div>
@@ -196,19 +196,19 @@ function PaiementInner() {
           <form onSubmit={goToPayment}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 24 }}>
               <div>
-                <label style={{ display: 'block', fontFamily: 'Raleway, sans-serif', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Nom complet *</label>
+                <label style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Nom complet *</label>
                 <input value={nom} onChange={e => setNom(e.target.value)} placeholder="Marie Dupont" required style={inputBase}
                   onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
                   onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')} />
               </div>
               <div>
-                <label style={{ display: 'block', fontFamily: 'Raleway, sans-serif', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Email *</label>
+                <label style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Email *</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="marie@email.fr" required style={inputBase}
                   onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
                   onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')} />
               </div>
               <div>
-                <label style={{ display: 'block', fontFamily: 'Raleway, sans-serif', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Téléphone</label>
+                <label style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 8 }}>Téléphone</label>
                 <input type="tel" value={tel} onChange={e => setTel(e.target.value)} placeholder="06 XX XX XX XX" style={inputBase}
                   onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
                   onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')} />
@@ -221,10 +221,10 @@ function PaiementInner() {
                 <input type="checkbox" checked={tableHotes} onChange={e => setTableHotes(e.target.checked)}
                   style={{ marginTop: 3, accentColor: '#c4a050', width: 16, height: 16, flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.82rem', color: '#f5f0e8', marginBottom: 4 }}>
+                  <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.82rem', color: '#f5f0e8', marginBottom: 4 }}>
                     Table d'hôtes <span style={{ color: '#c4a050' }}>+{TABLE_HOTES_PRICE} €/pers./soir</span>
                   </div>
-                  <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,.4)' }}>
+                  <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.72rem', color: 'rgba(255,255,255,.4)' }}>
                     Dîner maison avec Sandrine · sur réservation · {pers} pers. × {nuits} soir{nuits>1?'s':''} = {tableHotesTotal > 0 ? tableHotesTotal : pers * TABLE_HOTES_PRICE * nuits} €
                   </div>
                 </div>
@@ -232,39 +232,41 @@ function PaiementInner() {
             </div>
 
             {fetchError && (
-              <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '12px 16px', marginBottom: 20, fontSize: '0.82rem', color: '#e07070' }}>
+              <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '12px 16px', marginBottom: 20, fontSize: '0.82rem', color: '#e07070', fontFamily: 'var(--font-raleway)' }}>
                 {fetchError}
               </div>
             )}
 
-            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}${nom ? `&nom=${encodeURIComponent(nom)}` : ''}${email ? `&email=${encodeURIComponent(email)}` : ''}`}
-              style={{
-                display: 'block', width: '100%', marginBottom: 12, padding: '14px',
-                border: '1px solid rgba(196,160,80,.35)', color: '#c4a050',
-                fontFamily: 'Raleway, sans-serif', fontSize: '0.63rem',
-                letterSpacing: '0.2em', textTransform: 'uppercase', textAlign: 'center',
-                textDecoration: 'none', background: 'transparent',
-              }}>
-              Contacter Sandrine sans payer en ligne
-            </Link>
-            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 16 }}>
-              Réservation par échange direct · virement ou chèque
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
-              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.2)' }}>ou payer en ligne</span>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.08)' }} />
-            </div>
-
             <button type="submit" style={{
               width: '100%', background: '#c4a050', color: '#0d110e',
-              border: 'none', padding: '15px', cursor: 'pointer',
-              fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem',
-              letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 600,
+              border: 'none', padding: '16px', cursor: 'pointer',
+              fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
+              letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
+              marginBottom: 16,
             }}>
-              Continuer vers le paiement →
+              Payer en ligne — {total} €
             </button>
+
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 10 }}>
+              Paiement sécurisé Stripe · Annulation gratuite 48h avant
+            </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0' }}>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.06)' }} />
+              <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.56rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,.2)' }}>ou</span>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,.06)' }} />
+            </div>
+
+            <Link href={`/contact?chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}&pers=${pers}${nom ? `&nom=${encodeURIComponent(nom)}` : ''}${email ? `&email=${encodeURIComponent(email)}` : ''}`}
+              style={{
+                display: 'block', width: '100%', padding: '12px',
+                border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.35)',
+                fontFamily: 'var(--font-raleway)', fontSize: '0.58rem',
+                letterSpacing: '0.15em', textTransform: 'uppercase', textAlign: 'center',
+                textDecoration: 'none', background: 'transparent',
+              }}>
+              Contacter Sandrine (virement / chèque)
+            </Link>
           </form>
         )}
 
@@ -299,7 +301,7 @@ export default function PaiementPage() {
       <main style={{ background: '#0e1510', minHeight: '100vh', paddingTop: 80 }}>
         <Suspense fallback={
           <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Chargement…</div>
+            <div style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)' }}>Chargement…</div>
           </div>
         }>
           <PaiementInner />
