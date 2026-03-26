@@ -201,49 +201,47 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       )}
 
       {/* CTAs */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-        <Link
-          href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${checkin}` : ''}${checkout ? `&depart=${checkout}` : ''}${persons ? `&pers=${persons}` : ''}`}
-          style={{
-            flex: '0 0 auto',
-            textAlign: 'center',
-            background: 'transparent',
-            color: '#c4a050',
-            border: '1px solid rgba(196,160,80,.4)',
-            fontFamily: 'var(--font-raleway)',
-            fontSize: '.58rem',
-            letterSpacing: '.2em',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-            padding: '14px 16px',
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Contacter
-        </Link>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 6 }}>
         <button
           onClick={handleReserve}
           style={{
-            flex: 1,
+            width: '100%',
             textAlign: 'center',
-            background: datesOk ? '#c4a050' : 'rgba(196,160,80,.2)',
-            color: datesOk ? '#0d110e' : 'rgba(196,160,80,.5)',
-            border: datesOk ? 'none' : '1px solid rgba(196,160,80,.25)',
+            background: '#c4a050',
+            color: '#0d110e',
+            border: 'none',
             fontFamily: 'var(--font-raleway)',
-            fontSize: '.6rem',
+            fontSize: '.62rem',
             letterSpacing: '.28em',
             textTransform: 'uppercase',
-            fontWeight: 600,
-            padding: '14px 16px',
+            fontWeight: 700,
+            padding: '16px',
             cursor: 'pointer',
             transition: 'all .2s',
           }}
         >
-          {datesOk ? `Réserver · ${total} €` : 'Sélectionner des dates'}
+          {datesOk ? `Réserver · ${total} €` : 'Réserver cette chambre'}
         </button>
+        <Link
+          href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${checkin}` : ''}${checkout ? `&depart=${checkout}` : ''}${persons ? `&pers=${persons}` : ''}`}
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            background: 'transparent',
+            color: 'rgba(196,160,80,.6)',
+            border: '1px solid rgba(196,160,80,.25)',
+            fontFamily: 'var(--font-raleway)',
+            fontSize: '.56rem',
+            letterSpacing: '.18em',
+            textTransform: 'uppercase',
+            fontWeight: 500,
+            padding: '11px',
+            textDecoration: 'none',
+            display: 'block',
+          }}
+        >
+          Contacter Sandrine
+        </Link>
       </div>
 
       {datesOk && (
