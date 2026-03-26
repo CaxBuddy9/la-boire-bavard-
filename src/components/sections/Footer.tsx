@@ -52,30 +52,28 @@ export default function Footer() {
         </nav>
 
         {/* Tous les logos — une seule rangée avec barres dorées */}
-        <div className="flex justify-center items-center gap-x-4 mb-10"
-          style={{ opacity: 0.45, flexWrap: 'nowrap' as const, overflowX: 'auto' as const, paddingBottom: 4 }}>
-          <span style={{ width: 32, height: 1, background: 'rgba(196,160,80,.6)', flexShrink: 0 }} />
+        <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-3 mb-10"
+          style={{ opacity: 0.45 }}>
           {LABELS.map(({ href, C, label }) => href ? (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}
               className="hover:opacity-100 transition-opacity"
-              style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
+              style={{ display: 'flex', alignItems: 'center' }}
             >
               <C />
             </a>
           ) : (
-            <span key={label} title={label} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <span key={label} title={label} style={{ display: 'flex', alignItems: 'center' }}>
               <C />
             </span>
           ))}
           <a href="https://golfangers.fr" target="_blank" rel="noopener noreferrer"
             className="hover:opacity-100 transition-opacity"
-            style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}
+            style={{ display: 'flex', alignItems: 'center' }}
           >
             <Image src="/logos/golf-angers.png" alt="Golf d'Angers" height={36} width={120}
               className="object-contain w-auto" style={{ height: 36, mixBlendMode: 'screen' }}
             />
           </a>
-          <span style={{ width: 32, height: 1, background: 'rgba(196,160,80,.6)', flexShrink: 0 }} />
         </div>
 
         {/* Séparateur gold */}
