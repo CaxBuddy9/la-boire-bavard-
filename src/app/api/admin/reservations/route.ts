@@ -1,30 +1,55 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { verifyAdminCookie } from '../login/route'
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error(`Supabase not configured (url=${!!url}, key=${!!key})`)
+  if (!url || !key) throw new Error('Supabase non configuré')
   return createClient(url, key)
 }
 
-export async function GET() {
+function requireAdmin(req: NextRequest) {
+  if (!verifyAdminCookie(req)) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+  }
+  return null
+}
+
+const VALID_STATUSES = ['pending', 'confirmed', 'paid', 'cancelled']
+
+export async function GET(req: NextRequest) {
+  const auth = requireAdmin(req)
+  if (auth) return auth
+
   try {
     const { data, error } = await getSupabaseAdmin()
       .from('reservations')
       .select('*')
       .order('check_in', { ascending: true })
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: 'Erreur base de données' }, { status: 500 })
     return NextResponse.json({ data: data || [] })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const auth = requireAdmin(req)
+  if (auth) return auth
+
   try {
     const body = await req.json()
+
+    // Validation basique
+    if (!body.room_id || !body.guest_name || !body.check_in || !body.check_out) {
+      return NextResponse.json({ error: 'Champs obligatoires manquants' }, { status: 400 })
+    }
+    if (body.check_out <= body.check_in) {
+      return NextResponse.json({ error: 'Date de départ doit être après l\'arrivée' }, { status: 400 })
+    }
+
     const { error } = await getSupabaseAdmin()
       .from('reservations')
       .insert({
@@ -34,43 +59,53 @@ export async function POST(req: Request) {
         guest_phone: body.guest_phone || '',
         check_in:    body.check_in,
         check_out:   body.check_out,
-        guests:      Number(body.guests) || 2,
-        total_price: Number(body.total_price) || 0,
-        status:      body.status || 'confirmed',
-        table_hotes: body.table_hotes || false,
+        guests:      Math.max(1, Math.min(10, Number(body.guests) || 2)),
+        total_price: Math.max(0, Number(body.total_price) || 0),
+        status:      VALID_STATUSES.includes(body.status) ? body.status : 'confirmed',
+        table_hotes: body.table_hotes === true,
       })
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: 'Erreur lors de l\'insertion' }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
   }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
+  const auth = requireAdmin(req)
+  if (auth) return auth
+
   try {
     const { id } = await req.json()
-    if (!id) return NextResponse.json({ error: 'id requis' }, { status: 400 })
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json({ error: 'ID requis' }, { status: 400 })
+    }
 
     const { error } = await getSupabaseAdmin()
       .from('reservations')
       .delete()
       .eq('id', id)
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: 'Erreur lors de la suppression' }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
   }
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
+  const auth = requireAdmin(req)
+  if (auth) return auth
+
   try {
     const { id, status } = await req.json()
 
-    const VALID_STATUSES = ['pending', 'confirmed', 'paid', 'cancelled']
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json({ error: 'ID requis' }, { status: 400 })
+    }
     if (!VALID_STATUSES.includes(status)) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+      return NextResponse.json({ error: 'Statut invalide' }, { status: 400 })
     }
 
     const { error } = await getSupabaseAdmin()
@@ -78,9 +113,9 @@ export async function PATCH(req: Request) {
       .update({ status })
       .eq('id', id)
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
   }
 }

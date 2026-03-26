@@ -4,32 +4,62 @@ import { createClient } from '@supabase/supabase-js'
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Supabase not configured')
+  if (!url || !key) throw new Error('Supabase non configuré')
   return createClient(url, key)
+}
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function sanitize(s: unknown, maxLen = 200): string {
+  if (typeof s !== 'string') return ''
+  return s.trim().slice(0, maxLen)
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
 
+    const prenom  = sanitize(body.prenom, 100)
+    const nom     = sanitize(body.nom, 100)
+    const email   = sanitize(body.email, 200)
+    const tel     = sanitize(body.tel, 30)
+    const chambre = sanitize(body.chambre, 100)
+    const message = sanitize(body.message, 2000)
+    const arrivee = sanitize(body.arrivee, 20)
+    const depart  = sanitize(body.depart, 20)
+    const adultes = Math.max(1, Math.min(10, Number(body.adultes) || 2))
+
+    // Validation obligatoire
+    if (!prenom || !nom) {
+      return NextResponse.json({ error: 'Prénom et nom requis' }, { status: 400 })
+    }
+    if (!email || !isValidEmail(email)) {
+      return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
+    }
+
+    const guestName = `${prenom} ${nom}`.trim()
+    const today = new Date().toISOString().split('T')[0]
+
     const { error } = await getSupabaseAdmin()
       .from('reservations')
       .insert({
-        room_id:     body.chambre || 'Sans préférence',
-        guest_name:  `${body.prenom || ''} ${body.nom || ''}`.trim(),
-        guest_email: body.email || '',
-        guest_phone: body.tel || '',
-        check_in:    body.arrivee || new Date().toISOString().split('T')[0],
-        check_out:   body.depart  || new Date().toISOString().split('T')[0],
-        guests:      Number(body.adultes) || 2,
+        room_id:     chambre || 'Sans préférence',
+        guest_name:  guestName,
+        guest_email: email,
+        guest_phone: tel,
+        check_in:    arrivee || today,
+        check_out:   depart  || today,
+        guests:      adultes,
         total_price: 0,
         status:      'pending',
-        message:     body.message || '',
+        message,
       })
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return NextResponse.json({ error: 'Erreur lors de l\'envoi' }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
   }
 }

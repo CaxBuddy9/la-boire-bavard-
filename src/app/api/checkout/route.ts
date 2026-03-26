@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getStripe, PRICE_PER_NIGHT, TABLE_HOTES_PRICE } from '@/lib/stripe'
+import { ROOMS } from '@/lib/rooms'
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -9,69 +10,91 @@ function getSupabaseAdmin() {
   return createClient(url, key)
 }
 
-// Convertit DD/MM/YYYY ou YYYY-MM-DD → YYYY-MM-DD
+// Convertit DD/MM/YYYY ou YYYY-MM-DD → YYYY-MM-DD (avec validation)
 function toISO(s: string): string | null {
   if (!s) return null
-  if (s.includes('-') && s.split('-')[0].length === 4) return s
-  const [d, m, y] = s.split('/')
-  if (!d || !m || !y) return null
-  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const d = new Date(s)
+    return isNaN(d.getTime()) ? null : s
+  }
+  const match = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (!match) return null
+  const [, d, m, y] = match
+  const date = new Date(`${y}-${m}-${d}`)
+  if (isNaN(date.getTime())) return null
+  return `${y}-${m}-${d}`
 }
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+const VALID_ROOM_NAMES = ROOMS.map(r => r.name)
 
 export async function POST(req: NextRequest) {
   try {
     const { nuits, chambre, arrive, depart, pers, nom, email, tel, tableHotes } = await req.json()
 
-    if (!nuits || nuits < 1) {
+    // Validation des inputs
+    const nuitsNum = Number(nuits)
+    if (!nuitsNum || nuitsNum < 1 || nuitsNum > 365) {
       return NextResponse.json({ error: 'Nombre de nuits invalide' }, { status: 400 })
     }
+    if (!chambre || !VALID_ROOM_NAMES.includes(chambre)) {
+      return NextResponse.json({ error: 'Chambre invalide' }, { status: 400 })
+    }
+    if (email && !isValidEmail(email)) {
+      return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
+    }
+    const checkIn  = toISO(arrive)
+    const checkOut = toISO(depart)
+    if (!checkIn || !checkOut || checkOut <= checkIn) {
+      return NextResponse.json({ error: 'Dates invalides' }, { status: 400 })
+    }
+    const persNum = Math.max(1, Math.min(10, Number(pers) || 2))
 
-    const tableHotesTotal = tableHotes ? Math.round(pers || 2) * TABLE_HOTES_PRICE * nuits : 0
-    const amount = Math.round(nuits * PRICE_PER_NIGHT * 100) + tableHotesTotal * 100
+    const tableHotesTotal = tableHotes ? persNum * TABLE_HOTES_PRICE * nuitsNum : 0
+    const amount = Math.round(nuitsNum * PRICE_PER_NIGHT * 100) + tableHotesTotal * 100
 
     const paymentIntent = await getStripe().paymentIntents.create({
       amount,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
       metadata: {
-        chambre:    chambre      || '',
-        arrive:     arrive       || '',
-        depart:     depart       || '',
-        pers:       String(pers  || 2),
-        nom:        nom          || '',
-        email:      email        || '',
-        tel:        tel          || '',
+        chambre,
+        arrive:     arrive     || '',
+        depart:     depart     || '',
+        pers:       String(persNum),
+        nom:        nom        || '',
+        email:      email      || '',
+        tel:        tel        || '',
         tableHotes: tableHotes ? 'oui' : 'non',
       },
-      description: `La Boire Bavard — ${chambre} · ${nuits} nuit${nuits > 1 ? 's' : ''} · ${arrive} → ${depart}${tableHotes ? ' · Table d\'hôtes' : ''}`,
-      receipt_email: email || undefined,
+      description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
+      receipt_email: email && isValidEmail(email) ? email : undefined,
     })
 
-    // Insérer immédiatement en "pending" pour bloquer les dates dès la création du paiement
-    const checkIn  = toISO(arrive)
-    const checkOut = toISO(depart)
-    if (checkIn && checkOut) {
-      const supabase = getSupabaseAdmin()
-      if (supabase) {
-        await supabase.from('reservations').insert({
-          room_id:               chambre || 'inconnu',
-          guest_name:            nom     || 'Inconnu',
-          guest_email:           email   || '',
-          guest_phone:           tel     || '',
-          check_in:              checkIn,
-          check_out:             checkOut,
-          guests:                Number(pers) || 2,
-          total_price:           Math.round(amount / 100),
-          status:                'pending',
-          stripe_payment_intent: paymentIntent.id,
-          table_hotes:           tableHotes === true,
-        })
-      }
+    // Insérer immédiatement en "pending" pour bloquer les dates
+    const supabase = getSupabaseAdmin()
+    if (supabase) {
+      await supabase.from('reservations').insert({
+        room_id:               chambre,
+        guest_name:            nom     || 'Inconnu',
+        guest_email:           email   || '',
+        guest_phone:           tel     || '',
+        check_in:              checkIn,
+        check_out:             checkOut,
+        guests:                persNum,
+        total_price:           Math.round(amount / 100),
+        status:                'pending',
+        stripe_payment_intent: paymentIntent.id,
+        table_hotes:           tableHotes === true,
+      })
     }
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret })
   } catch (err: any) {
     console.error('[checkout] Error:', err.message)
-    return NextResponse.json({ error: err.message || 'Erreur serveur' }, { status: 500 })
+    return NextResponse.json({ error: 'Erreur lors de la création du paiement' }, { status: 500 })
   }
 }

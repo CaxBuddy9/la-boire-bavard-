@@ -17,12 +17,16 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
+              // unsafe-eval requis par Next.js (Turbopack/hydration) — unsafe-inline requis par Stripe.js
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
               "frame-src https://js.stripe.com https://hooks.stripe.com https://www.openstreetmap.org",
-              "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co",
+              "connect-src 'self' https://api.stripe.com https://*.supabase.co wss://*.supabase.co https://api.open-meteo.com",
               "img-src 'self' data: https:",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
+              "worker-src 'self'",
+              "base-uri 'self'",
+              "form-action 'self'",
             ].join('; '),
           },
           { key: 'X-Frame-Options', value: 'DENY' },

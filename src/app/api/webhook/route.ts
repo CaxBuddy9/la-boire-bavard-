@@ -2,56 +2,58 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 
-// Client Supabase avec service_role (accès total, server-side uniquement)
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Supabase not configured')
+  if (!url || !key) throw new Error('Supabase non configuré')
   return createClient(url, key)
 }
 
-// Désactiver le body parser — Stripe a besoin du raw body pour vérifier la signature
 export const config = { api: { bodyParser: false } }
+
+// Convertit dd/mm/yyyy ou yyyy-mm-dd → yyyy-mm-dd
+function parseDate(s: string): string | null {
+  if (!s) return null
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s
+  const match = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (!match) return null
+  const [, d, m, y] = match
+  const date = new Date(`${y}-${m}-${d}`)
+  if (isNaN(date.getTime())) return null
+  return `${y}-${m}-${d}`
+}
 
 export async function POST(req: NextRequest) {
   const body      = await req.text()
   const signature = req.headers.get('stripe-signature') ?? ''
-  const secret    = process.env.STRIPE_WEBHOOK_SECRET ?? ''
+  const secret    = process.env.STRIPE_WEBHOOK_SECRET
+
+  // En production, la signature est OBLIGATOIRE
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[webhook] STRIPE_WEBHOOK_SECRET non configuré')
+      return NextResponse.json({ error: 'Configuration manquante' }, { status: 500 })
+    }
+  }
 
   let event: any
 
-  // Vérifie la signature Stripe (sécurité)
   if (secret) {
     try {
       event = getStripe().webhooks.constructEvent(body, signature, secret)
-    } catch (err: any) {
-      console.error('[webhook] Signature invalide:', err.message)
+    } catch {
       return NextResponse.json({ error: 'Signature invalide' }, { status: 400 })
     }
   } else {
-    // Mode développement sans secret webhook
-    event = JSON.parse(body)
+    // Dev uniquement — jamais en production
+    try { event = JSON.parse(body) } catch {
+      return NextResponse.json({ error: 'JSON invalide' }, { status: 400 })
+    }
   }
 
-  // On écoute uniquement les paiements réussis
   if (event.type === 'payment_intent.succeeded') {
-    const pi       = event.data.object
-    const meta     = pi.metadata || {}
-
-    // Convertir la date vers YYYY-MM-DD pour Supabase (supporte DD/MM/YYYY et YYYY-MM-DD)
-    const parseDate = (s: string) => {
-      if (!s) return null
-      if (s.includes('-')) {
-        // Format ISO yyyy-mm-dd (venant du formulaire contact)
-        const parts = s.split('-')
-        if (parts.length === 3 && parts[0].length === 4) return s
-        return null
-      }
-      // Format dd/mm/yyyy (venant de BookingCard)
-      const [d, m, y] = s.split('/')
-      if (!d || !m || !y) return null
-      return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
-    }
+    const pi   = event.data.object
+    const meta = pi.metadata || {}
 
     const checkIn  = parseDate(meta.arrive)
     const checkOut = parseDate(meta.depart)
@@ -64,7 +66,6 @@ export async function POST(req: NextRequest) {
     try {
       const supabase = getSupabaseAdmin()
 
-      // Tenter de mettre à jour la ligne "pending" créée par /api/checkout
       const { data: existing } = await supabase
         .from('reservations')
         .select('id')
@@ -74,21 +75,19 @@ export async function POST(req: NextRequest) {
       if (existing?.id) {
         await supabase.from('reservations').update({ status: 'paid' }).eq('id', existing.id)
       } else {
-        // Fallback : insérer si la ligne n'existe pas encore
-        const { error } = await supabase.from('reservations').insert({
-          room_id:               meta.chambre        || 'inconnu',
-          guest_name:            meta.nom            || 'Inconnu',
-          guest_email:           meta.email          || '',
-          guest_phone:           meta.tel            || '',
+        await supabase.from('reservations').insert({
+          room_id:               meta.chambre       || 'inconnu',
+          guest_name:            meta.nom           || 'Inconnu',
+          guest_email:           meta.email         || '',
+          guest_phone:           meta.tel           || '',
           check_in:              checkIn,
           check_out:             checkOut,
-          guests:                Number(meta.pers)   || 2,
+          guests:                Math.max(1, Number(meta.pers) || 2),
           total_price:           Math.round(pi.amount / 100),
           status:                'paid',
           stripe_payment_intent: pi.id,
           table_hotes:           meta.tableHotes === 'oui',
         })
-        if (error) console.error('[webhook] Supabase insert error:', error.message)
       }
     } catch (err: any) {
       console.error('[webhook] Erreur Supabase:', err.message)
