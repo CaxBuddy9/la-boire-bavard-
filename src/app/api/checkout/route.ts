@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getStripe, PRICE_PER_NIGHT, TABLE_HOTES_PRICE } from '@/lib/stripe'
-import { ROOMS } from '@/lib/rooms'
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -29,19 +28,28 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-const VALID_ROOM_NAMES = ROOMS.map(r => r.name)
+function sanitize(s: unknown, max = 200): string {
+  return typeof s === 'string' ? s.trim().slice(0, max) : ''
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const { nuits, chambre, arrive, depart, pers, nom, email, tel, tableHotes } = await req.json()
+    const body = await req.json()
+    const { nuits, pers, tableHotes } = body
+    const chambre = sanitize(body.chambre, 100)
+    const arrive  = sanitize(body.arrive, 20)
+    const depart  = sanitize(body.depart, 20)
+    const nom     = sanitize(body.nom, 200)
+    const email   = sanitize(body.email, 200)
+    const tel     = sanitize(body.tel, 30)
 
     // Validation des inputs
     const nuitsNum = Number(nuits)
     if (!nuitsNum || nuitsNum < 1 || nuitsNum > 365) {
       return NextResponse.json({ error: 'Nombre de nuits invalide' }, { status: 400 })
     }
-    if (!chambre || !VALID_ROOM_NAMES.includes(chambre)) {
-      return NextResponse.json({ error: 'Chambre invalide' }, { status: 400 })
+    if (!chambre) {
+      return NextResponse.json({ error: 'Chambre requise' }, { status: 400 })
     }
     if (email && !isValidEmail(email)) {
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
