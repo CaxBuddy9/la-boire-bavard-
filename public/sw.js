@@ -1,9 +1,9 @@
-const CACHE = 'lbb-v2'
+const CACHE = 'lbb-v3'
 
 self.addEventListener('install', e => {
   self.skipWaiting()
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(['/admin', '/manifest.json']))
+    caches.open(CACHE).then(c => c.addAll(['/manifest.json']))
   )
 })
 
@@ -17,8 +17,19 @@ self.addEventListener('activate', e => {
 })
 
 self.addEventListener('fetch', e => {
-  // Network first, fallback to cache
+  const url = new URL(e.request.url)
+
+  // Ne pas intercepter les API calls, les images next/, ni les routes dynamiques
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/_next/') ||
+    url.pathname.startsWith('/admin')
+  ) return
+
+  // Uniquement les assets statiques en cache-first
+  if (e.request.method !== 'GET') return
+
   e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
+    caches.match(e.request).then(cached => cached || fetch(e.request))
   )
 })
