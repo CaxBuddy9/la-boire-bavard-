@@ -276,6 +276,17 @@ function PaiementInner() {
             options={{
               clientSecret,
               locale: 'fr',
+              appearance: {
+                theme: 'night',
+                variables: {
+                  colorPrimary: '#c4a050',
+                  colorBackground: '#1a2518',
+                  colorText: '#f5f0e8',
+                  colorDanger: '#e07070',
+                  fontFamily: 'Raleway, system-ui, sans-serif',
+                  borderRadius: '2px',
+                },
+              },
             }}
           >
             <PayForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />

@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
     const paymentIntent = await getStripe().paymentIntents.create({
       amount: totalAmount,
       currency: 'eur',
+      payment_method_types: ['card'],
       metadata,
       description: `La Boire Bavard — ${chambre} · ${nuitsNum} nuit${nuitsNum > 1 ? 's' : ''} · ${arrive} → ${depart}`,
       receipt_email: email && isValidEmail(email) ? email : undefined,
