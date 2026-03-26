@@ -12,7 +12,14 @@ import {
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+// Lazy init — évite les problèmes SSR de Next.js App Router
+let stripePromise: ReturnType<typeof loadStripe> | null = null
+function getStripe() {
+  if (!stripePromise) {
+    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+  }
+  return stripePromise
+}
 
 const TABLE_HOTES_PRICE = 25
 
@@ -336,7 +343,7 @@ function PaiementInner() {
 
         {/* Étape 2 — Paiement */}
         {step === 2 && clientSecret && (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <Elements stripe={getStripe()} options={{ clientSecret }}>
             <CardForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />
           </Elements>
         )}
