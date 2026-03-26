@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadStripe } from '@stripe/stripe-js'
@@ -119,19 +119,29 @@ function PaiementInner() {
   // Étape 2 : paiement
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [fetchError,   setFetchError]   = useState('')
+  const called = useRef(false)
 
   const tableHotesTotal = tableHotes ? pers * TABLE_HOTES_PRICE * nuits : 0
   const total = nuits * 88 + tableHotesTotal
 
-  // Si on vient du BookingCard (clientSecret déjà créé), sauter directement à l'étape 2
+  // Venant du BookingCard (go=1) : appeler l'API directement et passer à l'étape 2
   useEffect(() => {
-    const stored = sessionStorage.getItem('lbb_clientSecret')
-    if (stored) {
-      sessionStorage.removeItem('lbb_clientSecret')
-      sessionStorage.removeItem('lbb_total')
-      setClientSecret(stored)
-      setStep(2)
-    }
+    const go = params.get('go')
+    if (go !== '1' || called.current) return
+    called.current = true
+    fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nuits, chambre, arrive, depart, pers, nom, email, tel }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.error) { setFetchError(d.error); return }
+        setClientSecret(d.clientSecret)
+        setStep(2)
+      })
+      .catch(() => setFetchError('Impossible de contacter le serveur.'))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const goToPayment = async (e: React.FormEvent) => {
@@ -190,20 +200,37 @@ function PaiementInner() {
       {/* Formulaire */}
       <div style={{ background: 'rgba(255,255,255,.025)', border: '1px solid rgba(255,255,255,.06)', padding: '40px' }}>
 
-        {/* Indicateur étapes */}
-        <div style={{ display: 'flex', gap: 0, marginBottom: 32 }}>
-          {(['1 · Vos informations', '2 · Paiement'] as const).map((label, i) => (
-            <div key={i} style={{
-              flex: 1, textAlign: 'center', padding: '10px',
-              fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase',
-              color: step === i+1 ? '#c4a050' : 'rgba(255,255,255,.25)',
-              borderBottom: `2px solid ${step === i+1 ? '#c4a050' : 'rgba(255,255,255,.08)'}`,
-            }}>{label}</div>
-          ))}
-        </div>
+        {/* Chargement auto depuis BookingCard */}
+        {params.get('go') === '1' && step === 1 && !fetchError && (
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(196,160,80,.7)' }}>
+              Préparation du paiement…
+            </p>
+          </div>
+        )}
 
-        {/* Étape 1 — Informations */}
-        {step === 1 && (
+        {fetchError && (
+          <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '16px', marginBottom: 24, fontFamily: 'var(--font-raleway)', fontSize: '0.82rem', color: '#e07070' }}>
+            {fetchError}
+          </div>
+        )}
+
+        {/* Indicateur étapes (masqué pendant auto-chargement) */}
+        {!(params.get('go') === '1' && step === 1) && (
+          <div style={{ display: 'flex', gap: 0, marginBottom: 32 }}>
+            {(['1 · Vos informations', '2 · Paiement'] as const).map((label, i) => (
+              <div key={i} style={{
+                flex: 1, textAlign: 'center', padding: '10px',
+                fontFamily: 'var(--font-raleway)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase',
+                color: step === i+1 ? '#c4a050' : 'rgba(255,255,255,.25)',
+                borderBottom: `2px solid ${step === i+1 ? '#c4a050' : 'rgba(255,255,255,.08)'}`,
+              }}>{label}</div>
+            ))}
+          </div>
+        )}
+
+        {/* Étape 1 — Informations (seulement si pas de go=1) */}
+        {step === 1 && params.get('go') !== '1' && (
           <form onSubmit={goToPayment}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 24 }}>
               <div>

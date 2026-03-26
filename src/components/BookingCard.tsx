@@ -38,8 +38,6 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   const [tel,          setTel]          = useState('')
   const [shake,        setShake]        = useState(false)
   const [bookedRanges, setBookedRanges] = useState<BookedRange[]>([])
-  const [loading,      setLoading]      = useState(false)
-  const [error,        setError]        = useState('')
   const pickerRef = useRef<DateRangePickerHandle>(null)
   const router = useRouter()
 
@@ -60,7 +58,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
   const datesOk   = nights > 0
   const contactOk = nom.trim().length > 0 && email.trim().includes('@')
 
-  const handleReserve = async () => {
+  const handleReserve = () => {
     if (!datesOk) {
       pickerRef.current?.openCheckin()
       setShake(true)
@@ -69,45 +67,18 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
     }
     if (!contactOk) return
 
-    setLoading(true)
-    setError('')
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chambre: roomName,
-          arrive:  fmtDate(checkin),
-          depart:  fmtDate(checkout),
-          nuits:   nights,
-          pers:    persons,
-          nom,
-          email,
-          tel,
-        }),
-      })
-      const data = await res.json()
-      if (data.error) { setError(data.error); setLoading(false); return }
-
-      // Stocker le clientSecret en session pour que /paiement saute l'étape 1
-      sessionStorage.setItem('lbb_clientSecret', data.clientSecret)
-      sessionStorage.setItem('lbb_total', String(total))
-
-      const p = new URLSearchParams({
-        chambre: roomName,
-        arrive:  fmtDate(checkin),
-        depart:  fmtDate(checkout),
-        nuits:   String(nights),
-        pers:    String(persons),
-        nom,
-        email,
-        tel,
-      })
-      router.push(`/paiement?${p.toString()}`)
-    } catch {
-      setError('Impossible de contacter le serveur.')
-      setLoading(false)
-    }
+    const p = new URLSearchParams({
+      chambre: roomName,
+      arrive:  fmtDate(checkin),
+      depart:  fmtDate(checkout),
+      nuits:   String(nights),
+      pers:    String(persons),
+      nom,
+      email,
+      tel,
+      go: '1',
+    })
+    router.push(`/paiement?${p.toString()}`)
   }
 
   return (
@@ -294,26 +265,15 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         </>
       )}
 
-      {/* Erreur API */}
-      {error && (
-        <div style={{
-          background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)',
-          padding: '10px 14px', marginBottom: 14,
-          fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: '#e07070',
-        }}>
-          {error}
-        </div>
-      )}
-
       {/* CTAs */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 6 }}>
         <button
           onClick={handleReserve}
-          disabled={loading || (datesOk && !contactOk)}
+          disabled={datesOk && !contactOk}
           style={{
             width: '100%',
             textAlign: 'center',
-            background: (datesOk && !contactOk) ? 'rgba(196,160,80,.35)' : loading ? 'rgba(196,160,80,.6)' : '#c4a050',
+            background: (datesOk && !contactOk) ? 'rgba(196,160,80,.35)' : '#c4a050',
             color: '#0d110e',
             border: 'none',
             fontFamily: 'var(--font-raleway)',
@@ -322,15 +282,13 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
             textTransform: 'uppercase',
             fontWeight: 700,
             padding: '16px',
-            cursor: (loading || (datesOk && !contactOk)) ? 'default' : 'pointer',
+            cursor: (datesOk && !contactOk) ? 'default' : 'pointer',
             transition: 'all .2s',
           }}
         >
-          {loading
-            ? 'Chargement…'
-            : datesOk
-              ? (contactOk ? `Payer · ${total} €` : 'Remplissez vos coordonnées ↑')
-              : 'Réserver cette chambre'}
+          {datesOk
+            ? (contactOk ? `Payer · ${total} €` : 'Remplissez vos coordonnées ↑')
+            : 'Réserver cette chambre'}
         </button>
         <Link
           href={`/contact?chambre=${encodeURIComponent(roomName)}${checkin ? `&arrive=${checkin}` : ''}${checkout ? `&depart=${checkout}` : ''}${persons ? `&pers=${persons}` : ''}`}
