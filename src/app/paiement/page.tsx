@@ -29,9 +29,16 @@ function CardForm({
 }) {
   const stripe   = useStripe()
   const elements = useElements()
-  const [status, setStatus] = useState<'idle'|'loading'|'error'>('idle')
-  const [errMsg, setErrMsg] = useState('')
-  const [ready,  setReady]  = useState(false)
+  const [status,  setStatus] = useState<'idle'|'loading'|'error'>('idle')
+  const [errMsg,  setErrMsg] = useState('')
+  const [ready,   setReady]  = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
+
+  // Si Stripe ne répond pas en 10s → afficher un message d'aide
+  useEffect(() => {
+    const t = setTimeout(() => { if (!ready) setTimedOut(true) }, 10000)
+    return () => clearTimeout(t)
+  }, [ready])
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -61,12 +68,31 @@ function CardForm({
         Paiement sécurisé
       </p>
       <div style={{ marginBottom: 24 }}>
-        <PaymentElement
-          onReady={() => setReady(true)}
-          options={{ layout: 'tabs', fields: { billingDetails: { name: 'never', email: 'never' } } }}
-        />
-        {!ready && (
-          <div style={{ color: 'rgba(255,255,255,.3)', fontSize: '0.8rem', padding: '16px 0' }}>Chargement…</div>
+        {timedOut ? (
+          <div style={{ background: 'rgba(224,112,112,.08)', border: '1px solid rgba(224,112,112,.25)', padding: '20px', borderRadius: 2 }}>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.8rem', color: '#e07070', marginBottom: 12 }}>
+              Le formulaire de paiement ne se charge pas.
+            </p>
+            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.75rem', color: 'rgba(255,255,255,.4)', marginBottom: 8 }}>
+              Merci de contacter Sandrine directement pour finaliser votre réservation :
+            </p>
+            <a href="tel:0675786335" style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.85rem', color: '#c4a050', textDecoration: 'none', marginBottom: 4 }}>
+              📞 06 75 78 63 35
+            </a>
+            <a href="mailto:laboirebavard@gmail.com" style={{ display: 'block', fontFamily: 'var(--font-raleway)', fontSize: '0.85rem', color: '#c4a050', textDecoration: 'none' }}>
+              ✉ laboirebavard@gmail.com
+            </a>
+          </div>
+        ) : (
+          <>
+            <PaymentElement
+              onReady={() => setReady(true)}
+              options={{ layout: 'tabs' }}
+            />
+            {!ready && (
+              <div style={{ color: 'rgba(255,255,255,.3)', fontSize: '0.8rem', padding: '16px 0' }}>Chargement…</div>
+            )}
+          </>
         )}
       </div>
 
