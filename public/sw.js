@@ -19,6 +19,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url)
 
+  // Ne pas intercepter les requêtes externes (Stripe, fonts, etc.)
+  if (url.origin !== self.location.origin) return
+
   // Ne pas intercepter les API calls, les images next/, ni les routes dynamiques
   if (
     url.pathname.startsWith('/api/') ||
