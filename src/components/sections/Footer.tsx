@@ -53,7 +53,7 @@ export default function Footer() {
 
         {/* Tous les logos — une seule rangée avec barres dorées */}
         <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-3 mb-10"
-          style={{ opacity: 0.45 }}>
+          style={{ opacity: 0.45, overflowX: 'hidden' }}>
           {LABELS.map(({ href, C, label }) => href ? (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}
               className="hover:opacity-100 transition-opacity"
@@ -70,8 +70,8 @@ export default function Footer() {
             className="hover:opacity-100 transition-opacity"
             style={{ display: 'flex', alignItems: 'center' }}
           >
-            <Image src="/logos/golf-angers.png" alt="Golf d'Angers" height={36} width={120}
-              className="object-contain w-auto" style={{ height: 36, mixBlendMode: 'screen' }}
+            <Image src="/logos/golf-angers.png" alt="Golf d'Angers" height={30} width={100}
+              className="object-contain w-auto" style={{ height: 30, mixBlendMode: 'screen' }}
             />
           </a>
         </div>
