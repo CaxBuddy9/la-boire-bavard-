@@ -3,41 +3,52 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 
-// Module-level init — stable across renders, safe in 'use client' files
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+// Initialisation côté client uniquement
+const stripePromise = typeof window !== 'undefined'
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+  : null
 
 const TABLE_HOTES_PRICE = 25
 
-// ── Formulaire de paiement (rendu après obtention du clientSecret) ─────────
-function PayForm({ total, chambre, arrive, depart, nom, email }: {
-  total: number; chambre: string; arrive: string; depart: string; nom: string; email: string
+// ── Formulaire carte ───────────────────────────────────────────────────────
+function CardForm({ total, chambre, arrive, depart, nom, email, clientSecret }: {
+  total: number; chambre: string; arrive: string
+  depart: string; nom: string; email: string; clientSecret: string
 }) {
   const stripe   = useStripe()
   const elements = useElements()
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle')
   const [errMsg, setErrMsg] = useState('')
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!stripe || !elements) return
+    const card = elements.getElement(CardElement)
+    if (!card) return
+
     setStatus('loading')
     setErrMsg('')
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/paiement/confirmation?nom=${encodeURIComponent(nom)}&chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}`,
-        payment_method_data: { billing_details: { name: nom, email } },
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card,
+        billing_details: { name: nom, email },
       },
     })
 
     if (error) {
       setStatus('error')
       setErrMsg(error.message || 'Paiement refusé.')
+      return
+    }
+
+    if (paymentIntent?.status === 'succeeded') {
+      setStatus('success')
+      window.location.href = `/paiement/confirmation?nom=${encodeURIComponent(nom)}&chambre=${encodeURIComponent(chambre)}&arrive=${encodeURIComponent(arrive)}&depart=${encodeURIComponent(depart)}`
     }
   }
 
@@ -47,8 +58,30 @@ function PayForm({ total, chambre, arrive, depart, nom, email }: {
         Paiement sécurisé
       </p>
 
-      <div style={{ marginBottom: 24 }}>
-        <PaymentElement options={{ layout: 'tabs' }} />
+      {/* Champ carte Stripe */}
+      <div style={{
+        background: 'rgba(255,255,255,.05)',
+        border: '1px solid rgba(255,255,255,.15)',
+        padding: '14px 16px',
+        marginBottom: 24,
+      }}>
+        <CardElement options={{
+          style: {
+            base: {
+              color: '#f5f0e8',
+              fontFamily: 'Raleway, system-ui, sans-serif',
+              fontSize: '16px',
+              fontWeight: '300',
+              '::placeholder': { color: 'rgba(245,240,232,.35)' },
+              iconColor: '#c4a050',
+            },
+            invalid: {
+              color: '#e07070',
+              iconColor: '#e07070',
+            },
+          },
+          hidePostalCode: true,
+        }} />
       </div>
 
       <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '12px 16px', marginBottom: 24, fontSize: '0.75rem', color: 'rgba(255,255,255,.4)', display: 'flex', gap: 10, alignItems: 'center', fontFamily: 'var(--font-raleway)' }}>
@@ -62,15 +95,19 @@ function PayForm({ total, chambre, arrive, depart, nom, email }: {
         </div>
       )}
 
-      <button type="submit" disabled={!stripe || status === 'loading'} style={{
-        width: '100%',
-        background: (!stripe || status === 'loading') ? 'rgba(196,160,80,.4)' : '#c4a050',
-        color: '#111', border: 'none', padding: '16px',
-        fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
-        letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
-        cursor: (!stripe || status === 'loading') ? 'default' : 'pointer',
-      }}>
-        {status === 'loading' ? 'Traitement…' : `Payer ${total} €`}
+      <button
+        type="submit"
+        disabled={!stripe || status === 'loading' || status === 'success'}
+        style={{
+          width: '100%',
+          background: (status === 'loading' || status === 'success') ? 'rgba(196,160,80,.5)' : '#c4a050',
+          color: '#111', border: 'none', padding: '16px',
+          fontFamily: 'var(--font-raleway)', fontSize: '0.65rem',
+          letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
+          cursor: (status === 'loading' || status === 'success') ? 'default' : 'pointer',
+        }}
+      >
+        {status === 'loading' ? 'Traitement…' : status === 'success' ? 'Paiement validé ✓' : `Payer ${total} €`}
       </button>
 
       <p style={{ textAlign: 'center', fontFamily: 'var(--font-raleway)', fontSize: '0.7rem', color: 'rgba(255,255,255,.2)', marginTop: 12 }}>
@@ -120,7 +157,7 @@ function PaiementInner() {
     setFetching(false)
   }
 
-  // go=1 : on vient de BookingCard avec toutes les infos — appel API immédiat
+  // go=1 : appel API immédiat au montage
   useEffect(() => {
     if (params.get('go') !== '1' || called.current) return
     called.current = true
@@ -176,7 +213,6 @@ function PaiementInner() {
           </div>
         )}
 
-        {/* Chargement */}
         {fetching && (
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
             <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(196,160,80,.7)' }}>
@@ -185,10 +221,9 @@ function PaiementInner() {
           </div>
         )}
 
-        {/* Formulaire coordonnées — si pas encore de clientSecret et pas en chargement */}
+        {/* Formulaire coordonnées */}
         {!clientSecret && !fetching && (
           <form onSubmit={handleSubmit}>
-            {/* Masquer les champs si go=1 (déjà remplis), sauf en cas d'erreur */}
             {(params.get('go') !== '1' || fetchError) && (
               <>
                 <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)', marginBottom: 24 }}>
@@ -214,8 +249,6 @@ function PaiementInner() {
                       onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')} />
                   </div>
                 </div>
-
-                {/* Table d'hôtes */}
                 <div style={{ background: 'rgba(196,160,80,.04)', border: '1px solid rgba(196,160,80,.15)', padding: '18px 20px', marginBottom: 24, borderRadius: 2 }}>
                   <label style={{ display: 'flex', alignItems: 'flex-start', gap: 14, cursor: 'pointer' }}>
                     <input type="checkbox" checked={tableHotes} onChange={e => setTableHotes(e.target.checked)}
@@ -240,12 +273,8 @@ function PaiementInner() {
               letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontWeight: 700,
               marginBottom: 16,
             }}>
-              Payer en ligne — {total} €
+              Continuer vers le paiement — {total} €
             </button>
-
-            <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '0.62rem', color: 'rgba(255,255,255,.2)', textAlign: 'center', marginBottom: 16 }}>
-              Paiement sécurisé Stripe · Annulation gratuite 48h avant
-            </p>
 
             {params.get('go') !== '1' && (
               <>
@@ -269,27 +298,14 @@ function PaiementInner() {
           </form>
         )}
 
-        {/* Formulaire carte Stripe */}
-        {clientSecret && (
-          <Elements
-            stripe={stripePromise}
-            options={{
-              clientSecret,
-              locale: 'fr',
-              appearance: {
-                theme: 'night',
-                variables: {
-                  colorPrimary: '#c4a050',
-                  colorBackground: '#1a2518',
-                  colorText: '#f5f0e8',
-                  colorDanger: '#e07070',
-                  fontFamily: 'Raleway, system-ui, sans-serif',
-                  borderRadius: '2px',
-                },
-              },
-            }}
-          >
-            <PayForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />
+        {/* Formulaire carte Stripe — CardElement classique */}
+        {clientSecret && stripePromise && (
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <CardForm
+              total={total} chambre={chambre} arrive={arrive}
+              depart={depart} nom={nom} email={email}
+              clientSecret={clientSecret}
+            />
           </Elements>
         )}
       </div>
