@@ -98,8 +98,8 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
               )}
             </div>
 
-            {/* Right: booking card */}
-            <aside className="md:sticky md:top-[90px] self-start">
+            {/* Right: booking card — first on mobile, right column on desktop */}
+            <aside className="order-first md:order-none md:sticky md:top-[90px] self-start">
               <BookingCard roomName={room.name} capacityMax={room.capacityMax} />
             </aside>
           </div>

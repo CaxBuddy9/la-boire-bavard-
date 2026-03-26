@@ -281,6 +281,9 @@ function PaiementInner() {
                 colorText: '#f5f0e8', fontFamily: 'Raleway, sans-serif', borderRadius: '2px',
               },
             },
+            fonts: [
+              { cssSrc: 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap' },
+            ],
           }}>
             <CardForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />
           </Elements>

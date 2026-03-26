@@ -24,6 +24,7 @@
     overflow-x: hidden;
   }
   h1, h2, h3, h4 { font-family: var(--font-playfair); font-weight: 400; }
+  input, textarea, select, button { font-family: inherit; }
 }
 
 @layer utilities {
