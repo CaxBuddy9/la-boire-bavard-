@@ -336,19 +336,7 @@ function PaiementInner() {
 
         {/* Étape 2 — Paiement */}
         {step === 2 && clientSecret && (
-          <Elements stripe={stripePromise} options={{
-            clientSecret,
-            appearance: {
-              theme: 'night',
-              variables: {
-                colorPrimary: '#c4a050', colorBackground: '#131a13',
-                colorText: '#f5f0e8', fontFamily: 'Raleway, sans-serif', borderRadius: '2px',
-              },
-            },
-            fonts: [
-              { cssSrc: 'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap' },
-            ],
-          }}>
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
             <CardForm total={total} chambre={chambre} arrive={arrive} depart={depart} nom={nom} email={email} />
           </Elements>
         )}
