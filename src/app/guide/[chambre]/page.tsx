@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import GuideIntro from '@/components/GuideIntro'
 
 // ─── À modifier facilement ────────────────────────────────────────────────────
 const WIFI_RESEAU   = 'LaBoireBavard'
@@ -82,6 +83,7 @@ export default async function GuidePage({ params }: Props) {
   if (!room) notFound()
 
   return (
+    <GuideIntro roomName={room.name}>
     <main style={{ fontFamily: 'var(--font-raleway, Arial, sans-serif)', background: '#faf7f2', minHeight: '100vh' }}>
 
       {/* ══ EN-TÊTE ══════════════════════════════════════════════════════════ */}
@@ -227,6 +229,7 @@ export default async function GuidePage({ params }: Props) {
       </div>
 
     </main>
+    </GuideIntro>
   )
 }
 
