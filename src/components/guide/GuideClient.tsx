@@ -87,8 +87,8 @@ const T = {
 }
 
 // ─── Données WiFi ─────────────────────────────────────────────────────────────
-const WIFI_RESEAU   = 'LaBoireBavard'
-const WIFI_PASSWORD = 'boire2024'
+const WIFI_RESEAU   = 'Livebox-D6B0'
+const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 
 type RoomData = {
   name: string

@@ -45,8 +45,8 @@ function downloadFile(url, dest) {
 }
 
 // ─── WiFi pour QR code de connexion directe ──────────────────────────────────
-const WIFI_SSID     = 'LaBoireBavard'
-const WIFI_PASSWORD = 'boire2024'
+const WIFI_SSID     = 'Livebox-D6B0'
+const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 const WIFI_TYPE     = 'WPA'   // WPA, WEP, ou nopass
 // ─────────────────────────────────────────────────────────────────────────────
 
