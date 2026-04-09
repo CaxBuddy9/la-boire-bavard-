@@ -10,113 +10,151 @@ export default function GuideIntro({
   children: React.ReactNode
   roomName: string
 }) {
-  const [open, setOpen] = useState(false)
-  const [gone, setGone] = useState(false)
+  const [phase, setPhase] = useState<'show' | 'opening' | 'done'>('show')
 
   useEffect(() => {
-    const t1 = setTimeout(() => setOpen(true), 1800)   // portes s'ouvrent
-    const t2 = setTimeout(() => setGone(true), 3100)   // overlay retiré du DOM
+    const t1 = setTimeout(() => setPhase('opening'), 2200)
+    const t2 = setTimeout(() => setPhase('done'), 3800)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
   return (
     <>
-      {/* ── Contenu de la page — toujours rendu, caché derrière les portes ── */}
       {children}
 
-      {/* ── Overlay double porte ── */}
-      {!gone && (
+      {phase !== 'done' && (
         <div
           aria-hidden="true"
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            overflow: 'hidden', pointerEvents: open ? 'none' : 'all',
+            perspective: '1400px',
+            perspectiveOrigin: '50% 50%',
+            overflow: 'hidden',
           }}
         >
-          {/* Porte gauche */}
+          {/* ── PORTE GAUCHE ── */}
           <div style={{
-            position: 'absolute', top: 0, left: 0,
+            position: 'absolute',
+            top: 0, left: 0,
             width: '50%', height: '100%',
-            background: 'linear-gradient(180deg, #162b1a 0%, #0e1f10 100%)',
-            transform: open ? 'translateX(-100%)' : 'translateX(0)',
-            transition: 'transform 1.25s cubic-bezier(0.76, 0, 0.24, 1)',
+            transformOrigin: '0% 50%',
+            transform: phase === 'opening' ? 'rotateY(-105deg)' : 'rotateY(0deg)',
+            transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            transformStyle: 'preserve-3d',
           }}>
-            {/* Poignée gauche */}
+            {/* Face avant */}
             <div style={{
-              position: 'absolute', top: '50%', right: '14px',
-              transform: 'translateY(-50%)',
-              width: '6px', height: '52px',
-              background: '#c4a050', borderRadius: '3px',
-              opacity: open ? 0 : 0.85,
-              transition: 'opacity 0.3s ease',
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(160deg, #1e3a22 0%, #122018 100%)',
+              boxShadow: 'inset -6px 0 24px rgba(0,0,0,0.5)',
+            }}>
+              {/* Moulure haut */}
+              <div style={{ position: 'absolute', top: 24, left: 20, right: 20, height: '28%', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '3px' }} />
+              {/* Moulure bas */}
+              <div style={{ position: 'absolute', bottom: 24, left: 20, right: 20, height: '38%', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '3px' }} />
+              {/* Poignée gauche */}
+              <div style={{
+                position: 'absolute', top: '50%', right: 18,
+                transform: 'translateY(-50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+              }}>
+                <div style={{ width: 8, height: 50, background: 'linear-gradient(180deg, #e0c070 0%, #a07828 100%)', borderRadius: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.5)' }} />
+                <div style={{ width: 14, height: 5, background: '#c4a050', borderRadius: 2, opacity: 0.7 }} />
+              </div>
+            </div>
+            {/* Tranche latérale (épaisseur de la porte) */}
+            <div style={{
+              position: 'absolute', top: 0, right: -16, width: 16, height: '100%',
+              background: '#0a1510',
+              transform: 'rotateY(90deg)',
+              transformOrigin: 'left center',
             }} />
           </div>
 
-          {/* Porte droite */}
+          {/* ── PORTE DROITE ── */}
           <div style={{
-            position: 'absolute', top: 0, right: 0,
+            position: 'absolute',
+            top: 0, right: 0,
             width: '50%', height: '100%',
-            background: 'linear-gradient(180deg, #162b1a 0%, #0e1f10 100%)',
-            transform: open ? 'translateX(100%)' : 'translateX(0)',
-            transition: 'transform 1.25s cubic-bezier(0.76, 0, 0.24, 1)',
+            transformOrigin: '100% 50%',
+            transform: phase === 'opening' ? 'rotateY(105deg)' : 'rotateY(0deg)',
+            transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            transformStyle: 'preserve-3d',
           }}>
-            {/* Poignée droite */}
+            {/* Face avant */}
             <div style={{
-              position: 'absolute', top: '50%', left: '14px',
-              transform: 'translateY(-50%)',
-              width: '6px', height: '52px',
-              background: '#c4a050', borderRadius: '3px',
-              opacity: open ? 0 : 0.85,
-              transition: 'opacity 0.3s ease',
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(200deg, #1e3a22 0%, #122018 100%)',
+              boxShadow: 'inset 6px 0 24px rgba(0,0,0,0.5)',
+            }}>
+              {/* Moulure haut */}
+              <div style={{ position: 'absolute', top: 24, left: 20, right: 20, height: '28%', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '3px' }} />
+              {/* Moulure bas */}
+              <div style={{ position: 'absolute', bottom: 24, left: 20, right: 20, height: '38%', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '3px' }} />
+              {/* Poignée droite */}
+              <div style={{
+                position: 'absolute', top: '50%', left: 18,
+                transform: 'translateY(-50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+              }}>
+                <div style={{ width: 8, height: 50, background: 'linear-gradient(180deg, #e0c070 0%, #a07828 100%)', borderRadius: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.5)' }} />
+                <div style={{ width: 14, height: 5, background: '#c4a050', borderRadius: 2, opacity: 0.7 }} />
+              </div>
+            </div>
+            {/* Tranche (épaisseur) */}
+            <div style={{
+              position: 'absolute', top: 0, left: -16, width: 16, height: '100%',
+              background: '#0a1510',
+              transform: 'rotateY(-90deg)',
+              transformOrigin: 'right center',
             }} />
           </div>
 
-          {/* Filet d'or central (jointure des portes) */}
+          {/* ── FOND derrière les portes ── */}
           <div style={{
-            position: 'absolute', top: 0, left: '50%',
-            width: '1px', height: '100%',
-            background: 'rgba(196,160,80,0.5)',
-            transform: 'translateX(-0.5px)',
+            position: 'absolute', inset: 0, zIndex: -1,
+            background: '#0a1208',
           }} />
 
-          {/* ── Logo + Bienvenue — centré, disparaît au moment de l'ouverture ── */}
+          {/* ── Jointure centrale ── */}
           <div style={{
-            position: 'absolute', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textAlign: 'center', zIndex: 1,
-            opacity: open ? 0 : 1,
-            transition: 'opacity 0.45s ease',
+            position: 'absolute', top: 0, left: '50%', zIndex: 10,
+            width: 2, height: '100%',
+            background: 'linear-gradient(180deg, transparent 5%, rgba(196,160,80,0.7) 20%, rgba(196,160,80,0.7) 80%, transparent 95%)',
+            transform: 'translateX(-1px)',
+          }} />
+
+          {/* ── Logo + Bienvenue — disparaît à l'ouverture ── */}
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 5,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            opacity: phase === 'opening' ? 0 : 1,
+            transform: phase === 'opening' ? 'scale(0.92)' : 'scale(1)',
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
             pointerEvents: 'none',
-            width: '260px',
+            textAlign: 'center',
+            padding: '0 2rem',
           }}>
-            {/* Logo */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.25rem' }}>
-              <LogoSVG height={130} />
-            </div>
-
-            {/* Ligne or */}
-            <div style={{ width: '36px', height: '1px', background: '#c4a050', margin: '1rem auto 1.25rem' }} />
-
-            {/* Bienvenue */}
+            <LogoSVG height={148} />
+            <div style={{ width: 44, height: 1, background: '#c4a050', margin: '1.5rem auto 1.5rem', opacity: 0.8 }} />
             <p style={{
               fontFamily: 'var(--font-playfair, Georgia, serif)',
-              fontSize: '2.2rem',
+              fontSize: 'clamp(1.8rem, 6vw, 2.6rem)',
               fontWeight: 400,
               fontStyle: 'italic',
               color: 'white',
               margin: 0,
-              lineHeight: 1,
+              letterSpacing: '0.02em',
+              textShadow: '0 2px 20px rgba(0,0,0,0.5)',
             }}>
               Bienvenue
             </p>
-
-            {/* Nom de la chambre */}
             <p style={{
               color: '#c4a050',
-              fontSize: '0.7rem',
-              letterSpacing: '0.22em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.24em',
               textTransform: 'uppercase',
-              marginTop: '0.75rem',
+              marginTop: '0.9rem',
             }}>
               {roomName}
             </p>
