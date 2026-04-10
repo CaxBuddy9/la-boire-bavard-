@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { LogoSVG } from '@/components/Logo'
 
 type Lang = 'fr' | 'en' | 'es' | 'pt'
@@ -30,8 +30,9 @@ export type RoomTheme = {
   navInactive: string
 }
 
-type RoomData = {
+export type RoomData = {
   name: string
+  slug: string
   emoji: string
   bg: string
   theme: RoomTheme
@@ -57,6 +58,7 @@ const T = {
   dietTag:       { fr: 'PRÉFÉRENCES ALIMENTAIRES', en: 'DIETARY PREFERENCES', es: 'PREFERENCIAS ALIMENTARIAS', pt: 'PREFERÊNCIAS ALIMENTARES' },
   dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à Sandrine la veille.', en: 'We tailor breakfast to your needs. Let Sandrine know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a Sandrine de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe a Sandrine das suas preferências na noite anterior.' },
   diets:         { fr: ['Végétarien', 'Végétalien', 'Sans gluten', 'Allergie fruits à coque', 'Sans lactose', 'Halal'], en: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy', 'Dairy-Free', 'Halal'], es: ['Vegetariano', 'Vegano', 'Sin gluten', 'Alergia frutos secos', 'Sin lactosa', 'Halal'], pt: ['Vegetariano', 'Vegano', 'Sem glúten', 'Alergia a nozes', 'Sem lactose', 'Halal'] },
+  dietSent:      { fr: '✓ Sandrine a été prévenue', en: '✓ Sandrine has been notified', es: '✓ Sandrine ha sido avisada', pt: '✓ Sandrine foi notificada' },
   dinnerTag:     { fr: 'DÎNER EN COMMUN', en: 'SHARED DINING', es: 'CENA COMPARTIDA', pt: 'JANTAR PARTILHADO' },
   dinnerTitle:   { fr: 'Table d\'Hôtes', en: 'Host\'s Table', es: 'Mesa de Huéspedes', pt: 'Mesa de Hóspedes' },
   dinnerDesc:    { fr: 'Sandrine cuisine chaque soir un repas généreux autour de la grande table — légumes du potager, produits du terroir angevin, vins de Loire sélectionnés.', en: 'Sandrine cooks a generous dinner around the long table each evening — garden vegetables, Anjou terroir produce, selected Loire wines.', es: 'Sandrine cocina cada noche una cena generosa alrededor de la gran mesa — verduras del huerto, productos del terruño angevino, vinos del Loira seleccionados.', pt: 'A Sandrine cozinha todas as noites um jantar generoso à volta da mesa grande — legumes da horta, produtos do terroir angevino, vinhos do Loira selecionados.' },
@@ -64,10 +66,16 @@ const T = {
   dinnerPrice:   { fr: '25 € par personne', en: '25 € per person', es: '25 € por persona', pt: '25 € por pessoa' },
   dinnerSlots:   { fr: 'Choisissez votre heure', en: 'Select your time', es: 'Elija su hora', pt: 'Escolha a sua hora' },
   dinnerConfirm: { fr: 'Confirmer par WhatsApp', en: 'Confirm via WhatsApp', es: 'Confirmar por WhatsApp', pt: 'Confirmar via WhatsApp' },
+  dinnerSent:    { fr: '✓ Réservation envoyée à Sandrine', en: '✓ Reservation sent to Sandrine', es: '✓ Reserva enviada a Sandrine', pt: '✓ Reserva enviada à Sandrine' },
   poolTag:       { fr: 'BIEN-ÊTRE & DÉTENTE', en: 'WELLNESS & RELAXATION', es: 'BIENESTAR & RELAJACIÓN', pt: 'BEM-ESTAR & RELAXAMENTO' },
   poolTitle:     { fr: 'Piscine & Spa', en: 'Pool & Spa', es: 'Piscina & Spa', pt: 'Piscina & Spa' },
   poolHours:     { fr: 'Ouverte de 9h à 21h', en: 'Open from 9 AM to 9 PM', es: 'Abierta de 9:00 a 21:00', pt: 'Aberta das 9h às 21h' },
   spaNote:       { fr: 'Spa & Sauna sur réservation', en: 'Spa & Sauna by reservation', es: 'Spa & Sauna con reserva', pt: 'Spa & Sauna mediante reserva' },
+  spaBookTitle:  { fr: 'Réserver le Spa & Sauna', en: 'Book the Spa & Sauna', es: 'Reservar el Spa & Sauna', pt: 'Reservar o Spa & Sauna' },
+  spaBookDesc:   { fr: 'Choisissez votre créneau (1h à 1h30). Sandrine confirmera votre réservation.', en: 'Choose your slot (1h to 1.5h). Sandrine will confirm your booking.', es: 'Elija su franja horaria (1h a 1h30). Sandrine confirmará su reserva.', pt: 'Escolha o seu horário (1h a 1h30). Sandrine confirmará a sua reserva.' },
+  spaSlots:      { fr: 'Choisissez un créneau', en: 'Select a time slot', es: 'Elija una franja', pt: 'Escolha um horário' },
+  spaConfirm:    { fr: 'Demander ce créneau', en: 'Request this slot', es: 'Solicitar esta franja', pt: 'Solicitar este horário' },
+  spaSent:       { fr: '✓ Demande envoyée à Sandrine', en: '✓ Request sent to Sandrine', es: '✓ Solicitud enviada a Sandrine', pt: '✓ Pedido enviado à Sandrine' },
   poolRules:     { fr: ['Douche obligatoire avant d\'entrer', 'Serviettes disponibles sur demande', 'Silence demandé après 22h'], en: ['Shower required before entering', 'Towels available on request', 'Quiet hours after 10 PM'], es: ['Ducha obligatoria antes de entrar', 'Toallas disponibles a petición', 'Silencio a partir de las 22:00'], pt: ['Duche obrigatório antes de entrar', 'Toalhas disponíveis a pedido', 'Silêncio após as 22h'] },
   tipsTag:       { fr: 'BONS PLANS', en: 'LOCAL TIPS', es: 'CONSEJOS LOCALES', pt: 'DICAS LOCAIS' },
   tipsTitle:     { fr: 'À Découvrir', en: 'Things to Explore', es: 'Qué Descubrir', pt: 'O Que Descobrir' },
@@ -123,6 +131,7 @@ const WIFI_RESEAU   = 'Livebox-D6B0'
 const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 
 const DINNER_SLOTS = ['19:00', '19:30', '20:00', '20:30']
+const SPA_SLOTS    = ['10:00', '11:30', '14:00', '15:30', '17:00', '18:30', '20:00']
 
 const BREAKFAST_ITEMS = {
   fr: ['Confitures maison', 'Viennoiseries du four', 'Oeufs frais du jardin', 'Fromages d\'Anjou', 'Jus de fruits pressés', 'Café · Thé · Chocolat chaud'],
@@ -138,27 +147,83 @@ const LANGS: { code: Lang; label: string }[] = [
   { code: 'pt', label: 'PT' },
 ]
 
+async function sendToAdmin(room: string, type: string, data: unknown, lang: string) {
+  try {
+    await fetch('/api/guide/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ room, type, data, lang }),
+    })
+  } catch {
+    // dégradation gracieuse — ne pas planter si hors-ligne
+  }
+}
+
 export default function GuideClient({ room }: { room: RoomData }) {
   const [lang, setLang] = useState<Lang>('fr')
   const [selectedDiets, setSelectedDiets] = useState<number[]>([])
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
+  const [selectedSpaSlot, setSelectedSpaSlot] = useState<string | null>(null)
+  const [dietSent, setDietSent] = useState(false)
+  const [dinnerSent, setDinnerSent] = useState(false)
+  const [spaSent, setSpaSent] = useState(false)
 
   const { theme } = room
   const t = (key: keyof typeof T) => (T[key] as Record<Lang, string>)[lang]
+
+  // ── Sauvegarde auto des régimes (debounce 2s) ──────────────────────────────
+  const dietTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const dietInitRef  = useRef(false)
+
+  useEffect(() => {
+    if (!dietInitRef.current) { dietInitRef.current = true; return }
+    setDietSent(false)
+    clearTimeout(dietTimerRef.current)
+    dietTimerRef.current = setTimeout(async () => {
+      const names = (T.diets['fr'] as string[]).filter((_, i) => selectedDiets.includes(i))
+      await sendToAdmin(room.slug, 'diet', { diets: names }, lang)
+      setDietSent(true)
+    }, 2000)
+    return () => clearTimeout(dietTimerRef.current)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDiets])
+
   const toggleDiet = (i: number) =>
     setSelectedDiets(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])
 
-  // Helpers for consistent card styles
-  const card = {
+  // ── Confirmer dîner ────────────────────────────────────────────────────────
+  const confirmDinner = async () => {
+    await sendToAdmin(room.slug, 'dinner', { slot: selectedSlot }, lang)
+    setDinnerSent(true)
+  }
+
+  // ── Confirmer spa ──────────────────────────────────────────────────────────
+  const confirmSpa = async () => {
+    await sendToAdmin(room.slug, 'spa', { slot: selectedSpaSlot }, lang)
+    setSpaSent(true)
+  }
+
+  // Helpers styles ─────────────────────────────────────────────────────────
+  const card: React.CSSProperties = {
     background: theme.cardBg,
     border: theme.cardBorder !== 'transparent' ? `1px solid ${theme.cardBorder}` : undefined,
     boxShadow: theme.cardShadow,
     borderRadius: 20,
-    overflow: 'hidden' as const,
+    overflow: 'hidden',
     marginBottom: '0.875rem',
   }
-  const cardInner = { padding: '1.25rem 1.5rem' }
-  const cardDivider = { borderBottom: `1px solid ${theme.divider}` }
+  const cardInner: React.CSSProperties = { padding: '1.25rem 1.5rem' }
+  const cardDivider: React.CSSProperties = { borderBottom: `1px solid ${theme.divider}` }
+
+  const sentBadge = (label: string): React.CSSProperties => ({
+    display: 'inline-block',
+    background: 'rgba(109,184,122,.15)',
+    color: '#6db87a',
+    fontSize: '0.72rem',
+    padding: '4px 12px',
+    borderRadius: 20,
+    marginTop: 10,
+  })
 
   return (
     <div style={{ background: theme.pageBg, minHeight: '100vh', fontFamily: 'var(--font-raleway, Arial, sans-serif)', paddingBottom: '5rem' }}>
@@ -173,7 +238,6 @@ export default function GuideClient({ room }: { room: RoomData }) {
               <p style={{ fontSize: '0.82rem', fontWeight: 600, color: theme.heading, margin: 0 }}>{room.name}</p>
             </div>
           </div>
-          {/* Sélecteur de langue */}
           <div style={{ display: 'flex', gap: '0.3rem', background: theme.pillBg, borderRadius: 20, padding: '0.25rem' }}>
             {LANGS.map(({ code, label }) => (
               <button
@@ -208,11 +272,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
         </h1>
 
         {/* Hero chambre */}
-        <div style={{
-          background: `linear-gradient(160deg, ${room.bg} 0%, #0a1208 100%)`,
-          borderRadius: 20, padding: '2.5rem 2rem', marginBottom: '0.875rem',
-          position: 'relative', overflow: 'hidden',
-        }}>
+        <div style={{ background: `linear-gradient(160deg, ${room.bg} 0%, #0a1208 100%)`, borderRadius: 20, padding: '2.5rem 2rem', marginBottom: '0.875rem', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: `rgba(${theme.accentRgb},0.08)`, pointerEvents: 'none' }} />
           <p style={{ color: theme.accent, fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
             {room.emoji} {room.name}
@@ -228,8 +288,8 @@ export default function GuideClient({ room }: { room: RoomData }) {
         </div>
 
         {/* Mot de Sandrine */}
-        <div style={{ ...card, overflow: 'visible' }}>
-          <div style={{ ...cardInner }}>
+        <div style={{ ...card, overflow: 'visible' as const }}>
+          <div style={cardInner}>
             <p style={{ fontSize: '1.05rem', color: theme.text, lineHeight: 1.8, margin: 0, fontStyle: 'italic', fontFamily: 'var(--font-playfair, Georgia, serif)' }}>
               {t('sandrineNote')}
             </p>
@@ -243,7 +303,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
         <div style={{ background: theme.wifiBg, borderRadius: 20, padding: '1.75rem 1.5rem', marginBottom: '0.875rem', border: `1px solid rgba(${theme.accentRgb},.18)` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <p style={{ color: theme.accent, fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>📶 {t('wifiTitle')}</p>
-            <div style={{ width: 32, height: 32, background: `rgba(${theme.accentRgb},.15)`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', color: theme.accent }}>✓</div>
+            <div style={{ width: 32, height: 32, background: `rgba(${theme.accentRgb},.15)`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.accent }}>✓</div>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <div style={{ flex: 1, background: 'rgba(255,255,255,0.07)', borderRadius: 14, padding: '1rem', textAlign: 'center' }}>
@@ -265,7 +325,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
             { emoji: '☕', label: t('breakfastTime'), val: '7h30 – 10h00' },
             { emoji: '🍽️', label: t('tableLabel'), val: '25 € / pers.' },
           ].map(({ emoji, label, val }) => (
-            <div key={label} style={{ ...card, overflow: 'visible', marginBottom: 0, textAlign: 'center', padding: '1.1rem 1rem', borderTop: `3px solid ${theme.accent}` }}>
+            <div key={label} style={{ ...card, overflow: 'visible' as const, marginBottom: 0, textAlign: 'center', padding: '1.1rem 1rem', borderTop: `3px solid ${theme.accent}` }}>
               <div style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>{emoji}</div>
               <p style={{ fontSize: '0.72rem', color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0.25rem' }}>{label}</p>
               <p style={{ fontSize: '0.92rem', fontWeight: 700, color: theme.heading, margin: 0 }}>{val}</p>
@@ -274,11 +334,8 @@ export default function GuideClient({ room }: { room: RoomData }) {
         </div>
 
         {/* Petit-déjeuner */}
-        <div style={{ ...card }}>
-          <div style={{
-            background: 'linear-gradient(145deg, #3d2008 0%, #1a0d04 100%)',
-            padding: '2.5rem 1.75rem', position: 'relative', overflow: 'hidden',
-          }}>
+        <div style={card}>
+          <div style={{ background: 'linear-gradient(145deg, #3d2008 0%, #1a0d04 100%)', padding: '2.5rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.15, lineHeight: 1 }}>☕</div>
             <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
               {t('morningTag')}
@@ -300,9 +357,9 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
         </div>
 
-        {/* Préférences alimentaires */}
-        <div style={{ ...card, overflow: 'visible' }}>
-          <div style={{ ...cardInner }}>
+        {/* Préférences alimentaires — avec sauvegarde auto */}
+        <div style={{ ...card, overflow: 'visible' as const }}>
+          <div style={cardInner}>
             <p style={{ fontSize: '0.68rem', color: theme.accent, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.375rem' }}>
               {t('dietTag')}
             </p>
@@ -328,11 +385,16 @@ export default function GuideClient({ room }: { room: RoomData }) {
                 </button>
               ))}
             </div>
+            {selectedDiets.length > 0 && (
+              <div style={sentBadge('')}>
+                {dietSent ? t('dietSent') : '⏳ Envoi en cours…'}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Table d'hôtes */}
-        <div style={{ ...card }}>
+        {/* Table d'hôtes — avec sauvegarde */}
+        <div style={card}>
           <div style={{ background: `linear-gradient(145deg, ${room.bg} 0%, #0a1208 100%)`, padding: '2rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.1, lineHeight: 1 }}>🍷</div>
             <p style={{ color: 'rgba(196,160,80,0.8)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
@@ -356,11 +418,11 @@ export default function GuideClient({ room }: { room: RoomData }) {
               {DINNER_SLOTS.map(slot => (
                 <button
                   key={slot}
-                  onClick={() => setSelectedSlot(slot)}
+                  onClick={() => { setSelectedSlot(slot); setDinnerSent(false) }}
                   style={{
                     background: selectedSlot === slot ? theme.pillActiveBg : theme.pillBg,
                     color: selectedSlot === slot ? theme.pillActiveText : theme.text,
-                    border: `2px solid ${selectedSlot === slot ? theme.accent : theme.cardBorder !== 'transparent' ? theme.cardBorder : theme.divider}`,
+                    border: `2px solid ${selectedSlot === slot ? theme.accent : theme.divider}`,
                     borderRadius: 12, padding: '0.6rem 1.25rem',
                     fontSize: '1rem', fontWeight: 700, fontFamily: 'monospace',
                     cursor: 'pointer', transition: 'all .18s',
@@ -373,19 +435,26 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <p style={{ fontSize: '0.82rem', color: '#e07050', fontWeight: 600, margin: '0 0 1rem' }}>
               ⚠ {t('dinnerBook')}
             </p>
-            <a
-              href={`https://wa.me/33675786335?text=${encodeURIComponent(selectedSlot ? `Bonjour Sandrine, je souhaite réserver la table d'hôtes pour ${selectedSlot}.` : 'Bonjour Sandrine, je souhaite réserver la table d\'hôtes.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'block', background: '#25D366', color: 'white', borderRadius: 14, padding: '1rem', textAlign: 'center', fontWeight: 700, fontSize: '1rem', textDecoration: 'none' }}
-            >
-              {t('dinnerConfirm')}
-            </a>
+            {dinnerSent ? (
+              <div style={{ ...sentBadge(''), display: 'block', textAlign: 'center', padding: '12px' }}>
+                {t('dinnerSent')}
+              </div>
+            ) : (
+              <a
+                href={`https://wa.me/33675786335?text=${encodeURIComponent(selectedSlot ? `Bonjour Sandrine, je souhaite réserver la table d'hôtes pour ${selectedSlot}.` : 'Bonjour Sandrine, je souhaite réserver la table d\'hôtes.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={confirmDinner}
+                style={{ display: 'block', background: '#25D366', color: 'white', borderRadius: 14, padding: '1rem', textAlign: 'center', fontWeight: 700, fontSize: '1rem', textDecoration: 'none' }}
+              >
+                {t('dinnerConfirm')}
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Piscine & Spa */}
-        <div style={{ ...card }}>
+        {/* Piscine & Spa — avec réservation créneau */}
+        <div style={card}>
           <div style={{ background: 'linear-gradient(145deg, #0d2e32 0%, #051518 100%)', padding: '2rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.1 }}>🏊</div>
             <p style={{ color: 'rgba(196,160,80,0.8)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
@@ -404,6 +473,52 @@ export default function GuideClient({ room }: { room: RoomData }) {
                 <p style={{ fontSize: '0.98rem', color: theme.text, margin: 0 }}>{rule}</p>
               </div>
             ))}
+
+            {/* Réservation spa */}
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: `1px solid ${theme.divider}` }}>
+              <p style={{ fontSize: '0.72rem', color: '#7dd4e0', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.5rem' }}>
+                🛁 {t('spaBookTitle')}
+              </p>
+              <p style={{ fontSize: '0.85rem', color: theme.textSub, lineHeight: 1.6, margin: '0 0 1rem' }}>
+                {t('spaBookDesc')}
+              </p>
+              <p style={{ fontSize: '0.65rem', color: theme.textMuted, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
+                {t('spaSlots')}
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+                {SPA_SLOTS.map(slot => (
+                  <button
+                    key={slot}
+                    onClick={() => { setSelectedSpaSlot(slot); setSpaSent(false) }}
+                    style={{
+                      background: selectedSpaSlot === slot ? '#7dd4e0' : theme.pillBg,
+                      color: selectedSpaSlot === slot ? '#051518' : theme.text,
+                      border: `2px solid ${selectedSpaSlot === slot ? '#7dd4e0' : theme.divider}`,
+                      borderRadius: 10, padding: '0.5rem 1rem',
+                      fontSize: '0.92rem', fontWeight: 700, fontFamily: 'monospace',
+                      cursor: 'pointer', transition: 'all .18s',
+                    }}
+                  >
+                    {slot}
+                  </button>
+                ))}
+              </div>
+              {spaSent ? (
+                <div style={{ ...sentBadge(''), display: 'block', textAlign: 'center', padding: '10px' }}>
+                  {t('spaSent')}
+                </div>
+              ) : (
+                <a
+                  href={`https://wa.me/33675786335?text=${encodeURIComponent(selectedSpaSlot ? `Bonjour Sandrine, je souhaite réserver le spa pour ${selectedSpaSlot}.` : 'Bonjour Sandrine, je souhaite réserver le spa.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={confirmSpa}
+                  style={{ display: 'block', background: '#0d2e32', border: '1px solid #7dd4e040', color: '#7dd4e0', borderRadius: 14, padding: '0.875rem', textAlign: 'center', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}
+                >
+                  {t('spaConfirm')}
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
@@ -417,7 +532,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </h2>
           <div style={{ display: 'grid', gap: '0.625rem' }}>
             {(T.tips[lang] as { emoji: string; name: string; desc: string }[]).map(({ emoji, name, desc }) => (
-              <div key={name} style={{ ...card, overflow: 'visible', marginBottom: 0, display: 'flex', gap: '1rem', alignItems: 'center', padding: '1.1rem 1.25rem' }}>
+              <div key={name} style={{ ...card, overflow: 'visible' as const, marginBottom: 0, display: 'flex', gap: '1rem', alignItems: 'center', padding: '1.1rem 1.25rem' }}>
                 <span style={{ fontSize: '2rem', flexShrink: 0 }}>{emoji}</span>
                 <div>
                   <p style={{ fontSize: '0.98rem', fontWeight: 700, color: theme.heading, margin: 0 }}>{name}</p>
@@ -429,7 +544,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
         </div>
 
         {/* La maison */}
-        <div style={{ ...card }}>
+        <div style={card}>
           <div style={{ ...cardDivider, ...cardInner }}>
             <p style={{ fontSize: '0.68rem', color: theme.accent, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.25rem' }}>{t('rulesTag')}</p>
             <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: '1.4rem', color: theme.heading, fontWeight: 700, margin: 0 }}>{t('rulesTitle')}</h2>
@@ -459,15 +574,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
       </div>
 
       {/* ── BOTTOM NAV ── */}
-      <div style={{
-        position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-        width: '100%', maxWidth: 600,
-        background: theme.navBg,
-        backdropFilter: 'blur(12px)',
-        borderTop: `1px solid ${theme.navBorder}`,
-        display: 'flex',
-        padding: '0 0 env(safe-area-inset-bottom)',
-      }}>
+      <div style={{ position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 600, background: theme.navBg, backdropFilter: 'blur(12px)', borderTop: `1px solid ${theme.navBorder}`, display: 'flex', padding: '0 0 env(safe-area-inset-bottom)' }}>
         {[
           { href: '/', icon: '🏠', label: t('navHome'), active: false },
           { href: '#top', icon: '📖', label: t('navGuide'), active: true },
@@ -479,16 +586,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
             href={href}
             target={href.startsWith('http') ? '_blank' : undefined}
             rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            style={{
-              flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-              padding: '0.75rem 0.25rem 0.875rem',
-              textDecoration: 'none',
-              color: active ? theme.navActive : theme.navInactive,
-              fontSize: '0.65rem', fontWeight: active ? 700 : 500,
-              letterSpacing: '0.05em', textTransform: 'uppercase',
-              gap: '0.25rem',
-              borderTop: active ? `3px solid ${theme.accent}` : '3px solid transparent',
-            }}
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.75rem 0.25rem 0.875rem', textDecoration: 'none', color: active ? theme.navActive : theme.navInactive, fontSize: '0.65rem', fontWeight: active ? 700 : 500, letterSpacing: '0.05em', textTransform: 'uppercase', gap: '0.25rem', borderTop: active ? `3px solid ${theme.accent}` : '3px solid transparent' }}
           >
             <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>{icon}</span>
             {label}

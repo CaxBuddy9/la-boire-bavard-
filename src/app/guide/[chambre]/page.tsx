@@ -7,6 +7,7 @@ import type { RoomTheme } from '@/components/guide/GuideClient'
 const ROOMS = {
   jardin: {
     name: 'Côté Jardin',
+    slug: 'jardin',
     emoji: '🌿',
     bg: '#1a3320',
     theme: {
@@ -41,6 +42,7 @@ const ROOMS = {
   },
   cedre: {
     name: 'Côté Cèdre',
+    slug: 'cedre',
     emoji: '🌲',
     bg: '#1e2f18',
     theme: {
@@ -75,6 +77,7 @@ const ROOMS = {
   },
   vallee: {
     name: 'Côté Vallée',
+    slug: 'vallee',
     emoji: '🏞️',
     bg: '#1a2830',
     theme: {
@@ -109,6 +112,7 @@ const ROOMS = {
   },
   potager: {
     name: 'Côté Potager',
+    slug: 'potager',
     emoji: '🌱',
     bg: '#1e2f16',
     theme: {

@@ -322,6 +322,189 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   )
 }
 
+// ── Panel "Ce soir" — hôtes du jour ────────────────────────────────────────
+type GuestRequest = {
+  id: string
+  room: string
+  type: 'diet' | 'dinner' | 'spa'
+  data: Record<string, unknown>
+  lang: string
+  created_at: string
+}
+
+const ROOM_SLUGS: { slug: string; name: string; emoji: string; color: string }[] = [
+  { slug: 'jardin',  name: 'Côté Jardin',  emoji: '🌿', color: '#6db87a' },
+  { slug: 'cedre',   name: 'Côté Cèdre',   emoji: '🌲', color: '#c4907a' },
+  { slug: 'vallee',  name: 'Côté Vallée',  emoji: '🏞️', color: '#7ab8c4' },
+  { slug: 'potager', name: 'Côté Potager', emoji: '🌱', color: '#8ab578' },
+]
+
+function HotesPanel() {
+  const [requests, setRequests] = useState<GuestRequest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+
+  const load = async () => {
+    try {
+      const res = await fetch('/api/guide/request')
+      const json = await res.json()
+      if (json.data) {
+        setRequests(json.data)
+        setLastUpdate(new Date())
+      }
+    } catch {}
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    load()
+    const interval = setInterval(load, 20000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const getForRoom = (slug: string, type: GuestRequest['type']) => {
+    return requests
+      .filter(r => r.room === slug && r.type === type)
+      .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
+  }
+
+  const totalDiets   = requests.filter(r => r.type === 'diet').length
+  const totalDinners = requests.filter(r => r.type === 'dinner').length
+  const totalSpas    = requests.filter(r => r.type === 'spa').length
+  const anyData      = totalDiets + totalDinners + totalSpas > 0
+
+  return (
+    <div>
+      {/* En-tête + résumé */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f5f0e8', marginBottom: 4 }}>
+            Ce soir &amp; demain matin
+          </div>
+          <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,.3)', letterSpacing: '0.1em' }}>
+            Demandes des hôtes · mise à jour automatique toutes les 20s
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {lastUpdate && (
+            <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,.2)' }}>
+              {lastUpdate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          )}
+          <button onClick={load} style={{ background: 'none', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.4)', fontSize: '0.7rem', padding: '5px 10px', cursor: 'pointer', fontFamily: 'system-ui' }}>
+            ↻
+          </button>
+        </div>
+      </div>
+
+      {/* Résumé rapide */}
+      {!loading && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
+          {[
+            { icon: '🥗', label: 'Régimes alimentaires', count: totalDiets, color: '#6db87a' },
+            { icon: '🍽️', label: 'Dîners réservés', count: totalDinners, color: '#c4a050' },
+            { icon: '🛁', label: 'Jacuzzi / Spa réservé', count: totalSpas, color: '#7ab8c4' },
+          ].map(k => (
+            <div key={k.label} style={{ background: '#131a13', border: `1px solid ${k.count > 0 ? k.color + '40' : 'rgba(255,255,255,.07)'}`, borderRadius: 4, padding: '14px 16px', textAlign: 'center' }}>
+              <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{k.icon}</div>
+              <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', color: k.count > 0 ? k.color : 'rgba(255,255,255,.2)', marginBottom: 3 }}>{k.count}</div>
+              <div style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,.3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{k.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {loading ? (
+        <div style={{ textAlign: 'center', color: 'rgba(255,255,255,.3)', padding: 40 }}>Chargement…</div>
+      ) : !anyData ? (
+        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <div style={{ fontSize: '2rem', marginBottom: 12 }}>💤</div>
+          <div style={{ color: 'rgba(255,255,255,.3)', fontSize: '0.85rem' }}>Aucune demande pour le moment.</div>
+          <div style={{ color: 'rgba(255,255,255,.2)', fontSize: '0.75rem', marginTop: 6 }}>Les hôtes qui scannent leur QR code apparaîtront ici.</div>
+        </div>
+      ) : (
+        /* Cartes par chambre */
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {ROOM_SLUGS.map(room => {
+            const diet   = getForRoom(room.slug, 'diet')
+            const dinner = getForRoom(room.slug, 'dinner')
+            const spa    = getForRoom(room.slug, 'spa')
+            const hasAny = diet || dinner || spa
+            if (!hasAny) return null
+
+            const diets   = (diet?.data?.diets as string[]) || []
+            const dinnerTime = dinner?.data?.time as string
+            const dinnerGuests = dinner?.data?.guests as number
+            const spaSlot = spa?.data?.slot as string
+
+            return (
+              <div key={room.slug} style={{ background: '#131a13', border: `1px solid ${room.color}30`, borderRadius: 4, overflow: 'hidden' }}>
+                {/* En-tête chambre */}
+                <div style={{ background: `${room.color}14`, borderBottom: `1px solid ${room.color}25`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: '1.2rem' }}>{room.emoji}</span>
+                  <span style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#f5f0e8' }}>{room.name}</span>
+                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: room.color, marginLeft: 'auto' }}>
+                    {[diet && 'régime', dinner && 'dîner', spa && 'spa'].filter(Boolean).join(' · ')}
+                  </span>
+                </div>
+                {/* Contenu */}
+                <div style={{ padding: '16px 18px', display: 'grid', gridTemplateColumns: diets.length > 0 ? '1fr 1fr 1fr' : dinnerTime || spaSlot ? '1fr 1fr' : '1fr', gap: 16 }}>
+                  {/* Régimes */}
+                  {diets.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6db87a', marginBottom: 8 }}>🥗 Petit-déjeuner</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {diets.map((d: string) => (
+                          <span key={d} style={{ fontSize: '0.72rem', background: 'rgba(109,184,122,.12)', border: '1px solid rgba(109,184,122,.25)', color: '#6db87a', padding: '3px 8px', borderRadius: 3 }}>
+                            {d}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {/* Dîner */}
+                  {dinnerTime && (
+                    <div>
+                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c4a050', marginBottom: 8 }}>🍽️ Dîner ce soir</div>
+                      <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: '#c4a050' }}>{dinnerTime}</div>
+                      {dinnerGuests && (
+                        <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,.4)', marginTop: 4 }}>{dinnerGuests} pers. · 25 €/pers.</div>
+                      )}
+                    </div>
+                  )}
+                  {/* Spa */}
+                  {spaSlot && (
+                    <div>
+                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7ab8c4', marginBottom: 8 }}>🛁 Jacuzzi</div>
+                      <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: '#7ab8c4' }}>{spaSlot}</div>
+                      <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,.4)', marginTop: 4 }}>
+                        {(() => {
+                          const lang = spa?.lang
+                          if (lang === 'en') return 'Slot booked'
+                          if (lang === 'es') return 'Reservado'
+                          if (lang === 'pt') return 'Reservado'
+                          return 'Créneau réservé'
+                        })()}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Note info */}
+      <div style={{ marginTop: 24, padding: '12px 16px', background: 'rgba(196,160,80,.04)', border: '1px solid rgba(196,160,80,.1)', borderRadius: 4, fontSize: '0.72rem', color: 'rgba(255,255,255,.3)', lineHeight: 1.6 }}>
+        <strong style={{ color: 'rgba(196,160,80,.5)' }}>Comment ça marche ?</strong><br />
+        Vos hôtes scannent le QR code de leur chambre et renseignent leurs préférences alimentaires, réservent le dîner ou choisissent un créneau spa. Leurs demandes apparaissent ici en temps réel.
+        <br />Pour que ça fonctionne, créez la table <code style={{ fontFamily: 'monospace', color: 'rgba(196,160,80,.6)' }}>guest_requests</code> dans votre tableau de bord Supabase (voir instructions).
+      </div>
+    </div>
+  )
+}
+
 // ── Planning Gantt ──────────────────────────────────────────────────────────
 function Planning({ reservations }: { reservations: Reservation[] }) {
   const now = new Date()
@@ -483,7 +666,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [tab, setTab] = useState<'reservations'|'planning'>('reservations')
+  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'>('reservations')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
 
@@ -597,6 +780,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <button style={tabBtn(tab === 'planning')} onClick={() => setTab('planning')}>
             Planning
           </button>
+          <button style={{ ...tabBtn(tab === 'cesoir'), borderColor: tab === 'cesoir' ? 'rgba(122,184,196,.4)' : undefined, color: tab === 'cesoir' ? '#7ab8c4' : undefined, background: tab === 'cesoir' ? 'rgba(122,184,196,.1)' : undefined }} onClick={() => setTab('cesoir')}>
+            🛎 Ce soir
+          </button>
         </div>
 
         {/* Erreur Supabase */}
@@ -621,6 +807,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
         )}
+
+        {/* ── Onglet Ce soir ── */}
+        {tab === 'cesoir' && <HotesPanel />}
 
         {/* ── Onglet Planning ── */}
         {tab === 'planning' && (
