@@ -1,25 +1,157 @@
 /**
- * Génère les QR codes avec le logo BB centré
+ * QR codes personnalisés La Boire Bavard
+ * Nouveau logo PNG officiel centré · Modules ronds · Cadre chambre
  * Usage : node scripts/generate-qrcodes.mjs
  */
 
 import QRCode from 'qrcode'
+import { Resvg } from '@resvg/resvg-js'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// ─── À modifier si le domaine change ─────────────────────────────────────────
 const BASE_URL   = 'https://la-boire-bavard.vercel.app'
 const OUTPUT_DIR = path.join(__dirname, '..', '..', 'LA BOIRE BAVARD WEBSITE')
-// ─────────────────────────────────────────────────────────────────────────────
 
-// ─── Identifiants WiFi ───────────────────────────────────────────────────────
 const WIFI_SSID     = 'Livebox-D6B0'
 const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 const WIFI_TYPE     = 'WPA'
-// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Nouveau logo LBBA (SVG inline — viewBox recadré 675×1400) ────────────────
+const logoSvgPath = path.join(__dirname, '..', 'public', 'logo-lbba.svg')
+const LOGO_DATA_URI = `data:image/svg+xml;base64,${fs.readFileSync(logoSvgPath).toString('base64')}`
+
+// ─── Couleurs par chambre ─────────────────────────────────────────────────────
+const ROOM_COLORS = {
+  jardin:  { bg: '#1a3320', label: 'Côté Jardin',  emoji: '🌿' },
+  cedre:   { bg: '#1e2f18', label: 'Côté Cèdre',   emoji: '🌲' },
+  vallee:  { bg: '#1a2830', label: 'Côté Vallée',  emoji: '🏞️' },
+  potager: { bg: '#1e2f16', label: 'Côté Potager', emoji: '🌱' },
+  wifi:    { bg: '#1a3320', label: 'WiFi',          emoji: '📶' },
+}
+
+function isFinder(r, c, n) {
+  return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7)
+}
+
+function buildQRSvg(data, roomId, label, emoji) {
+  const qr      = QRCode.create(data, { errorCorrectionLevel: 'H' })
+  const modules = qr.modules.data
+  const n       = qr.modules.size
+
+  const M       = 14
+  const MARGIN  = 4
+  const qrSize  = n * M
+  const svgW    = (n + MARGIN * 2) * M
+  const FRAME_H = 72
+
+  const svgH    = svgW + FRAME_H
+  const off     = MARGIN * M
+
+  const color = ROOM_COLORS[roomId] || ROOM_COLORS.wifi
+
+  // ── Zone logo : 28% de n, centré ──────────────────────────────────────────
+  const logoN   = Math.round(n * 0.28)
+  const logoS   = Math.floor((n - logoN) / 2)
+  const logoE   = logoS + logoN
+
+  // ── Modules ───────────────────────────────────────────────────────────────
+  let dots = ''
+  let finders = ''
+
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      if (!modules[r * n + c]) continue
+      if (c >= logoS && c < logoE && r >= logoS && r < logoE) continue
+
+      const cx = off + c * M + M / 2
+      const cy = off + r * M + M / 2
+
+      if (isFinder(r, c, n)) {
+        finders += `<rect x="${cx - M/2}" y="${cy - M/2}" width="${M}" height="${M}"
+          rx="${M * 0.25}" fill="#1a3320"/>`
+      } else {
+        dots += `<circle cx="${cx}" cy="${cy}" r="${M * 0.42}" fill="#1a3320"/>`
+      }
+    }
+  }
+
+  const finderStyle = (row, col) => {
+    const x = off + col * M
+    const y = off + row * M
+    const s = 7 * M
+    const r = M * 1.2
+    return `
+      <rect x="${x}" y="${y}" width="${s}" height="${s}" rx="${r}"
+            fill="none" stroke="#1a3320" stroke-width="${M * 0.5}"/>
+      <rect x="${x + M*1.5}" y="${y + M*1.5}" width="${s - M*3}" height="${s - M*3}"
+            rx="${r * 0.5}" fill="#1a3320"/>`
+  }
+
+  const finderOverlays = `
+    ${finderStyle(0, 0)}
+    ${finderStyle(0, n - 7)}
+    ${finderStyle(n - 7, 0)}
+  `
+
+  // ── Nouveau logo LBBA centré ──────────────────────────────────────────────
+  // Le PNG fait 2048×1494 mais le logo réel est en portrait dans la zone centrale
+  // On utilise preserveAspectRatio pour le centrer proprement
+  const lSize  = logoN * M
+  const lX     = off + logoS * M
+  const lY     = off + logoS * M
+  const pad    = lSize * 0.06
+
+  const logo = `
+    <rect x="${lX}" y="${lY}" width="${lSize}" height="${lSize}"
+          rx="${lSize * 0.15}" fill="#faf7f2"/>
+    <image href="${LOGO_DATA_URI}"
+           x="${lX + pad}" y="${lY + pad}"
+           width="${lSize - pad * 2}" height="${lSize - pad * 2}"
+           preserveAspectRatio="xMidYMid meet"/>`
+
+  // ── Cadre bas ─────────────────────────────────────────────────────────────
+  const frame = `
+    <rect x="0" y="${svgW}" width="${svgW}" height="${FRAME_H}"
+          fill="${color.bg}" rx="0"/>
+    <rect x="${svgW * 0.1}" y="${svgW + 1}" width="${svgW * 0.8}" height="1.5"
+          fill="#c4a050" opacity="0.6"/>
+    <text x="${svgW / 2}" y="${svgW + 28}"
+          text-anchor="middle" font-size="20" font-family="serif">${emoji}</text>
+    <text x="${svgW / 2}" y="${svgW + 50}"
+          text-anchor="middle" font-size="16" font-weight="600"
+          font-family="Georgia, serif" fill="white" letter-spacing="1">${label}</text>
+    <text x="${svgW / 2}" y="${svgW + 66}"
+          text-anchor="middle" font-size="9"
+          font-family="Arial, sans-serif" fill="#c4a050" letter-spacing="2">
+      LA BOIRE BAVARD · ANJOU
+    </text>`
+
+  const border = `
+    <rect x="1" y="1" width="${svgW - 2}" height="${svgH - 2}"
+          rx="16" fill="none" stroke="#c4a050" stroke-width="2" opacity="0.5"/>`
+
+  return `<svg xmlns="http://www.w3.org/2000/svg"
+     width="${svgW}" height="${svgH}"
+     viewBox="0 0 ${svgW} ${svgH}">
+  <rect width="${svgW}" height="${svgH}" fill="#faf7f2" rx="16"/>
+  ${dots}
+  ${finderOverlays}
+  ${logo}
+  ${frame}
+  ${border}
+</svg>`
+}
+
+// ─── Génération ───────────────────────────────────────────────────────────────
+if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true })
+for (const f of fs.readdirSync(OUTPUT_DIR).filter(f => f.startsWith('QR-'))) {
+  fs.unlinkSync(path.join(OUTPUT_DIR, f))
+}
+
+console.log('📱 Génération des QR codes avec le nouveau logo PNG...\n')
 
 const CHAMBRES = [
   { id: 'jardin',  label: 'Cote-Jardin'  },
@@ -28,80 +160,25 @@ const CHAMBRES = [
   { id: 'potager', label: 'Cote-Potager' },
 ]
 
-// ─── Monogramme BB extrait du Logo.tsx ───────────────────────────────────────
-const BB_PATHS = `
-  <rect x="78" y="18" width="8" height="118" rx="2" fill="#b8922a"/>
-  <rect x="60" y="18" width="20" height="6"  rx="1.5" fill="#b8922a"/>
-  <rect x="60" y="76" width="20" height="5"  rx="1.5" fill="#b8922a"/>
-  <rect x="60" y="130" width="20" height="6" rx="1.5" fill="#b8922a"/>
-  <path d="M86,18 Q44,18 44,47 Q44,76 86,76"    stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M86,76 Q36,76 36,103 Q36,136 86,136"  stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="114" y="18" width="8" height="118" rx="2" fill="#b8922a"/>
-  <rect x="120" y="18" width="20" height="6"  rx="1.5" fill="#b8922a"/>
-  <rect x="120" y="76" width="20" height="5"  rx="1.5" fill="#b8922a"/>
-  <rect x="120" y="130" width="20" height="6" rx="1.5" fill="#b8922a"/>
-  <path d="M114,18 Q156,18 156,47 Q156,76 114,76"   stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M114,76 Q164,76 164,103 Q164,136 114,136" stroke="#b8922a" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="94" y="14"  width="12" height="4" rx="2" fill="#b8922a" opacity=".5"/>
-  <rect x="94" y="128" width="12" height="4" rx="2" fill="#b8922a" opacity=".5"/>
-`
-// Le monogramme occupe environ x:36–164, y:14–136 dans le viewBox 200x320
-
-async function generateQR(data, outputPath) {
-  const svgStr = await QRCode.toString(data, {
-    type: 'svg',
-    margin: 3,
-    errorCorrectionLevel: 'H',   // 30% de récupération — permet d'avoir un logo au centre
-    color: { dark: '#1a3320', light: '#faf7f2' },
-  })
-
-  // Dimensions du QR généré
-  const vbMatch = svgStr.match(/viewBox="0 0 (\d+(?:\.\d+)?) (\d+(?:\.\d+)?)"/)
-  const W = vbMatch ? parseFloat(vbMatch[1]) : 41
-  const H = vbMatch ? parseFloat(vbMatch[2]) : 41
-
-  // Zone logo : 26% de la taille du QR, centrée
-  const size   = W * 0.26
-  const pad    = size * 0.15
-  const total  = size + pad * 2
-  const lx     = (W - total) / 2
-  const ly     = (H - total) / 2
-
-  const logoOverlay = `
-  <!-- Fond blanc arrondi -->
-  <rect x="${lx}" y="${ly}" width="${total}" height="${total}"
-        rx="${total * 0.14}" fill="#faf7f2"/>
-  <!-- Monogramme BB (viewBox partiel : x36–164, y14–136) -->
-  <svg x="${lx + pad}" y="${ly + pad}"
-       width="${size}" height="${size}"
-       viewBox="36 14 128 122"
-       preserveAspectRatio="xMidYMid meet">
-    ${BB_PATHS}
-  </svg>`
-
-  const finalSvg = svgStr.replace('</svg>', logoOverlay + '\n</svg>')
-  const svgPath  = outputPath.replace(/\.png$/, '.svg')
-  fs.writeFileSync(svgPath, finalSvg, 'utf8')
+function svgToPng(svgStr, outputPath) {
+  const resvg = new Resvg(svgStr, { fitTo: { mode: 'width', value: 800 } })
+  const png   = resvg.render().asPng()
+  fs.writeFileSync(outputPath, png)
 }
 
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true })
-
-console.log('📱 Génération des QR codes avec logo BB...\n')
-
-// QR codes carnet de séjour
 for (const { id, label } of CHAMBRES) {
-  const url  = `${BASE_URL}/guide/${id}`
-  const dest = path.join(OUTPUT_DIR, `QR-${label}.svg`)
-  await generateQR(url, dest)
-  console.log(`✅  QR-${label}.svg  →  ${url}`)
+  const url   = `${BASE_URL}/guide/${id}`
+  const room  = ROOM_COLORS[id]
+  const svg   = buildQRSvg(url, id, room.label, room.emoji)
+  const dest  = path.join(OUTPUT_DIR, `QR-${label}.png`)
+  svgToPng(svg, dest)
+  console.log(`✅  QR-${label}.png`)
 }
 
-// QR code WiFi (connexion directe)
 const wifiData = `WIFI:T:${WIFI_TYPE};S:${WIFI_SSID};P:${WIFI_PASSWORD};;`
-await generateQR(wifiData, path.join(OUTPUT_DIR, 'QR-WiFi-Connexion-Directe.svg'))
-console.log(`✅  QR-WiFi-Connexion-Directe.svg  →  réseau "${WIFI_SSID}"`)
+const wifiSvg  = buildQRSvg(wifiData, 'wifi', 'WiFi · Livebox-D6B0', '📶')
+svgToPng(wifiSvg, path.join(OUTPUT_DIR, 'QR-WiFi.png'))
+console.log('✅  QR-WiFi.png')
 
-console.log(`\n📁 Fichiers SVG dans :\n   ${OUTPUT_DIR}`)
-console.log('\n💡 Ouvrez chaque fichier .svg dans Chrome puis Fichier → Imprimer.')
-console.log('   SVG = qualité parfaite à toutes les tailles.\n')
-console.log('⚠️  Si le domaine Vercel change, modifiez BASE_URL ligne 13.')
+console.log(`\n📁 ${OUTPUT_DIR}`)
+console.log('💡 Ouvrir dans Chrome → Ctrl+P pour imprimer')

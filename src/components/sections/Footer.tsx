@@ -1,21 +1,12 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useT } from '@/context/LangContext'
 import {
   LogoLLA, LogoDestinationAnjou, LogoQualiteTourisme,
   LogoOfficeTourisme, LogoVignobles, LogoAccueilVelo,
   LogoLoireVelo, LogoEcoAttitude,
 } from '@/components/TourismLogos'
-
-const NAV = [
-  { href: '/',                label: 'Accueil' },
-  { href: '/propriete',       label: 'La propriété' },
-  { href: '/chambres',        label: 'Chambres' },
-  { href: '/bienetre',        label: 'Bien-être' },
-  { href: '/petitdej',        label: 'Petit-déjeuner' },
-  { href: '/avis',            label: 'Avis' },
-  { href: '/contact',         label: 'Contact & Accès' },
-  { href: '/mentions-legales',label: 'Mentions légales' },
-]
 
 const LABELS = [
   { href: 'https://www.loire-layon-aubance.fr', C: LogoLLA,              label: 'Loire Layon Aubance' },
@@ -29,13 +20,32 @@ const LABELS = [
 ]
 
 export default function Footer() {
+  const t = useT()
+
+  const NAV = [
+    { href: '/',                 label: t('Accueil', 'Home') },
+    { href: '/propriete',        label: t('La propriété', 'The Estate') },
+    { href: '/chambres',         label: t('Chambres', 'Rooms') },
+    { href: '/bienetre',         label: t('Bien-être', 'Wellness') },
+    { href: '/petitdej',         label: t('Petit-déjeuner', 'Breakfast') },
+    { href: '/avis',             label: t('Avis', 'Reviews') },
+    { href: '/contact',          label: t('Contact & Accès', 'Contact & Directions') },
+    { href: '/mentions-legales', label: t('Mentions légales', 'Legal notice') },
+  ]
+
   return (
     <footer style={{ background: '#0d110e' }} className="font-sans">
       <div className="max-w-5xl mx-auto px-4 sm:px-8 py-12 text-center">
 
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-lbba.svg"
+          alt="La Boire Bavard"
+          style={{ height: 80, width: 'auto', display: 'block', margin: '0 auto 12px' }}
+        />
         <div className="font-serif text-white text-xl tracking-wide mb-1">La Boire Bavard</div>
         <div className="text-[0.52rem] tracking-[0.38em] uppercase mb-8" style={{ color: 'rgba(196,160,80,.5)' }}>
-          Chambres d&apos;Hôtes · Anjou
+          {t("Chambres d'Hôtes · Anjou", 'Bed & Breakfast · Anjou')}
         </div>
 
         {/* Gold line */}
