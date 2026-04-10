@@ -1,7 +1,9 @@
 'use client'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-type Lang = 'fr' | 'en'
+export type Lang = 'fr' | 'en' | 'es' | 'pt'
+
+const VALID_LANGS: Lang[] = ['fr', 'en', 'es', 'pt']
 
 const LangContext = createContext<{ lang: Lang; setLang: (l: Lang) => void }>({
   lang: 'fr',
@@ -13,7 +15,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('lang') as Lang | null
-    if (saved === 'fr' || saved === 'en') setLangState(saved)
+    if (saved && VALID_LANGS.includes(saved)) setLangState(saved)
   }, [])
 
   const setLang = (l: Lang) => {
@@ -32,8 +34,14 @@ export function useLang() {
   return useContext(LangContext)
 }
 
-// Simple translate helper: t('Accueil', 'Home')
+// Translate helper: t('Accueil', 'Home', 'Inicio', 'Início')
+// ES/PT are optional — falls back to EN if not provided
 export function useT() {
   const { lang } = useLang()
-  return (fr: string, en: string) => lang === 'en' ? en : fr
+  return (fr: string, en: string, es?: string, pt?: string): string => {
+    if (lang === 'es') return es ?? en
+    if (lang === 'pt') return pt ?? en
+    if (lang === 'en') return en
+    return fr
+  }
 }

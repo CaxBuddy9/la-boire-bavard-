@@ -3,16 +3,16 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogoSVG } from '@/components/Logo'
-import { useLang, useT } from '@/context/LangContext'
+import { useLang, useT, type Lang } from '@/context/LangContext'
 
 const links = [
-  { href: '/',          fr: 'Accueil',         en: 'Home' },
-  { href: '/propriete', fr: 'La propriété',     en: 'The Estate' },
-  { href: '/chambres',  fr: 'Chambres',         en: 'Rooms' },
-  { href: '/bienetre',  fr: 'Bien-être',        en: 'Wellness' },
-  { href: '/petitdej',  fr: 'Petit-déjeuner',   en: 'Breakfast' },
-  { href: '/avis',      fr: 'Avis',             en: 'Reviews' },
-  { href: '/contact',   fr: 'Contact & Accès',  en: 'Contact & Access' },
+  { href: '/',          fr: 'Accueil',         en: 'Home',                es: 'Inicio',           pt: 'Início' },
+  { href: '/propriete', fr: 'La propriété',     en: 'The Estate',          es: 'La propiedad',     pt: 'A propriedade' },
+  { href: '/chambres',  fr: 'Chambres',         en: 'Rooms',               es: 'Habitaciones',     pt: 'Quartos' },
+  { href: '/bienetre',  fr: 'Bien-être',        en: 'Wellness',            es: 'Bienestar',        pt: 'Bem-estar' },
+  { href: '/petitdej',  fr: 'Petit-déjeuner',   en: 'Breakfast',           es: 'Desayuno',         pt: 'Pequeno-almoço' },
+  { href: '/avis',      fr: 'Avis',             en: 'Reviews',             es: 'Opiniones',        pt: 'Avaliações' },
+  { href: '/contact',   fr: 'Contact & Accès',  en: 'Contact & Directions',es: 'Contacto',         pt: 'Contacto' },
 ]
 
 export default function Nav() {
@@ -52,7 +52,7 @@ export default function Nav() {
               La Boire Bavard
             </span>
             <span className={`font-sans text-[0.52rem] tracking-[0.3em] uppercase transition-colors duration-300 ${subColor}`}>
-              Chambres d'Hôtes · Anjou
+              {t("Chambres d'Hôtes · Anjou", 'Bed & Breakfast · Anjou')}
             </span>
           </div>
         </Link>
@@ -65,7 +65,7 @@ export default function Nav() {
                 href={l.href}
                 className={`font-sans text-[0.62rem] tracking-[0.18em] uppercase transition-colors duration-200 ${linkBase} ${pathname === l.href ? 'text-[#c4a050]' : ''}`}
               >
-                {lang === 'en' ? l.en : l.fr}
+                {l[lang as keyof typeof l] ?? l.fr}
               </Link>
             </li>
           ))}
@@ -73,21 +73,17 @@ export default function Nav() {
 
         {/* Right side: Lang switch + CTA */}
         <div className="hidden md:flex items-center gap-6">
-          {/* FR / EN toggle */}
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setLang('fr')}
-              className={`font-sans text-[0.58rem] tracking-[0.16em] uppercase transition-colors duration-200 ${lang === 'fr' ? langBtnActive : langBtnBase}`}
-            >
-              FR
-            </button>
-            <span className={`text-[0.5rem] ${scrolled && !isHome ? 'text-ink/20' : 'text-white/20'}`}>|</span>
-            <button
-              onClick={() => setLang('en')}
-              className={`font-sans text-[0.58rem] tracking-[0.16em] uppercase transition-colors duration-200 ${lang === 'en' ? langBtnActive : langBtnBase}`}
-            >
-              EN
-            </button>
+          {/* Lang toggle FR / EN / ES / PT */}
+          <div className="flex items-center gap-2">
+            {(['fr', 'en', 'es', 'pt'] as Lang[]).map((code) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                className={`font-sans text-[0.55rem] tracking-[0.14em] uppercase transition-colors duration-200 ${lang === code ? langBtnActive : langBtnBase}`}
+              >
+                {code.toUpperCase()}
+              </button>
+            ))}
           </div>
 
           {/* CTA */}
@@ -128,24 +124,20 @@ export default function Nav() {
               onClick={() => setOpen(false)}
               className={`font-sans text-[0.72rem] tracking-[0.25em] uppercase hover:text-[#c4a050] transition-colors ${pathname === l.href ? 'text-[#c4a050]' : 'text-[rgba(255,255,255,0.8)]'}`}
             >
-              {lang === 'en' ? l.en : l.fr}
+              {l[lang as keyof typeof l] ?? l.fr}
             </Link>
           ))}
           {/* Mobile lang switch */}
           <div className="flex items-center gap-3 pt-1">
-            <button
-              onClick={() => setLang('fr')}
-              className={`font-sans text-[0.65rem] tracking-[0.2em] uppercase ${lang === 'fr' ? 'text-[#c4a050]' : 'text-white/40'}`}
-            >
-              FR
-            </button>
-            <span className="text-white/20 text-xs">|</span>
-            <button
-              onClick={() => setLang('en')}
-              className={`font-sans text-[0.65rem] tracking-[0.2em] uppercase ${lang === 'en' ? 'text-[#c4a050]' : 'text-white/40'}`}
-            >
-              EN
-            </button>
+            {(['fr', 'en', 'es', 'pt'] as Lang[]).map((code) => (
+              <button
+                key={code}
+                onClick={() => setLang(code)}
+                className={`font-sans text-[0.65rem] tracking-[0.2em] uppercase ${lang === code ? 'text-[#c4a050]' : 'text-white/40'}`}
+              >
+                {code.toUpperCase()}
+              </button>
+            ))}
           </div>
           <Link href="/contact" onClick={() => setOpen(false)} className="btn-gold text-center mt-2">
             {t('Réserver', 'Book')}
