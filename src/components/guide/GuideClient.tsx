@@ -172,7 +172,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const t = (key: keyof typeof T) => (T[key] as Record<Lang, string>)[lang]
 
   // ── Sauvegarde auto des régimes (debounce 2s) ──────────────────────────────
-  const dietTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const dietTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const dietInitRef  = useRef(false)
 
   useEffect(() => {
