@@ -23,7 +23,7 @@ export const ROOMS: Room[] = [
     capacityMax: 4,
     pricePerNight: 88,
     features: ['Cheminée', 'Terrasse privée', 'Accès jardin', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
-    images: ['/photos/photo1.jpg', '/photos/photo5.jpg', '/photos/photo6.jpg'],
+    images: ['/photos/chambre-jardin-ensemble.jpg', '/photos/chambre-jardin-lit-terrasse.jpg', '/photos/chambre-jardin-cheminee.jpg', '/photos/chambre-jardin-console.jpg', '/photos/chambre-jardin-entree.jpg'],
     character: 'Familiale & lumineuse',
   },
   {

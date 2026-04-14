@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 const BASE_URL = 'https://la-boire-bavard.vercel.app'
 
 const CHAMBRES = [
-  { id: 'jardin',  label: 'Côté Jardin',  emoji: '🌿', couleur: '#1a3320' },
-  { id: 'cedre',   label: 'Côté Cèdre',   emoji: '🌲', couleur: '#1e2a18' },
-  { id: 'vallee',  label: 'Côté Vallée',  emoji: '🏞️', couleur: '#1a2830' },
-  { id: 'potager', label: 'Côté Potager', emoji: '🌱', couleur: '#1e2d16' },
+  { id: 'jardin',  label: 'Côté Jardin',  emoji: '🌿', couleur: '#1a3320', qrColor: '#1a3320' },
+  { id: 'cedre',   label: 'Côté Cèdre',   emoji: '🌲', couleur: '#1e2a18', qrColor: '#08091a' },
+  { id: 'vallee',  label: 'Côté Vallée',  emoji: '🏞️', couleur: '#1a2830', qrColor: '#1a2832' },
+  { id: 'potager', label: 'Côté Potager', emoji: '🌱', couleur: '#1e2d16', qrColor: '#130e07' },
 ]
 
 export default function QRCodesPage() {
@@ -118,9 +118,9 @@ export default function QRCodesPage() {
           gridTemplateColumns: '1fr 1fr',
           gap: '1.5rem',
         }}>
-          {CHAMBRES.map(({ id, label, emoji, couleur }) => {
+          {CHAMBRES.map(({ id, label, emoji, couleur, qrColor }) => {
             const url   = `${BASE_URL}/guide/${id}`
-            const qrUri = buildQRDataUri(url, '#1a3320')
+            const qrUri = buildQRDataUri(url, qrColor)
             return (
               <div key={id} style={{
                 background: 'white',
