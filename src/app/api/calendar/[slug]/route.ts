@@ -49,7 +49,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params
-  const roomName = SLUG_TO_ROOM[slug]
+  // Accepte "jardin" et "jardin.ics"
+  const cleanSlug = slug.replace(/\.ics$/i, '')
+  const roomName = SLUG_TO_ROOM[cleanSlug]
   if (!roomName) {
     return new NextResponse('Chambre introuvable', { status: 404 })
   }
@@ -75,12 +77,10 @@ export async function GET(
       'END:VEVENT',
     ].join('\r\n')).join('\r\n')
 
-    return icalResponse(slug, buildICal(slug, roomName, events))
+    return icalResponse(cleanSlug, buildICal(cleanSlug, roomName, events))
 
   } catch (e) {
-    // Supabase non configuré ou erreur → on retourne un iCal vide valide
-    // pour que Booking.com accepte l'URL
     console.error('[calendar]', e)
-    return icalResponse(slug, buildICal(slug, roomName, ''))
+    return icalResponse(cleanSlug, buildICal(cleanSlug, roomName, ''))
   }
 }
