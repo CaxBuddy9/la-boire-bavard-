@@ -660,13 +660,224 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
   )
 }
 
+// ── Facturation ────────────────────────────────────────────────────────────
+const PRICE_NUIT  = 88
+const PRICE_TABLE = 25
+const TAXE_SEJOUR = 0.83
+
+function fmtDateFact(iso: string) {
+  if (!iso) return '—'
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
+}
+function nightsFact(a: string, d: string) {
+  if (!a || !d) return 0
+  return Math.max(0, Math.round((new Date(d).getTime() - new Date(a).getTime()) / 86400000))
+}
+function pad4(n: number) { return String(n).padStart(4, '0') }
+
+function FacturationPanel() {
+  const today = new Date().toISOString().split('T')[0]
+  const [num,         setNum]         = useState(`LBB-${new Date().getFullYear()}-${pad4(1)}`)
+  const [dateFacture, setDateFacture] = useState(today)
+  const [nom,         setNom]         = useState('')
+  const [prenom,      setPrenom]      = useState('')
+  const [adresse,     setAdresse]     = useState('')
+  const [email,       setEmail]       = useState('')
+  const [chambre,     setChambre]     = useState('Côté Jardin')
+  const [arrive,      setArrive]      = useState('')
+  const [depart,      setDepart]      = useState('')
+  const [pers,        setPers]        = useState(2)
+  const [tableHotes,  setTableHotes]  = useState(0)
+  const [note,        setNote]        = useState('')
+
+  const n = nightsFact(arrive, depart)
+  const lignes = [
+    { label: `Chambre ${chambre} — ${n} nuit${n > 1 ? 's' : ''} × ${PRICE_NUIT} €`, qty: n, pu: PRICE_NUIT, total: n * PRICE_NUIT },
+    ...(tableHotes > 0 ? [{ label: `Table d'hôtes — ${tableHotes} convive${tableHotes > 1 ? 's' : ''}`, qty: tableHotes, pu: PRICE_TABLE, total: tableHotes * PRICE_TABLE }] : []),
+    ...(n > 0 ? [{ label: `Taxe de séjour — ${pers} pers. × ${n} nuit${n > 1 ? 's' : ''} × ${TAXE_SEJOUR} €`, qty: pers * n, pu: TAXE_SEJOUR, total: Math.round(pers * n * TAXE_SEJOUR * 100) / 100 }] : []),
+  ]
+  const total = lignes.reduce((s, l) => s + l.total, 0)
+
+  const handlePrint = () => {
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(`<!DOCTYPE html><html><head>
+      <meta charset="utf-8"/>
+      <title>Facture ${num} — La Boire Bavard</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:system-ui,sans-serif;color:#1a1a1a;background:#fff;padding:48px;max-width:800px;margin:auto}
+        .hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;padding-bottom:22px;border-bottom:2px solid #c4a050}
+        .logo{font-family:Georgia,serif;font-size:1.6rem;color:#1a3220}
+        .sub{font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;color:#c4a050;margin-top:4px}
+        .etab{font-size:0.78rem;color:#555;line-height:1.7;margin-top:8px}
+        .fnum{font-family:Georgia,serif;font-size:1.1rem;color:#1a3220;text-align:right}
+        .fdate{font-size:0.78rem;color:#777;margin-top:6px;text-align:right}
+        .stitle{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4a050;margin-bottom:10px}
+        .cbox{background:#f8f6f0;padding:16px 20px;border-left:3px solid #c4a050;margin-bottom:30px}
+        .cname{font-family:Georgia,serif;font-size:1.05rem;margin-bottom:4px}
+        .cdet{font-size:0.82rem;color:#555;line-height:1.6}
+        .sbar{display:flex;flex-wrap:wrap;gap:20px 32px;margin-bottom:28px;padding:14px 20px;background:#1a3220;color:#fff}
+        .sitem label{font-size:0.54rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(196,160,80,.8);display:block;margin-bottom:3px}
+        .sitem span{font-size:0.88rem}
+        table{width:100%;border-collapse:collapse;margin-bottom:22px}
+        thead tr{border-bottom:1px solid #c4a050}
+        th{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:#888;padding:8px 0;text-align:left;font-weight:400}
+        th.r,td.r{text-align:right}
+        td{padding:11px 0;font-size:0.85rem;border-bottom:1px solid #eee;vertical-align:top}
+        .gline{height:2px;background:linear-gradient(90deg,#c4a050,transparent);margin-bottom:14px}
+        .ttl{display:flex;justify-content:flex-end}
+        .ttl table{width:auto}
+        .ttl td{border:none;padding:5px 0}
+        .ttl td:first-child{padding-right:40px;font-size:0.8rem;color:#777}
+        .ttl td:last-child{font-size:0.8rem;color:#777;text-align:right}
+        .ttl tr.big td{padding-top:14px;font-family:Georgia,serif;font-size:1.15rem;color:#1a3220;border-top:2px solid #1a3220}
+        .notebox{background:#f8f6f0;padding:14px 18px;font-size:0.8rem;color:#555;line-height:1.6;margin-top:24px;border-left:2px solid #ddd}
+        .foot{margin-top:44px;padding-top:18px;border-top:1px solid #eee;font-size:0.7rem;color:#aaa;text-align:center;line-height:1.8}
+      </style></head><body>
+      <div class="hd">
+        <div>
+          <div class="logo">La Boire Bavard</div>
+          <div class="sub">Chambres d'Hôtes · Anjou</div>
+          <div class="etab">4 chemin de la Boire Bavard, Lieu-dit La Hutte<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · laboirebavard@gmail.com</div>
+        </div>
+        <div><div class="fnum">Facture ${num}</div><div class="fdate">Émise le ${fmtDateFact(dateFacture)}</div></div>
+      </div>
+      <div class="stitle">Facturé à</div>
+      <div class="cbox">
+        <div class="cname">${prenom} ${nom}</div>
+        <div class="cdet">${adresse ? adresse + '<br/>' : ''}${email}</div>
+      </div>
+      ${n > 0 ? `<div class="sbar">${[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',n+' nuit'+(n>1?'s':'')],['Personnes',String(pers)]].map(([l,v])=>`<div class="sitem"><label>${l}</label><span>${v}</span></div>`).join('')}</div>` : ''}
+      <table><thead><tr><th>Prestation</th><th class="r">Qté</th><th class="r">P.U.</th><th class="r">Total</th></tr></thead>
+      <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td class="r" style="color:#777">${l.qty}</td><td class="r" style="color:#777">${l.pu.toFixed(2)} €</td><td class="r" style="font-weight:500">${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody></table>
+      <div class="gline"></div>
+      <div class="ttl"><table><tr><td>Sous-total</td><td>${total.toFixed(2)} €</td></tr><tr><td>TVA</td><td>Non applicable</td></tr><tr class="big"><td>Total TTC</td><td>${total.toFixed(2)} €</td></tr></table></div>
+      ${note ? `<div class="notebox"><strong style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#888">Note</strong><br/>${note}</div>` : ''}
+      <div class="foot">La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>Micro-entreprise · TVA non applicable — art. 293B du CGI</div>
+    </body></html>`)
+    win.document.close()
+    win.focus()
+    setTimeout(() => win.print(), 400)
+  }
+
+  const inp: React.CSSProperties = { background: 'rgba(255,255,255,.06)', border: '1px solid rgba(196,160,80,.2)', color: '#f5f0e8', fontFamily: 'system-ui, sans-serif', fontSize: '0.82rem', padding: '7px 10px', width: '100%', outline: 'none' }
+  const lbl: React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 4 }
+  const cap: React.CSSProperties = { fontSize: '0.52rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(196,160,80,.55)' }
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 24, alignItems: 'start' }}>
+      {/* Formulaire */}
+      <div style={{ background: '#131a13', border: '1px solid rgba(196,160,80,.15)', padding: 20 }}>
+        <p style={{ fontSize: '0.55rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: '#c4a050', marginBottom: 16 }}>Nouvelle facture</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          <label style={lbl}><span style={cap}>N° facture</span><input style={inp} value={num} onChange={e => setNum(e.target.value)} /></label>
+          <label style={lbl}><span style={cap}>Date</span><input style={{...inp, colorScheme:'dark'}} type="date" value={dateFacture} onChange={e => setDateFacture(e.target.value)} /></label>
+        </div>
+        <div style={{ height: 1, background: 'rgba(255,255,255,.06)', margin: '12px 0' }} />
+        <p style={{ ...cap, marginBottom: 10 }}>Client</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+          <label style={lbl}><span style={cap}>Prénom</span><input style={inp} value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Marie" /></label>
+          <label style={lbl}><span style={cap}>Nom</span><input style={inp} value={nom} onChange={e => setNom(e.target.value)} placeholder="Dupont" /></label>
+        </div>
+        <label style={{...lbl, marginBottom: 10}}><span style={cap}>Adresse</span><input style={inp} value={adresse} onChange={e => setAdresse(e.target.value)} /></label>
+        <label style={{...lbl, marginBottom: 14}}><span style={cap}>Email</span><input style={inp} type="email" value={email} onChange={e => setEmail(e.target.value)} /></label>
+        <div style={{ height: 1, background: 'rgba(255,255,255,.06)', margin: '12px 0' }} />
+        <p style={{ ...cap, marginBottom: 10 }}>Séjour</p>
+        <label style={{...lbl, marginBottom: 10}}>
+          <span style={cap}>Chambre</span>
+          <select style={inp} value={chambre} onChange={e => setChambre(e.target.value)}>
+            {['Côté Jardin','Côté Cèdre','Côté Vallée','Côté Potager'].map(r => <option key={r}>{r}</option>)}
+          </select>
+        </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+          <label style={lbl}><span style={cap}>Arrivée</span><input style={{...inp, colorScheme:'dark'}} type="date" value={arrive} onChange={e => setArrive(e.target.value)} /></label>
+          <label style={lbl}><span style={cap}>Départ</span><input style={{...inp, colorScheme:'dark'}} type="date" value={depart} onChange={e => setDepart(e.target.value)} /></label>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+          <label style={lbl}><span style={cap}>Personnes</span><input style={inp} type="number" min={1} max={4} value={pers} onChange={e => setPers(+e.target.value)} /></label>
+          <label style={lbl}><span style={cap}>Table d'hôtes</span><input style={inp} type="number" min={0} max={20} value={tableHotes} onChange={e => setTableHotes(+e.target.value)} /></label>
+        </div>
+        <label style={{...lbl, marginBottom: 16}}><span style={cap}>Note</span><textarea style={{...inp, resize:'vertical', minHeight:52}} value={note} onChange={e => setNote(e.target.value)} placeholder="Remise, message…" /></label>
+        <button onClick={handlePrint} style={{ width:'100%', padding:'10px 0', background:'transparent', border:'1px solid #c4a050', color:'#c4a050', fontFamily:'system-ui,sans-serif', fontSize:'0.62rem', letterSpacing:'0.2em', textTransform:'uppercase', cursor:'pointer' }}>
+          🖨 Imprimer / PDF
+        </button>
+      </div>
+
+      {/* Prévisualisation */}
+      <div style={{ background: '#fff', color: '#1a1a1a', padding: '40px 44px', boxShadow: '0 4px 40px rgba(0,0,0,.5)' }}>
+        {/* Header */}
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:32, paddingBottom:20, borderBottom:'2px solid #c4a050' }}>
+          <div>
+            <div style={{ fontFamily:'Georgia,serif', fontSize:'1.5rem', color:'#1a3220' }}>La Boire Bavard</div>
+            <div style={{ fontSize:'0.62rem', letterSpacing:'0.24em', textTransform:'uppercase', color:'#c4a050', marginTop:4 }}>Chambres d'Hôtes · Anjou</div>
+            <div style={{ fontSize:'0.77rem', color:'#555', lineHeight:1.7, marginTop:8 }}>4 chemin de la Boire Bavard<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35</div>
+          </div>
+          <div style={{ textAlign:'right' }}>
+            <div style={{ fontFamily:'Georgia,serif', fontSize:'1rem', color:'#1a3220' }}>Facture {num}</div>
+            <div style={{ fontSize:'0.75rem', color:'#777', marginTop:5 }}>Émise le {fmtDateFact(dateFacture)}</div>
+          </div>
+        </div>
+        {/* Client */}
+        <div style={{ background:'#f8f6f0', padding:'14px 18px', borderLeft:'3px solid #c4a050', marginBottom:24 }}>
+          <div style={{ fontFamily:'Georgia,serif', fontSize:'1rem', marginBottom:3 }}>{prenom || nom ? `${prenom} ${nom}`.trim() : <span style={{color:'#aaa'}}>Nom du client</span>}</div>
+          <div style={{ fontSize:'0.8rem', color:'#555', lineHeight:1.6 }}>{adresse && <>{adresse}<br/></>}{email}</div>
+        </div>
+        {/* Séjour */}
+        {n > 0 && (
+          <div style={{ display:'flex', flexWrap:'wrap', gap:'16px 28px', background:'#1a3220', color:'#fff', padding:'12px 18px', marginBottom:24 }}>
+            {[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',`${n} nuit${n>1?'s':''}`],['Pers.',String(pers)]].map(([l,v])=>(
+              <div key={l}><div style={{ fontSize:'0.53rem', letterSpacing:'0.16em', textTransform:'uppercase', color:'rgba(196,160,80,.8)', marginBottom:2 }}>{l}</div><div style={{ fontSize:'0.85rem' }}>{v}</div></div>
+            ))}
+          </div>
+        )}
+        {/* Tableau */}
+        <table style={{ width:'100%', borderCollapse:'collapse', marginBottom:18 }}>
+          <thead><tr style={{ borderBottom:'1px solid #c4a050' }}>
+            {['Prestation','Qté','P.U.','Total'].map(h => <th key={h} style={{ fontSize:'0.58rem', letterSpacing:'0.14em', textTransform:'uppercase', color:'#888', padding:'7px 0', textAlign: h==='Prestation'?'left':'right', fontWeight:400 }}>{h}</th>)}
+          </tr></thead>
+          <tbody>
+            {lignes.map((l,i) => (
+              <tr key={i}>
+                <td style={{ padding:'10px 0', fontSize:'0.84rem', borderBottom:'1px solid #eee' }}>{l.label}</td>
+                <td style={{ padding:'10px 0', fontSize:'0.84rem', borderBottom:'1px solid #eee', textAlign:'right', color:'#777' }}>{l.qty}</td>
+                <td style={{ padding:'10px 0', fontSize:'0.84rem', borderBottom:'1px solid #eee', textAlign:'right', color:'#777' }}>{l.pu.toFixed(2)} €</td>
+                <td style={{ padding:'10px 0', fontSize:'0.84rem', borderBottom:'1px solid #eee', textAlign:'right', fontWeight:500 }}>{l.total.toFixed(2)} €</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{ height:2, background:'linear-gradient(90deg,#c4a050,transparent)', marginBottom:12 }} />
+        <div style={{ display:'flex', justifyContent:'flex-end' }}>
+          <table style={{ borderCollapse:'collapse' }}>
+            <tbody>
+              <tr><td style={{ paddingRight:36, paddingBottom:6, fontSize:'0.78rem', color:'#777' }}>Sous-total</td><td style={{ fontSize:'0.78rem', color:'#777', textAlign:'right' }}>{total.toFixed(2)} €</td></tr>
+              <tr><td style={{ paddingRight:36, paddingBottom:10, fontSize:'0.78rem', color:'#777' }}>TVA</td><td style={{ fontSize:'0.78rem', color:'#777', textAlign:'right' }}>Non applicable</td></tr>
+              <tr style={{ borderTop:'2px solid #1a3220' }}>
+                <td style={{ paddingRight:36, paddingTop:12, fontFamily:'Georgia,serif', fontSize:'1.05rem', color:'#1a3220' }}>Total TTC</td>
+                <td style={{ paddingTop:12, fontFamily:'Georgia,serif', fontSize:'1.2rem', color:'#1a3220', textAlign:'right' }}>{total.toFixed(2)} €</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {note && <div style={{ background:'#f8f6f0', padding:'12px 16px', fontSize:'0.78rem', color:'#555', lineHeight:1.6, marginTop:20, borderLeft:'2px solid #ddd' }}>{note}</div>}
+        <div style={{ marginTop:36, paddingTop:16, borderTop:'1px solid #eee', fontSize:'0.68rem', color:'#aaa', textAlign:'center', lineHeight:1.8 }}>
+          La Boire Bavard · 49320 Blaison-Saint-Sulpice · Sandrine · 06 75 78 63 35<br/>
+          Micro-entreprise · TVA non applicable — art. 293B du CGI
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Dashboard ──────────────────────────────────────────────────────────────
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'>('reservations')
+  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'|'facturation'>('reservations')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
 
@@ -783,6 +994,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <button style={{ ...tabBtn(tab === 'cesoir'), borderColor: tab === 'cesoir' ? 'rgba(122,184,196,.4)' : undefined, color: tab === 'cesoir' ? '#7ab8c4' : undefined, background: tab === 'cesoir' ? 'rgba(122,184,196,.1)' : undefined }} onClick={() => setTab('cesoir')}>
             🛎 Ce soir
           </button>
+          <button style={{ ...tabBtn(tab === 'facturation'), borderColor: tab === 'facturation' ? 'rgba(196,160,80,.4)' : undefined }} onClick={() => setTab('facturation')}>
+            🧾 Facturation
+          </button>
         </div>
 
         {/* Erreur Supabase */}
@@ -807,6 +1021,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
         )}
+
+        {/* ── Onglet Facturation ── */}
+        {tab === 'facturation' && <FacturationPanel />}
 
         {/* ── Onglet Ce soir ── */}
         {tab === 'cesoir' && <HotesPanel />}
