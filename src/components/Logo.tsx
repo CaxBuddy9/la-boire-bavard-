@@ -1,41 +1,42 @@
-// Logo — La Boire Bavard (SVG vectoriel officiel)
-// viewBox recadré 675×1400 → ratio portrait ~0.482:1
+// Logo officiel — La Boire Bavard
+// PNG fond transparent, couleurs or + vert natifs.
 
-// Filtre CSS → gold : brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(5deg)
-// Filtre CSS → white : brightness(0) invert(1)
-
-// eslint-disable-next-line @next/next/no-img-element
 export function LogoSVG({
   height = 66,
   className = '',
-  variant = 'color',
+  variant = 'dark-bg',
 }: {
   height?: number
   className?: string
-  variant?: 'color' | 'white' | 'gold'
+  /** dark-bg : logo couleurs natives (or+vert) sur fond sombre — par défaut
+   *  color   : idem, fond clair
+   *  white   : silhouette blanche pure */
+  variant?: 'color' | 'dark-bg' | 'white'
 }) {
-  const width = Math.round(height * 0.482)
-  const filter =
-    variant === 'white'
-      ? 'brightness(0) invert(1)'
-      : variant === 'gold'
-      ? 'brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(5deg)'
-      : undefined
+  const style: React.CSSProperties = {
+    display: 'block',
+    flexShrink: 0,
+    height,
+    width: 'auto',
+    ...(variant === 'white' && {
+      filter: 'brightness(0) invert(1)',
+    }),
+  }
 
+  // eslint-disable-next-line @next/next/no-img-element
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logo-lbba.svg"
+      src="/logo-lbba.png"
       alt="La Boire Bavard"
       height={height}
-      width={width}
+      width={height}
       className={className}
-      style={{ display: 'block', flexShrink: 0, height, width: 'auto', filter }}
+      style={style}
     />
   )
 }
 
-// Filigrane hero — logo blanc à 10% d'opacité
+// Filigrane hero — logo blanc très discret
 export function LogoWatermark() {
   return (
     <div
@@ -44,7 +45,7 @@ export function LogoWatermark() {
         right: '6%',
         top: '50%',
         transform: 'translateY(-50%)',
-        opacity: 0.10,
+        opacity: 0.08,
         pointerEvents: 'none',
         filter: 'brightness(0) invert(1)',
       }}
@@ -52,7 +53,7 @@ export function LogoWatermark() {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo-lbba.svg"
+        src="/logo-lbba.png"
         alt=""
         style={{ height: 380, width: 'auto', display: 'block' }}
       />
