@@ -35,6 +35,7 @@ export type RoomData = {
   slug: string
   emoji: string
   bg: string
+  image?: string
   theme: RoomTheme
   details: { fr: string; en: string; es: string; pt: string }[]
 }
@@ -167,6 +168,15 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const [dietSent, setDietSent] = useState(false)
   const [dinnerSent, setDinnerSent] = useState(false)
   const [spaSent, setSpaSent] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [showWifiQR, setShowWifiQR] = useState(false)
+
+  const copyPassword = () => {
+    navigator.clipboard.writeText(WIFI_PASSWORD).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    })
+  }
 
   const { theme } = room
   const t = (key: keyof typeof T) => (T[key] as Record<Lang, string>)[lang]
@@ -260,6 +270,29 @@ export default function GuideClient({ room }: { room: RoomData }) {
         </div>
       </div>
 
+      {/* ── PHOTO DE LA CHAMBRE ── */}
+      {room.image && (
+        <div style={{ maxWidth: 600, margin: '0 auto', padding: '1.25rem 1.25rem 0' }}>
+          <div style={{ position: 'relative', width: '100%', height: 'clamp(200px, 55vw, 320px)', borderRadius: 20, overflow: 'hidden' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={room.image}
+              alt={room.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%', display: 'block' }}
+            />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55) 100%)' }} />
+            <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.5rem' }}>
+              <p style={{ color: theme.accent, fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.2rem' }}>
+                {room.emoji} La Boire Bavard
+              </p>
+              <p style={{ color: 'white', fontSize: '1.4rem', fontFamily: 'var(--font-playfair, Georgia, serif)', margin: 0, fontStyle: 'italic', fontWeight: 400, lineHeight: 1.2 }}>
+                {room.name}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── CONTENU ── */}
       <div style={{ maxWidth: 600, margin: '0 auto', padding: '2rem 1.25rem 1rem' }}>
 
@@ -299,21 +332,50 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
         </div>
 
-        {/* WiFi */}
-        <div style={{ background: theme.wifiBg, borderRadius: 20, padding: '1.75rem 1.5rem', marginBottom: '0.875rem', border: `1px solid rgba(${theme.accentRgb},.18)` }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-            <p style={{ color: theme.accent, fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>📶 {t('wifiTitle')}</p>
-            <div style={{ width: 32, height: 32, background: `rgba(${theme.accentRgb},.15)`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.accent }}>✓</div>
+        {/* WiFi — design épuré */}
+        <div style={{ background: theme.wifiBg, borderRadius: 20, marginBottom: '0.875rem', border: `1px solid rgba(${theme.accentRgb},.18)`, overflow: 'hidden' }}>
+          {/* En-tête */}
+          <div style={{ padding: '1.1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: 40, height: 40, background: `rgba(${theme.accentRgb},.15)`, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', flexShrink: 0 }}>📶</div>
+            <div>
+              <p style={{ color: theme.accent, fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>{t('wifiTitle')}</p>
+              <p style={{ color: theme.textSub, fontSize: '0.8rem', margin: '0.1rem 0 0' }}>Connexion gratuite & illimitée</p>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <div style={{ flex: 1, background: 'rgba(255,255,255,0.07)', borderRadius: 14, padding: '1rem', textAlign: 'center' }}>
-              <p style={{ color: theme.textSub, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 0.5rem' }}>{t('network')}</p>
-              <p style={{ color: 'white', fontSize: '1rem', fontWeight: 700, fontFamily: 'monospace', margin: 0 }}>{WIFI_RESEAU}</p>
+          {/* Réseau */}
+          <div style={{ padding: '0.875rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ color: theme.textSub, fontSize: '0.82rem' }}>{t('network')}</span>
+            <span style={{ color: theme.heading, fontSize: '0.95rem', fontWeight: 700, fontFamily: 'monospace' }}>{WIFI_RESEAU}</span>
+          </div>
+          {/* Mot de passe + bouton copier */}
+          <div style={{ padding: '0.875rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ color: theme.textSub, fontSize: '0.78rem', margin: '0 0 0.3rem' }}>{t('password')}</p>
+              <p style={{ color: theme.heading, fontSize: '1.05rem', fontWeight: 700, fontFamily: 'monospace', margin: 0, wordBreak: 'break-all' }}>{WIFI_PASSWORD}</p>
             </div>
-            <div style={{ flex: 1, background: theme.accent, borderRadius: 14, padding: '1rem', textAlign: 'center' }}>
-              <p style={{ color: 'rgba(0,0,0,0.45)', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 0.5rem' }}>{t('password')}</p>
-              <p style={{ color: theme.pillActiveText, fontSize: '1.25rem', fontWeight: 800, fontFamily: 'monospace', margin: 0, letterSpacing: '0.05em' }}>{WIFI_PASSWORD}</p>
-            </div>
+            <button
+              onClick={copyPassword}
+              style={{ flexShrink: 0, background: copied ? 'rgba(76,175,80,.2)' : `rgba(${theme.accentRgb},.15)`, color: copied ? '#4caf50' : theme.accent, border: `1px solid ${copied ? '#4caf5040' : `rgba(${theme.accentRgb},.3)`}`, borderRadius: 10, padding: '0.5rem 1rem', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s', fontFamily: 'inherit', whiteSpace: 'nowrap' }}
+            >
+              {copied ? '✓ Copié' : 'Copier'}
+            </button>
+          </div>
+          {/* Bouton connexion directe */}
+          <div style={{ padding: '0.875rem 1.5rem 1.25rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)` }}>
+            <button
+              onClick={() => setShowWifiQR(v => !v)}
+              style={{ width: '100%', background: theme.accent, color: theme.pillActiveText, border: 'none', borderRadius: 14, padding: '0.875rem 1rem', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              <span>📱</span>
+              {showWifiQR ? 'Masquer le QR code' : 'Se connecter en un scan'}
+            </button>
+            {showWifiQR && (
+              <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/photos/wifi-qr.jpg" alt="QR code WiFi" style={{ width: 190, height: 190, borderRadius: 16, display: 'block', margin: '0 auto', objectFit: 'cover' }} />
+                <p style={{ color: theme.textMuted, fontSize: '0.72rem', marginTop: '0.625rem', letterSpacing: '0.05em' }}>Scannez avec l'appareil photo de votre téléphone</p>
+              </div>
+            )}
           </div>
         </div>
 

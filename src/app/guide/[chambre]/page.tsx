@@ -10,6 +10,7 @@ const ROOMS = {
     slug: 'jardin',
     emoji: '🌿',
     bg: '#1c1008',
+    image: '/photos/chambre-jardin-ensemble.jpg',
     theme: {
       pageBg: '#120c08',
       topbarBg: '#1c1008',
