@@ -45,7 +45,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-1.5">
           <LogoSVG height={70} variant="dark-bg" />
           <div className="flex flex-col leading-none">
             <span className={`font-serif text-[1.1rem] tracking-[0.06em] font-normal transition-colors duration-300 ${logoColor}`}>
