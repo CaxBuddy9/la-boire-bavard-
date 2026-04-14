@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
+import PhotoGallery from '@/components/PhotoGallery'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
@@ -113,26 +114,20 @@ export default function PropriетеPage() {
             >
               En images
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {[
+            <PhotoGallery
+              columns={3}
+              photos={[
                 { src: '/photos/maison-exterieure-piscine.jpg', alt: 'Jardin et piscine' },
                 { src: '/photos/maison-exterieure-fleurs.jpg', alt: 'La maison au printemps' },
                 { src: '/photos/maison-exterieure-ete.jpg', alt: 'Vue extérieure été' },
+                { src: '/photos/propriete-jardin-cedre.jpg', alt: 'Le jardin et le cèdre centenaire' },
                 { src: '/photos/chambre-jardin-ensemble.jpg', alt: 'Chambre Côté Jardin' },
-                { src: '/photos/chambre-jardin-lit-terrasse.jpg', alt: 'Lit avec vue jardin' },
+                { src: '/photos/chambre-jardin-lit-terrasse.jpg', alt: 'Lit avec vue sur le jardin' },
                 { src: '/photos/chambre-jardin-cheminee.jpg', alt: 'Cheminée en tuffeau' },
-              ].map(({ src, alt }, i) => (
-                <div key={i} className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={src}
-                    alt={`La Boire Bavard — ${alt}`}
-                    fill
-                    className="object-cover hover:scale-[1.05] transition-transform duration-500"
-                    sizes="(max-width:768px) 50vw, 33vw"
-                  />
-                </div>
-              ))}
-            </div>
+                { src: '/photos/chambre-jardin-console.jpg', alt: 'Console et miroir' },
+                { src: '/photos/chambre-jardin-entree.jpg', alt: 'Entrée depuis la terrasse' },
+              ]}
+            />
           </div>
         </section>
 

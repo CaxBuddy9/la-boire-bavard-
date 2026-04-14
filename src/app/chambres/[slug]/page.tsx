@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import BookingCard from '@/components/BookingCard'
+import PhotoGallery from '@/components/PhotoGallery'
 import { ROOMS, getRoomBySlug } from '@/lib/rooms'
 
 export function generateStaticParams() {
@@ -80,21 +81,18 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
                 ))}
               </ul>
 
-              {/* Gallery */}
+              {/* Gallery cliquable */}
               {room.images.length > 1 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {room.images.slice(1).map((src, i) => (
-                    <div key={i} className="relative aspect-[4/3] overflow-hidden">
-                      <Image
-                        src={src}
-                        alt={`${room.name} — photo ${i + 2}`}
-                        fill
-                        className="object-cover hover:scale-[1.04] transition-transform duration-500"
-                        sizes="(max-width:768px) 50vw, 30vw"
-                      />
-                    </div>
-                  ))}
-                </div>
+                <>
+                  <h3 className="font-serif font-normal text-2xl mb-6" style={{ color: 'rgba(253,252,249,.85)' }}>Galerie</h3>
+                  <PhotoGallery
+                    photos={room.images.map((src, i) => ({
+                      src,
+                      alt: `${room.name} — photo ${i + 1}`,
+                    }))}
+                    columns={2}
+                  />
+                </>
               )}
             </div>
 
