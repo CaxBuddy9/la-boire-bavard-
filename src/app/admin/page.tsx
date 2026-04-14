@@ -709,7 +709,7 @@ function FacturationPanel() {
       <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,sans-serif;color:#1a1a1a;background:#fff;padding:48px;max-width:800px;margin:auto;position:relative}
-        .watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;object-fit:contain;opacity:0.045;pointer-events:none;z-index:0}
+        .watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;object-fit:contain;opacity:0.022;pointer-events:none;z-index:0}
         .content{position:relative;z-index:1}
         .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #c4a050}
         .hd-left{display:flex;align-items:center;gap:18px}
@@ -740,7 +740,7 @@ function FacturationPanel() {
         .ttl tr.big td{padding-top:12px;font-family:Georgia,serif;font-size:1.12rem;color:#1a3220;border-top:2px solid #1a3220}
         .notebox{background:#f8f6f0;padding:13px 17px;font-size:0.78rem;color:#666;line-height:1.6;margin-top:22px;border-left:2px solid #e0d8cc}
         .foot{margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .foot-logo{width:44px;height:44px;object-fit:contain;opacity:0.55}
+        .foot-logo{width:36px;height:36px;object-fit:contain;opacity:0.3}
         .foot-txt{font-size:0.68rem;color:#bbb;line-height:1.75;text-align:center;flex:1}
         @media print{.watermark{position:fixed}}
       </style></head><body>
@@ -771,7 +771,6 @@ function FacturationPanel() {
         <div class="foot">
           <img class="foot-logo" src="${origin}/logo-lbba.png" alt=""/>
           <div class="foot-txt">La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>Micro-entreprise · TVA non applicable — art. 293B du CGI</div>
-          <img class="foot-logo" src="${origin}/logo-lbba.png" alt=""/>
         </div>
       </div>
     </body></html>`)
@@ -827,7 +826,7 @@ function FacturationPanel() {
       <div style={{ background: '#fff', color: '#1a1a1a', padding: '40px 44px', boxShadow: '0 4px 40px rgba(0,0,0,.5)', position:'relative', overflow:'hidden' }}>
         {/* Filigrane */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-lbba.png" alt="" aria-hidden style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:320, height:320, objectFit:'contain', opacity:0.045, pointerEvents:'none', userSelect:'none' }} />
+        <img src="/logo-lbba.png" alt="" aria-hidden style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:320, height:320, objectFit:'contain', opacity:0.022, pointerEvents:'none', userSelect:'none' }} />
         {/* Header */}
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:32, paddingBottom:20, borderBottom:'2px solid #c4a050', position:'relative' }}>
           <div style={{ display:'flex', alignItems:'center', gap:18 }}>
@@ -889,14 +888,12 @@ function FacturationPanel() {
         {note && <div style={{ background:'#f8f6f0', padding:'12px 16px', fontSize:'0.78rem', color:'#555', lineHeight:1.6, marginTop:20, borderLeft:'2px solid #e0d8cc' }}>{note}</div>}
         <div style={{ marginTop:36, paddingTop:16, borderTop:'1px solid #eee', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, position:'relative' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-lbba.png" alt="" style={{ width:44, height:44, objectFit:'contain', opacity:0.5 }} />
+          <img src="/logo-lbba.png" alt="" style={{ width:36, height:36, objectFit:'contain', opacity:0.35 }} />
           <div style={{ fontSize:'0.68rem', color:'#bbb', lineHeight:1.75, textAlign:'center', flex:1 }}>
             La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>
             Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>
             Micro-entreprise · TVA non applicable — art. 293B du CGI
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-lbba.png" alt="" style={{ width:44, height:44, objectFit:'contain', opacity:0.5 }} />
         </div>
       </div>
     </div>
