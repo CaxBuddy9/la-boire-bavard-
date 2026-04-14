@@ -702,60 +702,78 @@ function FacturationPanel() {
   const handlePrint = () => {
     const win = window.open('', '_blank')
     if (!win) return
+    const origin = window.location.origin
     win.document.write(`<!DOCTYPE html><html><head>
       <meta charset="utf-8"/>
       <title>Facture ${num} — La Boire Bavard</title>
       <style>
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:system-ui,sans-serif;color:#1a1a1a;background:#fff;padding:48px;max-width:800px;margin:auto}
-        .hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;padding-bottom:22px;border-bottom:2px solid #c4a050}
-        .logo{font-family:Georgia,serif;font-size:1.6rem;color:#1a3220}
-        .sub{font-size:0.62rem;letter-spacing:0.24em;text-transform:uppercase;color:#c4a050;margin-top:4px}
-        .etab{font-size:0.78rem;color:#555;line-height:1.7;margin-top:8px}
-        .fnum{font-family:Georgia,serif;font-size:1.1rem;color:#1a3220;text-align:right}
-        .fdate{font-size:0.78rem;color:#777;margin-top:6px;text-align:right}
-        .stitle{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4a050;margin-bottom:10px}
-        .cbox{background:#f8f6f0;padding:16px 20px;border-left:3px solid #c4a050;margin-bottom:30px}
-        .cname{font-family:Georgia,serif;font-size:1.05rem;margin-bottom:4px}
-        .cdet{font-size:0.82rem;color:#555;line-height:1.6}
-        .sbar{display:flex;flex-wrap:wrap;gap:20px 32px;margin-bottom:28px;padding:14px 20px;background:#1a3220;color:#fff}
-        .sitem label{font-size:0.54rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(196,160,80,.8);display:block;margin-bottom:3px}
-        .sitem span{font-size:0.88rem}
-        table{width:100%;border-collapse:collapse;margin-bottom:22px}
+        body{font-family:system-ui,sans-serif;color:#1a1a1a;background:#fff;padding:48px;max-width:800px;margin:auto;position:relative}
+        .watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;object-fit:contain;opacity:0.045;pointer-events:none;z-index:0}
+        .content{position:relative;z-index:1}
+        .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #c4a050}
+        .hd-left{display:flex;align-items:center;gap:18px}
+        .hd-logo{width:72px;height:72px;object-fit:contain}
+        .logo-txt .name{font-family:Georgia,serif;font-size:1.45rem;color:#1a3220}
+        .logo-txt .sub{font-size:0.6rem;letter-spacing:0.24em;text-transform:uppercase;color:#c4a050;margin-top:3px}
+        .logo-txt .etab{font-size:0.75rem;color:#777;line-height:1.7;margin-top:7px}
+        .fnum{font-family:Georgia,serif;font-size:1.05rem;color:#1a3220;text-align:right}
+        .fdate{font-size:0.75rem;color:#999;margin-top:5px;text-align:right}
+        .stitle{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4a050;margin-bottom:9px}
+        .cbox{background:#f8f6f0;padding:15px 19px;border-left:3px solid #c4a050;margin-bottom:28px}
+        .cname{font-family:Georgia,serif;font-size:1.02rem;margin-bottom:3px}
+        .cdet{font-size:0.8rem;color:#666;line-height:1.65}
+        .sbar{display:flex;flex-wrap:wrap;gap:16px 28px;margin-bottom:26px;padding:13px 18px;background:#1a3220;color:#fff}
+        .sitem label{font-size:0.52rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(196,160,80,.8);display:block;margin-bottom:2px}
+        .sitem span{font-size:0.86rem}
+        table{width:100%;border-collapse:collapse;margin-bottom:20px}
         thead tr{border-bottom:1px solid #c4a050}
-        th{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:#888;padding:8px 0;text-align:left;font-weight:400}
+        th{font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:#999;padding:7px 0;text-align:left;font-weight:400}
         th.r,td.r{text-align:right}
-        td{padding:11px 0;font-size:0.85rem;border-bottom:1px solid #eee;vertical-align:top}
-        .gline{height:2px;background:linear-gradient(90deg,#c4a050,transparent);margin-bottom:14px}
+        td{padding:10px 0;font-size:0.84rem;border-bottom:1px solid #efefef;vertical-align:top}
+        .gline{height:2px;background:linear-gradient(90deg,#c4a050,transparent);margin-bottom:12px}
         .ttl{display:flex;justify-content:flex-end}
         .ttl table{width:auto}
-        .ttl td{border:none;padding:5px 0}
-        .ttl td:first-child{padding-right:40px;font-size:0.8rem;color:#777}
-        .ttl td:last-child{font-size:0.8rem;color:#777;text-align:right}
-        .ttl tr.big td{padding-top:14px;font-family:Georgia,serif;font-size:1.15rem;color:#1a3220;border-top:2px solid #1a3220}
-        .notebox{background:#f8f6f0;padding:14px 18px;font-size:0.8rem;color:#555;line-height:1.6;margin-top:24px;border-left:2px solid #ddd}
-        .foot{margin-top:44px;padding-top:18px;border-top:1px solid #eee;font-size:0.7rem;color:#aaa;text-align:center;line-height:1.8}
+        .ttl td{border:none;padding:4px 0}
+        .ttl td:first-child{padding-right:40px;font-size:0.78rem;color:#888}
+        .ttl td:last-child{font-size:0.78rem;color:#888;text-align:right}
+        .ttl tr.big td{padding-top:12px;font-family:Georgia,serif;font-size:1.12rem;color:#1a3220;border-top:2px solid #1a3220}
+        .notebox{background:#f8f6f0;padding:13px 17px;font-size:0.78rem;color:#666;line-height:1.6;margin-top:22px;border-left:2px solid #e0d8cc}
+        .foot{margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .foot-logo{width:44px;height:44px;object-fit:contain;opacity:0.55}
+        .foot-txt{font-size:0.68rem;color:#bbb;line-height:1.75;text-align:center;flex:1}
+        @media print{.watermark{position:fixed}}
       </style></head><body>
-      <div class="hd">
-        <div>
-          <div class="logo">La Boire Bavard</div>
-          <div class="sub">Chambres d'Hôtes · Anjou</div>
-          <div class="etab">4 chemin de la Boire Bavard, Lieu-dit La Hutte<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · laboirebavard@gmail.com</div>
+      <img class="watermark" src="${origin}/logo-lbba.png" alt=""/>
+      <div class="content">
+        <div class="hd">
+          <div class="hd-left">
+            <img class="hd-logo" src="${origin}/logo-lbba.png" alt="Logo La Boire Bavard"/>
+            <div class="logo-txt">
+              <div class="name">La Boire Bavard</div>
+              <div class="sub">Chambres d'Hôtes · Anjou</div>
+              <div class="etab">4 chemin de la Boire Bavard, Lieu-dit La Hutte<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · laboirebavard@gmail.com</div>
+            </div>
+          </div>
+          <div><div class="fnum">Facture ${num}</div><div class="fdate">Émise le ${fmtDateFact(dateFacture)}</div></div>
         </div>
-        <div><div class="fnum">Facture ${num}</div><div class="fdate">Émise le ${fmtDateFact(dateFacture)}</div></div>
+        <div class="stitle">Facturé à</div>
+        <div class="cbox">
+          <div class="cname">${prenom} ${nom}</div>
+          <div class="cdet">${adresse ? adresse + '<br/>' : ''}${email}</div>
+        </div>
+        ${n > 0 ? `<div class="sbar">${[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',n+' nuit'+(n>1?'s':'')],['Personnes',String(pers)]].map(([l,v])=>`<div class="sitem"><label>${l}</label><span>${v}</span></div>`).join('')}</div>` : ''}
+        <table><thead><tr><th>Prestation</th><th class="r">Qté</th><th class="r">P.U.</th><th class="r">Total</th></tr></thead>
+        <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td class="r" style="color:#888">${l.qty}</td><td class="r" style="color:#888">${l.pu.toFixed(2)} €</td><td class="r" style="font-weight:500">${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody></table>
+        <div class="gline"></div>
+        <div class="ttl"><table><tr><td>Sous-total</td><td>${total.toFixed(2)} €</td></tr><tr><td>TVA</td><td>Non applicable</td></tr><tr class="big"><td>Total TTC</td><td>${total.toFixed(2)} €</td></tr></table></div>
+        ${note ? `<div class="notebox"><strong style="font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:#999">Note</strong><br/>${note}</div>` : ''}
+        <div class="foot">
+          <img class="foot-logo" src="${origin}/logo-lbba.png" alt=""/>
+          <div class="foot-txt">La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>Micro-entreprise · TVA non applicable — art. 293B du CGI</div>
+          <img class="foot-logo" src="${origin}/logo-lbba.png" alt=""/>
+        </div>
       </div>
-      <div class="stitle">Facturé à</div>
-      <div class="cbox">
-        <div class="cname">${prenom} ${nom}</div>
-        <div class="cdet">${adresse ? adresse + '<br/>' : ''}${email}</div>
-      </div>
-      ${n > 0 ? `<div class="sbar">${[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',n+' nuit'+(n>1?'s':'')],['Personnes',String(pers)]].map(([l,v])=>`<div class="sitem"><label>${l}</label><span>${v}</span></div>`).join('')}</div>` : ''}
-      <table><thead><tr><th>Prestation</th><th class="r">Qté</th><th class="r">P.U.</th><th class="r">Total</th></tr></thead>
-      <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td class="r" style="color:#777">${l.qty}</td><td class="r" style="color:#777">${l.pu.toFixed(2)} €</td><td class="r" style="font-weight:500">${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody></table>
-      <div class="gline"></div>
-      <div class="ttl"><table><tr><td>Sous-total</td><td>${total.toFixed(2)} €</td></tr><tr><td>TVA</td><td>Non applicable</td></tr><tr class="big"><td>Total TTC</td><td>${total.toFixed(2)} €</td></tr></table></div>
-      ${note ? `<div class="notebox"><strong style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#888">Note</strong><br/>${note}</div>` : ''}
-      <div class="foot">La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>Micro-entreprise · TVA non applicable — art. 293B du CGI</div>
     </body></html>`)
     win.document.close()
     win.focus()
@@ -806,17 +824,24 @@ function FacturationPanel() {
       </div>
 
       {/* Prévisualisation */}
-      <div style={{ background: '#fff', color: '#1a1a1a', padding: '40px 44px', boxShadow: '0 4px 40px rgba(0,0,0,.5)' }}>
+      <div style={{ background: '#fff', color: '#1a1a1a', padding: '40px 44px', boxShadow: '0 4px 40px rgba(0,0,0,.5)', position:'relative', overflow:'hidden' }}>
+        {/* Filigrane */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-lbba.png" alt="" aria-hidden style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:320, height:320, objectFit:'contain', opacity:0.045, pointerEvents:'none', userSelect:'none' }} />
         {/* Header */}
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:32, paddingBottom:20, borderBottom:'2px solid #c4a050' }}>
-          <div>
-            <div style={{ fontFamily:'Georgia,serif', fontSize:'1.5rem', color:'#1a3220' }}>La Boire Bavard</div>
-            <div style={{ fontSize:'0.62rem', letterSpacing:'0.24em', textTransform:'uppercase', color:'#c4a050', marginTop:4 }}>Chambres d'Hôtes · Anjou</div>
-            <div style={{ fontSize:'0.77rem', color:'#555', lineHeight:1.7, marginTop:8 }}>4 chemin de la Boire Bavard<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35</div>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:32, paddingBottom:20, borderBottom:'2px solid #c4a050', position:'relative' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:18 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-lbba.png" alt="Logo" style={{ width:72, height:72, objectFit:'contain' }} />
+            <div>
+              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.45rem', color:'#1a3220' }}>La Boire Bavard</div>
+              <div style={{ fontSize:'0.6rem', letterSpacing:'0.24em', textTransform:'uppercase', color:'#c4a050', marginTop:3 }}>Chambres d'Hôtes · Anjou</div>
+              <div style={{ fontSize:'0.75rem', color:'#777', lineHeight:1.7, marginTop:7 }}>4 chemin de la Boire Bavard<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35</div>
+            </div>
           </div>
           <div style={{ textAlign:'right' }}>
             <div style={{ fontFamily:'Georgia,serif', fontSize:'1rem', color:'#1a3220' }}>Facture {num}</div>
-            <div style={{ fontSize:'0.75rem', color:'#777', marginTop:5 }}>Émise le {fmtDateFact(dateFacture)}</div>
+            <div style={{ fontSize:'0.75rem', color:'#999', marginTop:5 }}>Émise le {fmtDateFact(dateFacture)}</div>
           </div>
         </div>
         {/* Client */}
@@ -861,10 +886,17 @@ function FacturationPanel() {
             </tbody>
           </table>
         </div>
-        {note && <div style={{ background:'#f8f6f0', padding:'12px 16px', fontSize:'0.78rem', color:'#555', lineHeight:1.6, marginTop:20, borderLeft:'2px solid #ddd' }}>{note}</div>}
-        <div style={{ marginTop:36, paddingTop:16, borderTop:'1px solid #eee', fontSize:'0.68rem', color:'#aaa', textAlign:'center', lineHeight:1.8 }}>
-          La Boire Bavard · 49320 Blaison-Saint-Sulpice · Sandrine · 06 75 78 63 35<br/>
-          Micro-entreprise · TVA non applicable — art. 293B du CGI
+        {note && <div style={{ background:'#f8f6f0', padding:'12px 16px', fontSize:'0.78rem', color:'#555', lineHeight:1.6, marginTop:20, borderLeft:'2px solid #e0d8cc' }}>{note}</div>}
+        <div style={{ marginTop:36, paddingTop:16, borderTop:'1px solid #eee', display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, position:'relative' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-lbba.png" alt="" style={{ width:44, height:44, objectFit:'contain', opacity:0.5 }} />
+          <div style={{ fontSize:'0.68rem', color:'#bbb', lineHeight:1.75, textAlign:'center', flex:1 }}>
+            La Boire Bavard · 4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice<br/>
+            Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com<br/>
+            Micro-entreprise · TVA non applicable — art. 293B du CGI
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-lbba.png" alt="" style={{ width:44, height:44, objectFit:'contain', opacity:0.5 }} />
         </div>
       </div>
     </div>
