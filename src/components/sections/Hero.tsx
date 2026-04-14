@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { LogoWatermark } from '@/components/Logo'
+import { LogoSVG, LogoWatermark } from '@/components/Logo'
 import { useT } from '@/context/LangContext'
 
 export default function Hero() {
@@ -26,12 +26,16 @@ export default function Hero() {
 
       {/* Contenu */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-        <p className="label-caps mb-6 animate-[rise_0.8s_0.15s_both]">
+        <div className="flex justify-center mb-6 animate-[rise_0.9s_0s_both]">
+          <LogoSVG height={120} variant="dark-bg" />
+        </div>
+
+        <p className="label-caps mb-5 animate-[rise_0.8s_0.2s_both]">
           {t("Chambres d'Hôtes · Anjou · France", 'Bed & Breakfast · Anjou · France')}
         </p>
 
-        <h1 className="font-serif font-normal leading-none mb-5 animate-[rise_0.8s_0.3s_both]"
-          style={{ fontSize: 'clamp(4rem,9vw,8rem)', letterSpacing: '-0.01em' }}
+        <h1 className="font-serif font-normal leading-none mb-5 animate-[rise_0.8s_0.35s_both]"
+          style={{ fontSize: 'clamp(3rem,7vw,6.5rem)', letterSpacing: '-0.01em' }}
         >
           La Boire<br />
           <em className="font-serif italic text-white/65">Bavard</em>

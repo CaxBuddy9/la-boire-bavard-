@@ -27,9 +27,10 @@ export default function GuideIntro({
           aria-hidden="true"
           style={{
             position: 'fixed', inset: 0, zIndex: 9999,
-            perspective: '1400px',
+            perspective: '1200px',
             perspectiveOrigin: '50% 50%',
             overflow: 'hidden',
+            transform: 'translateZ(0)',
           }}
         >
           {/* ── PORTE GAUCHE ── */}
@@ -38,8 +39,8 @@ export default function GuideIntro({
             top: 0, left: 0,
             width: '50%', height: '100%',
             transformOrigin: '0% 50%',
-            transform: phase === 'opening' ? 'rotateY(-105deg)' : 'rotateY(0deg)',
-            transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            transform: phase === 'opening' ? 'rotateY(-98deg)' : 'rotateY(0deg)',
+            transition: 'transform 1.4s cubic-bezier(0.77, 0, 0.175, 1)',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
             backfaceVisibility: 'hidden',
@@ -79,8 +80,8 @@ export default function GuideIntro({
             top: 0, right: 0,
             width: '50%', height: '100%',
             transformOrigin: '100% 50%',
-            transform: phase === 'opening' ? 'rotateY(105deg)' : 'rotateY(0deg)',
-            transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
+            transform: phase === 'opening' ? 'rotateY(98deg)' : 'rotateY(0deg)',
+            transition: 'transform 1.4s cubic-bezier(0.77, 0, 0.175, 1)',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
             backfaceVisibility: 'hidden',
@@ -139,7 +140,7 @@ export default function GuideIntro({
             textAlign: 'center',
             padding: '0 2rem',
           }}>
-            <LogoSVG height={148} variant="white" />
+            <LogoSVG height={148} variant="dark-bg" />
             <div style={{ width: 44, height: 1, background: '#c4a050', margin: '1.5rem auto 1.5rem', opacity: 0.8 }} />
             <p style={{
               fontFamily: 'var(--font-playfair, Georgia, serif)',

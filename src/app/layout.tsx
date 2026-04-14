@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/logo-lbba.svg', type: 'image/svg+xml' },
-      { url: '/favicon.png',   type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', type: 'image/png' },
     ],
     apple: '/icons/icon-192.png',
   },
