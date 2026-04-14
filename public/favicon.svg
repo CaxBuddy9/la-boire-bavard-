@@ -1,55 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <radialGradient id="bg" cx="38%" cy="30%" r="75%">
-      <stop offset="0%" stop-color="#2e5535"/>
-      <stop offset="100%" stop-color="#0d1a10"/>
-    </radialGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#c4a050" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#c4a050" stop-opacity="0"/>
-    </radialGradient>
+    <filter id="remove-white" color-interpolation-filters="sRGB">
+      <!-- invert: blanc → noir, or → ~complémentaire -->
+      <feComponentTransfer result="inv">
+        <feFuncR type="linear" slope="-1" intercept="1"/>
+        <feFuncG type="linear" slope="-1" intercept="1"/>
+        <feFuncB type="linear" slope="-1" intercept="1"/>
+      </feComponentTransfer>
+      <!-- hue-rotate 180° : restitue les teintes d'origine -->
+      <feColorMatrix type="hueRotate" values="180"/>
+    </filter>
   </defs>
 
-  <!-- Fond vert foncé arrondi (style icône moderne) -->
-  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Fond vert foncé -->
+  <rect width="64" height="64" rx="10" fill="#1a3220"/>
 
-  <!-- Halo or subtil -->
-  <ellipse cx="32" cy="30" rx="22" ry="20" fill="url(#glow)"/>
-
-  <!-- Bordure or fine -->
-  <rect width="64" height="64" rx="14" fill="none" stroke="#c4a050" stroke-width="1.5"/>
-
-  <!-- Clé : anneau -->
-  <circle cx="26" cy="24" r="9.5" fill="none" stroke="#c4a050" stroke-width="3"/>
-  <circle cx="26" cy="24" r="4.5" fill="#c4a050"/>
-
-  <!-- Clé : tige -->
-  <rect x="33" y="22" width="17" height="4" rx="2" fill="#c4a050"/>
-
-  <!-- Clé : dents -->
-  <rect x="46" y="26" width="4" height="6" rx="1.5" fill="#c4a050"/>
-  <rect x="40" y="26" width="4" height="5" rx="1.5" fill="#c4a050"/>
-
-  <!-- Vigne : feuille gauche -->
-  <path d="M 18 42 Q 14 36 20 34 Q 22 40 18 42 Z" fill="#5ab86c" opacity="0.85"/>
-  <line x1="18" y1="42" x2="20" y2="34" stroke="#5ab86c" stroke-width="1" opacity="0.6"/>
-
-  <!-- Vigne : feuille milieu -->
-  <path d="M 28 44 Q 22 36 30 33 Q 33 40 28 44 Z" fill="#4da85e" opacity="0.9"/>
-  <line x1="28" y1="44" x2="30" y2="33" stroke="#4da85e" stroke-width="1" opacity="0.6"/>
-
-  <!-- Vigne : feuille droite -->
-  <path d="M 39 42 Q 36 34 44 33 Q 44 40 39 42 Z" fill="#5ab86c" opacity="0.85"/>
-  <line x1="39" y1="42" x2="44" y2="33" stroke="#5ab86c" stroke-width="1" opacity="0.6"/>
-
-  <!-- Grappe : raisins -->
-  <circle cx="31" cy="47" r="2.5" fill="#c4a050" opacity="0.9"/>
-  <circle cx="26" cy="48" r="2.2" fill="#c4a050" opacity="0.8"/>
-  <circle cx="36" cy="48" r="2.2" fill="#c4a050" opacity="0.8"/>
-  <circle cx="29" cy="52" r="2" fill="#c4a050" opacity="0.75"/>
-  <circle cx="34" cy="52" r="2" fill="#c4a050" opacity="0.75"/>
-  <circle cx="31.5" cy="56" r="1.8" fill="#c4a050" opacity="0.65"/>
-
-  <!-- Trait or bas -->
-  <line x1="20" y1="61" x2="44" y2="61" stroke="#c4a050" stroke-width="0.8" opacity="0.4"/>
+  <!-- Logo : filtre invert+hueRotate, blend lighten efface le fond noir -->
+  <image
+    href="/logo-lbba.png"
+    x="4" y="4" width="56" height="56"
+    filter="url(#remove-white)"
+    style="mix-blend-mode: lighten"
+  />
 </svg>
