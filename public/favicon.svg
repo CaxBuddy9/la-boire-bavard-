@@ -1,25 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <filter id="remove-white" color-interpolation-filters="sRGB">
-      <!-- invert: blanc → noir, or → ~complémentaire -->
-      <feComponentTransfer result="inv">
-        <feFuncR type="linear" slope="-1" intercept="1"/>
-        <feFuncG type="linear" slope="-1" intercept="1"/>
-        <feFuncB type="linear" slope="-1" intercept="1"/>
-      </feComponentTransfer>
-      <!-- hue-rotate 180° : restitue les teintes d'origine -->
-      <feColorMatrix type="hueRotate" values="180"/>
-    </filter>
-  </defs>
-
-  <!-- Fond vert foncé -->
   <rect width="64" height="64" rx="10" fill="#1a3220"/>
-
-  <!-- Logo : filtre invert+hueRotate, blend lighten efface le fond noir -->
-  <image
-    href="/logo-lbba.png"
-    x="4" y="4" width="56" height="56"
-    filter="url(#remove-white)"
-    style="mix-blend-mode: lighten"
-  />
+  <image href="/favicon.png" x="0" y="0" width="64" height="64"/>
 </svg>
