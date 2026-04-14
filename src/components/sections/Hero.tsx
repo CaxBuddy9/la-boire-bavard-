@@ -11,7 +11,7 @@ export default function Hero() {
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Image Ken Burns */}
       <Image
-        src="/photos/maison-exterieure-piscine.jpg"
+        src="/photos/exterieur/maison-exterieure-piscine.jpg"
         alt="La Boire Bavard — vue extérieure jardin et piscine"
         fill priority
         className="object-cover animate-kenburns"

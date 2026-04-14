@@ -24,7 +24,7 @@ export default function BienetreePage() {
         {/* Hero */}
         <section className="relative h-[70vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/photo3.jpg"
+            src="/photos/chambres/potager/chambre-potager-pierre.jpg"
             alt="Piscine La Boire Bavard"
             fill priority
             className="object-cover"
@@ -59,7 +59,7 @@ export default function BienetreePage() {
         {/* Piscine */}
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-            <Image src="/photos/photo4.jpg" alt="Piscine chauffée" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/chambres/jardin/chambre-jardin-combles.jpg" alt="Piscine chauffée" fill className="object-cover" sizes="50vw" />
           </div>
           <div style={{ background: '#141f15' }} className="flex flex-col justify-center px-12 py-20 md:px-16">
             <p className="label-caps mb-5">Mai – Septembre</p>
@@ -120,7 +120,7 @@ export default function BienetreePage() {
             </div>
           </div>
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-            <Image src="/photos/photo6.jpg" alt="Spa et sauna" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt="Spa et sauna" fill className="object-cover" sizes="50vw" />
           </div>
         </div>
 

@@ -18,7 +18,7 @@ export default function BienetreContent() {
       {/* Hero */}
       <section className="relative h-[70vh] flex items-end pb-16 overflow-hidden">
         <Image
-          src="/photos/photo3.jpg"
+          src="/photos/chambres/potager/chambre-potager-pierre.jpg"
           alt={t('Piscine La Boire Bavard', 'Pool at La Boire Bavard')}
           fill priority
           className="object-cover"
@@ -58,7 +58,7 @@ export default function BienetreContent() {
       {/* Piscine */}
       <div className="grid md:grid-cols-2 min-h-[70vh]">
         <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-          <Image src="/photos/photo4.jpg" alt={t('Piscine chauffée', 'Heated pool')} fill className="object-cover" sizes="50vw" />
+          <Image src="/photos/chambres/jardin/chambre-jardin-combles.jpg" alt={t('Piscine chauffée', 'Heated pool')} fill className="object-cover" sizes="50vw" />
         </div>
         <div style={{ background: '#141f15' }} className="flex flex-col justify-center px-12 py-20 md:px-16">
           <p className="label-caps mb-5">{t('Mai – Septembre', 'May – September')}</p>
@@ -133,7 +133,7 @@ export default function BienetreContent() {
           </div>
         </div>
         <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-          <Image src="/photos/photo6.jpg" alt={t('Spa et sauna', 'Spa and sauna')} fill className="object-cover" sizes="50vw" />
+          <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt={t('Spa et sauna', 'Spa and sauna')} fill className="object-cover" sizes="50vw" />
         </div>
       </div>
 

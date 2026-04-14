@@ -26,7 +26,7 @@ export default function PropriетеPage() {
         {/* Hero */}
         <section className="relative h-[65vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/propriete-jardin-cedre.jpg"
+            src="/photos/exterieur/propriete-jardin-cedre.jpg"
             alt="La propriété La Boire Bavard — jardin et cèdre centenaire"
             fill priority
             className="object-cover"
@@ -47,7 +47,7 @@ export default function PropriетеPage() {
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
             <Image
-              src="/photos/maison-exterieure-fleurs.jpg"
+              src="/photos/exterieur/maison-exterieure-fleurs.jpg"
               alt="La longère angevine de La Boire Bavard au printemps"
               fill
               className="object-cover transition-transform duration-700 hover:scale-[1.03]"
@@ -117,15 +117,15 @@ export default function PropriетеPage() {
             <PhotoGallery
               columns={3}
               photos={[
-                { src: '/photos/maison-exterieure-piscine.jpg', alt: 'Jardin et piscine' },
-                { src: '/photos/maison-exterieure-fleurs.jpg', alt: 'La maison au printemps' },
-                { src: '/photos/maison-exterieure-ete.jpg', alt: 'Vue extérieure été' },
-                { src: '/photos/propriete-jardin-cedre.jpg', alt: 'Le jardin et le cèdre centenaire' },
-                { src: '/photos/chambre-jardin-ensemble.jpg', alt: 'Chambre Côté Jardin' },
-                { src: '/photos/chambre-jardin-lit-terrasse.jpg', alt: 'Lit avec vue sur le jardin' },
-                { src: '/photos/chambre-jardin-cheminee.jpg', alt: 'Cheminée en tuffeau' },
-                { src: '/photos/chambre-jardin-console.jpg', alt: 'Console et miroir' },
-                { src: '/photos/chambre-jardin-entree.jpg', alt: 'Entrée depuis la terrasse' },
+                { src: '/photos/exterieur/maison-exterieure-piscine.jpg', alt: 'Jardin et piscine' },
+                { src: '/photos/exterieur/maison-exterieure-fleurs.jpg', alt: 'La maison au printemps' },
+                { src: '/photos/exterieur/maison-exterieure-ete.jpg', alt: 'Vue extérieure été' },
+                { src: '/photos/exterieur/propriete-jardin-cedre.jpg', alt: 'Le jardin et le cèdre centenaire' },
+                { src: '/photos/chambres/jardin/chambre-jardin-ensemble.jpg', alt: 'Chambre Côté Jardin' },
+                { src: '/photos/chambres/jardin/chambre-jardin-lit-terrasse.jpg', alt: 'Lit avec vue sur le jardin' },
+                { src: '/photos/chambres/jardin/chambre-jardin-cheminee.jpg', alt: 'Cheminée en tuffeau' },
+                { src: '/photos/chambres/jardin/chambre-jardin-console.jpg', alt: 'Console et miroir' },
+                { src: '/photos/chambres/jardin/chambre-jardin-entree.jpg', alt: 'Entrée depuis la terrasse' },
               ]}
             />
           </div>

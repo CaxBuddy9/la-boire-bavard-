@@ -5,10 +5,10 @@ export type RoomColor = {
 }
 
 export const ROOM_COLORS: Record<string, RoomColor> = {
-  jardin:  { bg: '#0a1a0c', accent: '#c4a050', accentRgb: '196,160,80'  }, // vert forêt + or
-  cedre:   { bg: '#120c1a', accent: '#c4907a', accentRgb: '196,144,122' }, // plum nuit + rose
-  vallee:  { bg: '#081420', accent: '#4aa8c0', accentRgb: '74,168,192'  }, // bleu Loire + teal
-  potager: { bg: '#0c1808', accent: '#88b558', accentRgb: '136,181,88'  }, // vert nuit + herbe
+  jardin:  { bg: '#180e08', accent: '#c4603a', accentRgb: '196,96,58'   }, // poutres bois + terracotta (tuiles, chaises rouges)
+  cedre:   { bg: '#141210', accent: '#a89070', accentRgb: '168,144,112' }, // taupe doux + beige doré (mansarde gris/crème)
+  vallee:  { bg: '#080e18', accent: '#5a9ab0', accentRgb: '90,154,176'  }, // nuit bleue + Loire (vue panoramique)
+  potager: { bg: '#0e100c', accent: '#7aaa6a', accentRgb: '122,170,106' }, // noir doux + vert sauge (pierre blanche, jardin)
 }
 
 export type Room = {
@@ -38,17 +38,17 @@ export const ROOMS: Room[] = [
     pricePerNight: 88,
     features: ['Cheminée', 'Terrasse privée', 'Accès jardin', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
-      '/photos/chambre-jardin-ensemble.jpg',
-      '/photos/chambre-jardin-lit-terrasse.jpg',
-      '/photos/chambre-jardin-cheminee.jpg',
-      '/photos/chambre-jardin-console.jpg',
-      '/photos/chambre-jardin-entree.jpg',
-      '/photos/chambre-jardin-cheminee-rideau.jpg',
-      '/photos/chambre-jardin-vue-ensemble.jpg',
-      '/photos/chambre-jardin-lit-gros-plan.jpg',
-      '/photos/chambre-jardin-porte-jardin.jpg',
-      '/photos/chambre-jardin-lumineux.jpg',
-      '/photos/chambre-jardin-large.jpg',
+      '/photos/chambres/jardin/chambre-jardin-ensemble.jpg',
+      '/photos/chambres/jardin/chambre-jardin-lit-terrasse.jpg',
+      '/photos/chambres/jardin/chambre-jardin-cheminee.jpg',
+      '/photos/chambres/jardin/chambre-jardin-console.jpg',
+      '/photos/chambres/jardin/chambre-jardin-entree.jpg',
+      '/photos/chambres/jardin/chambre-jardin-cheminee-rideau.jpg',
+      '/photos/chambres/jardin/chambre-jardin-vue-ensemble.jpg',
+      '/photos/chambres/jardin/chambre-jardin-lit-gros-plan.jpg',
+      '/photos/chambres/jardin/chambre-jardin-porte-jardin.jpg',
+      '/photos/chambres/jardin/chambre-jardin-lumineux.jpg',
+      '/photos/chambres/jardin/chambre-jardin-large.jpg',
     ],
     character: 'Familiale & lumineuse',
     color: ROOM_COLORS.jardin,
@@ -63,7 +63,7 @@ export const ROOMS: Room[] = [
     capacityMax: 2,
     pricePerNight: 88,
     features: ['Baignoire', 'Accès piscine direct', 'Vue cèdre centenaire', 'WiFi', 'Petit-déjeuner inclus'],
-    images: ['/photos/photo2.jpg', '/photos/photo7.jpg', '/photos/photo8.jpg'],
+    images: ['/photos/chambres/cedre/chambre-cedre-lit-taupe.jpg', '/photos/chambres/jardin/chambre-jardin-baignoire.jpg', '/photos/exterieur/maison-facade-piscine.jpg'],
     character: 'Romantique & intime',
     color: ROOM_COLORS.cedre,
   },
@@ -77,7 +77,7 @@ export const ROOMS: Room[] = [
     capacityMax: 4,
     pricePerNight: 88,
     features: ['Vue Loire', 'Escalier privé', 'Salle de douche', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
-    images: ['/photos/photo3.jpg', '/photos/photo5.jpg', '/photos/photo9.jpg'],
+    images: ['/photos/chambres/potager/chambre-potager-pierre.jpg', '/photos/exterieur/maison-facade-printemps.jpg', '/photos/chambres/potager/chambre-potager-sdb.jpg'],
     character: 'Vue panoramique',
     color: ROOM_COLORS.vallee,
   },
@@ -91,7 +91,7 @@ export const ROOMS: Room[] = [
     capacityMax: 2,
     pricePerNight: 88,
     features: ['Vue potager', 'SdB séparée', 'Calme absolu', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
-    images: ['/photos/photo4.jpg', '/photos/photo6.jpg', '/photos/photo8.jpg'],
+    images: ['/photos/chambres/jardin/chambre-jardin-combles.jpg', '/photos/exterieur/propriete-jacuzzi-terrasse.jpg', '/photos/exterieur/maison-facade-piscine.jpg'],
     character: 'Tranquille & ressourçante',
     color: ROOM_COLORS.potager,
   },

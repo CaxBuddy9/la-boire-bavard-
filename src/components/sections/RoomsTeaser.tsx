@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { ROOMS } from '@/lib/rooms'
 
 const ROOM_IMAGES: Record<string, string> = {
-  jardin:  '/photos/photo1.jpg',
-  cedre:   '/photos/photo2.jpg',
-  vallee:  '/photos/photo3.jpg',
-  potager: '/photos/photo4.jpg',
+  jardin:  '/photos/chambres/jardin/chambre-jardin-poutres.jpg',
+  cedre:   '/photos/chambres/cedre/chambre-cedre-lit-taupe.jpg',
+  vallee:  '/photos/chambres/potager/chambre-potager-pierre.jpg',
+  potager: '/photos/chambres/jardin/chambre-jardin-combles.jpg',
 }
 
 export default function RoomsTeaser() {
@@ -30,7 +30,7 @@ export default function RoomsTeaser() {
             className="group relative overflow-hidden aspect-[3/4] block"
           >
             <Image
-              src={ROOM_IMAGES[room.id] ?? '/photos/photo1.jpg'}
+              src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/chambre-jardin-poutres.jpg'}
               alt={room.name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"

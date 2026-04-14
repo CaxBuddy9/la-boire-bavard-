@@ -40,7 +40,7 @@ const ROOMS = {
     slug: 'jardin',
     emoji: '🌿',
     bg: ROOM_COLORS.jardin.bg,
-    image: '/photos/chambre-jardin-ensemble.jpg',
+    image: '/photos/chambres/jardin/chambre-jardin-ensemble.jpg',
     theme: makeTheme('jardin') satisfies RoomTheme,
     details: [
       { fr: "La terrasse privée s'ouvre directement depuis la chambre", en: "The private terrace opens directly from your room", es: "La terraza privada se abre directamente desde la habitación", pt: "O terraço privado abre diretamente do seu quarto" },

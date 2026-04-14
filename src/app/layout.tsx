@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
     description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand.",
-    images: ['/photos/photo5.jpg'],
+    images: ['/photos/exterieur/maison-facade-printemps.jpg'],
     locale: 'fr_FR',
     type: 'website',
   },

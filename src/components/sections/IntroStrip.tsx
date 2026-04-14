@@ -17,7 +17,7 @@ export default function IntroStrip() {
       {/* Photo */}
       <div className="relative overflow-hidden min-h-[50vh] md:min-h-full">
         <Image
-          src="/photos/chambre-jardin-lit-terrasse.jpg"
+          src="/photos/chambres/jardin/chambre-jardin-lit-terrasse.jpg"
           alt="Chambre Côté Jardin — lit avec vue sur le jardin"
           fill
           className="object-cover transition-transform duration-700 hover:scale-[1.03]"

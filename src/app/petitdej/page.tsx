@@ -25,7 +25,7 @@ export default function PetitDejPage() {
         {/* Hero */}
         <section className="relative h-[60vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/photo7.jpg"
+            src="/photos/chambres/jardin/chambre-jardin-baignoire.jpg"
             alt="Petit-déjeuner La Boire Bavard"
             fill priority
             className="object-cover"
@@ -87,7 +87,7 @@ export default function PetitDejPage() {
         <div className="grid md:grid-cols-2 min-h-[60vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
             <Image
-              src="/photos/photo8.jpg"
+              src="/photos/exterieur/maison-facade-piscine.jpg"
               alt="Table d'hôtes"
               fill
               className="object-cover"

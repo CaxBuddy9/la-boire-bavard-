@@ -40,7 +40,32 @@
       "Skill(update-config)",
       "Bash(node scripts/patch-planning.js)",
       "Bash(env \")",
-      "Bash(grep -r import.*from.*server C:UsersthegoOneDriveDesktopla-boire-bavardsrc --include=*.tsx --include=*.ts)"
+      "Bash(grep -r import.*from.*server C:UsersthegoOneDriveDesktopla-boire-bavardsrc --include=*.tsx --include=*.ts)",
+      "Bash(mkdir -p \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/app/guide/qrcodes\")",
+      "Bash(mkdir -p \"/c/Users/thego/OneDrive/Desktop/la-boire-bavard/src/app/guide/chambre-placeholder\")",
+      "Bash(node scripts/generate-qrcodes.mjs)",
+      "Bash(node -e ':*)",
+      "Bash(cp \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\icons\\\\enhanced_--replace-the-current-leaves-with-grapevine-elemen \\(1\\).png\" \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\logo-lbba.png\")",
+      "Bash(cp \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\logo-lbba.png\" \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\favicon.png\")",
+      "Bash(cp \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\logo-lbba.png\" \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\icons\\\\icon-192.png\")",
+      "Bash(cp \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\logo-lbba.png\" \"C:\\\\Users\\\\thego\\\\OneDrive\\\\Desktop\\\\la-boire-bavard\\\\public\\\\icons\\\\icon-512.png\")",
+      "Bash(node:*)",
+      "Bash(npm i:*)",
+      "Bash(cp \"WhatsApp Image 2026-04-13 at 17.52.58.jpeg\" \"public/photos/maison-exterieure-piscine.jpg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-13 at 17.52.58 \\(1\\).jpeg\" \"public/photos/maison-exterieure-fleurs.jpg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-13 at 17.52.58 \\(2\\).jpeg\" \"public/photos/maison-exterieure-ete.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/LBB SECTION PROPRIETE.jpg\" \"public/photos/propriete-jardin-cedre.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.19.jpeg\" \"public/photos/chambre-jardin-ensemble.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.19 \\(2\\).jpeg\" \"public/photos/chambre-jardin-cheminee-rideau.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.19 \\(7\\).jpeg\" \"public/photos/chambre-jardin-vue-ensemble.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.19 \\(8\\).jpeg\" \"public/photos/chambre-jardin-lit-gros-plan.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.20 \\(2\\).jpeg\" \"public/photos/chambre-jardin-porte-jardin.jpg\")",
+      "Bash(cp \"LA BOIRE BAVARD WEBSITE/WhatsApp Image 2026-04-13 at 17.52.20 \\(4\\).jpeg\" \"public/photos/chambre-jardin-lumineux.jpg\")",
+      "Bash(grep -o 'fill=\"#[fF]\\\\{3\\\\}[fF]\\\\{0,3\\\\}\"' \"C:/Users/thego/OneDrive/Desktop/la-boire-bavard/public/logo-lbba.svg\")",
+      "Bash(identify public/logo-lbba.png)",
+      "Bash(ls -la public/*.png public/*.svg)",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(node -e \"require\\('canvas'\\); console.log\\('canvas ok'\\)\")"
     ]
   }
 }
