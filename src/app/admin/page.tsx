@@ -700,47 +700,49 @@ function FacturationPanel() {
   const total = lignes.reduce((s, l) => s + l.total, 0)
 
   const printCSS = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Inter:wght@300;400&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Raleway',system-ui,sans-serif;color:#2a2a2a;background:#fff;max-width:860px;margin:auto}
-    .band{background:#1a3220;padding:28px 48px;display:flex;align-items:center;justify-content:space-between}
-    .band-logo{width:68px;height:68px;object-fit:contain}
-    .band-center{text-align:center;flex:1;padding:0 24px}
-    .band-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.7rem;font-weight:300;color:#f5f0e8;letter-spacing:0.08em}
-    .band-sub{font-size:0.52rem;letter-spacing:0.32em;text-transform:uppercase;color:rgba(196,160,80,.75);margin-top:5px}
+    body{font-family:'Inter',system-ui,sans-serif;font-weight:300;color:#1a1a1a;background:#faf9f7;max-width:860px;margin:auto}
+    .band{background:#162418;padding:32px 52px;display:flex;align-items:center;justify-content:space-between}
+    .band-logo{width:54px;height:54px;object-fit:contain}
+    .band-center{text-align:center;flex:1;padding:0 28px}
+    .band-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:200;color:#fff;letter-spacing:0.14em}
+    .band-sub{font-size:0.46rem;letter-spacing:0.4em;text-transform:uppercase;color:rgba(196,160,80,.6);margin-top:6px}
     .band-right{text-align:right}
-    .band-ftitle{font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(196,160,80,.65)}
-    .band-fnum{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;font-weight:300;color:#f5f0e8;margin-top:3px;letter-spacing:0.04em}
-    .band-fdate{font-size:0.7rem;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:0.06em}
-    .gold-rule{height:1px;background:linear-gradient(90deg,#c4a050 0%,rgba(196,160,80,.2) 100%)}
-    .body{padding:36px 48px}
-    .info-row{display:flex;justify-content:space-between;gap:32px;margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid #e8e4de}
-    .info-col{flex:1}
-    .info-label{font-size:0.5rem;letter-spacing:0.28em;text-transform:uppercase;color:#c4a050;margin-bottom:10px}
-    .info-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:400;color:#1a3220;margin-bottom:4px}
-    .info-detail{font-size:0.78rem;color:#777;line-height:1.8}
-    .sejour{display:flex;flex-wrap:wrap;gap:0;margin-bottom:32px;border:1px solid #e8e4de}
-    .sejour-item{flex:1;padding:12px 18px;border-right:1px solid #e8e4de;min-width:100px}
-    .sejour-item:last-child{border-right:none}
-    .sejour-item .sl{font-size:0.48rem;letter-spacing:0.22em;text-transform:uppercase;color:#c4a050;display:block;margin-bottom:4px}
-    .sejour-item .sv{font-size:0.85rem;color:#2a2a2a}
-    table{width:100%;border-collapse:collapse;margin-bottom:0}
-    thead tr th{font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:#aaa;padding:10px 0;font-weight:400;border-bottom:1px solid #e8e4de}
-    th:not(:first-child),td:not(:first-child){text-align:right}
-    tbody tr td{padding:13px 0;font-size:0.84rem;border-bottom:1px solid #f0ede8;color:#333}
+    .band-ftitle{font-size:0.44rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+    .band-fnum{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:200;color:#fff;margin-top:4px;letter-spacing:0.06em}
+    .band-fdate{font-size:0.65rem;color:rgba(255,255,255,.3);margin-top:5px;letter-spacing:0.08em;font-weight:300}
+    .gold-line{height:1px;background:#c4a050}
+    .body{padding:40px 52px;background:#faf9f7}
+    .info-row{display:flex;gap:0;margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid rgba(0,0,0,.08)}
+    .info-col{flex:1;padding-right:32px}
+    .info-col:last-child{padding-right:0;padding-left:32px;border-left:1px solid rgba(0,0,0,.08)}
+    .info-label{font-size:0.42rem;letter-spacing:0.38em;text-transform:uppercase;color:#c4a050;margin-bottom:12px}
+    .info-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;font-weight:300;color:#0a0a0a;margin-bottom:6px;letter-spacing:0.02em}
+    .info-detail{font-size:0.72rem;color:#999;line-height:1.9;font-weight:300}
+    .sejour{display:flex;margin-bottom:32px;background:#fff;border:1px solid rgba(0,0,0,.07)}
+    .si{flex:1;padding:14px 18px;border-right:1px solid rgba(0,0,0,.07)}
+    .si:last-child{border-right:none}
+    .sl{font-size:0.4rem;letter-spacing:0.32em;text-transform:uppercase;color:#c4a050;display:block;margin-bottom:5px}
+    .sv{font-size:0.8rem;color:#1a1a1a;font-weight:300}
+    table{width:100%;border-collapse:collapse}
+    th{font-size:0.42rem;letter-spacing:0.28em;text-transform:uppercase;color:#bbb;padding:10px 0;font-weight:400;border-bottom:1px solid rgba(0,0,0,.08);text-align:left}
+    th:not(:first-child){text-align:right}
+    td{padding:14px 0;font-size:0.8rem;border-bottom:1px solid rgba(0,0,0,.05);color:#333;font-weight:300}
+    td:not(:first-child){text-align:right}
     tbody tr:last-child td{border-bottom:none}
-    .total-wrap{display:flex;justify-content:flex-end;margin-top:24px}
-    .total-box{width:260px;border:1px solid #e8e4de}
-    .total-row{display:flex;justify-content:space-between;padding:9px 18px;font-size:0.78rem;color:#888;border-bottom:1px solid #f0ede8}
-    .total-row:last-child{border-bottom:none;padding:14px 18px;background:#1a3220}
-    .total-row:last-child span{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;font-weight:400;color:#f5f0e8}
-    .total-row:last-child span:last-child{color:#c4a050}
-    .notebox{background:#faf8f5;border:1px solid #e8e4de;border-left:2px solid #c4a050;padding:14px 18px;font-size:0.78rem;color:#666;line-height:1.7;margin-top:28px}
-    .foot{margin-top:40px;padding:20px 48px;border-top:1px solid #e8e4de;display:flex;align-items:center;gap:20px}
-    .foot-logo{width:32px;height:32px;object-fit:contain;opacity:0.25;flex-shrink:0}
-    .foot-txt{font-size:0.65rem;color:#bbb;line-height:1.8}
-    .wm{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;object-fit:contain;opacity:0.018;pointer-events:none}
-    @media print{body{max-width:none}.wm{position:fixed}}
+    .tot{display:flex;justify-content:flex-end;margin-top:28px}
+    .tot-box{width:256px}
+    .tr{display:flex;justify-content:space-between;padding:8px 0;font-size:0.72rem;color:#aaa;border-bottom:1px solid rgba(0,0,0,.06);font-weight:300}
+    .tr:last-child{border-bottom:none;border-top:1px solid #162418;margin-top:4px;padding-top:14px}
+    .tr:last-child span:first-child{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;font-weight:200;color:#162418;letter-spacing:0.04em}
+    .tr:last-child span:last-child{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:300;color:#c4a050}
+    .note{background:#fff;border:1px solid rgba(0,0,0,.07);border-left:1px solid #c4a050;padding:16px 18px;font-size:0.72rem;color:#888;line-height:1.8;margin-top:28px;font-weight:300}
+    .foot{padding:20px 52px 24px;display:flex;align-items:center;gap:18px;border-top:1px solid rgba(0,0,0,.07);background:#faf9f7}
+    .flogo{width:26px;height:26px;object-fit:contain;opacity:0.18;flex-shrink:0}
+    .ftxt{font-size:0.6rem;color:#ccc;line-height:1.9;font-weight:300}
+    .wm{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;object-fit:contain;opacity:0.015;pointer-events:none}
+    @media print{.wm{position:fixed}}
   `
 
   const handlePrint = () => {
@@ -853,11 +855,11 @@ function FacturationPanel() {
         <img src="/logo-lbba.png" alt="" aria-hidden style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:280, height:280, objectFit:'contain', opacity:0.018, pointerEvents:'none' }} />
 
         {/* Bande header */}
-        <div style={{ background:'#1a3220', padding:'24px 40px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ background:'#162418', padding:'28px 40px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-lbba.png" alt="Logo" style={{ width:60, height:60, objectFit:'contain' }} />
+          <img src="/logo-lbba.png" alt="Logo" style={{ width:56, height:56, objectFit:'contain' }} />
           <div style={{ textAlign:'center', flex:1, padding:'0 20px' }}>
-            <div style={{ fontFamily:'Georgia,serif', fontSize:'1.5rem', fontWeight:300, color:'#f5f0e8', letterSpacing:'0.08em' }}>La Boire Bavard</div>
+            <div style={{ fontFamily:'Georgia,serif', fontSize:'1.5rem', fontWeight:300, color:'#fff', letterSpacing:'0.14em' }}>La Boire Bavard</div>
             <div style={{ fontSize:'0.5rem', letterSpacing:'0.3em', textTransform:'uppercase', color:'rgba(196,160,80,.7)', marginTop:4 }}>Chambres d'Hôtes · Anjou</div>
           </div>
           <div style={{ textAlign:'right' }}>
@@ -874,7 +876,7 @@ function FacturationPanel() {
           <div style={{ display:'flex', gap:32, marginBottom:28, paddingBottom:24, borderBottom:'1px solid #e8e4de' }}>
             <div style={{ flex:1 }}>
               <div style={{ fontSize:'0.48rem', letterSpacing:'0.26em', textTransform:'uppercase', color:'#c4a050', marginBottom:10 }}>Établissement</div>
-              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#1a3220', marginBottom:4 }}>La Boire Bavard</div>
+              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#162418', marginBottom:4 }}>La Boire Bavard</div>
               <div style={{ fontSize:'0.75rem', color:'#888', lineHeight:1.8 }}>4 chemin de la Boire Bavard<br/>Lieu-dit La Hutte<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35</div>
             </div>
             <div style={{ flex:1 }}>
@@ -922,7 +924,7 @@ function FacturationPanel() {
             <div style={{ width:240, border:'1px solid #e8e4de' }}>
               <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 16px', fontSize:'0.75rem', color:'#999', borderBottom:'1px solid #f0ede8' }}><span>Sous-total</span><span>{total.toFixed(2)} €</span></div>
               <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 16px', fontSize:'0.75rem', color:'#999' }}><span>TVA</span><span>Non applicable</span></div>
-              <div style={{ display:'flex', justifyContent:'space-between', padding:'13px 16px', background:'#1a3220', borderTop:'1px solid rgba(196,160,80,.3)' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', padding:'13px 16px', background:'#162418', borderTop:'1px solid rgba(196,160,80,.3)' }}>
                 <span style={{ fontFamily:'Georgia,serif', fontSize:'1rem', fontWeight:400, color:'#f5f0e8' }}>Total TTC</span>
                 <span style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#c4a050' }}>{total.toFixed(2)} €</span>
               </div>
