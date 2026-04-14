@@ -38,7 +38,7 @@ function icalResponse(slug: string, body: string) {
   return new NextResponse(body, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${slug}.ics"`,
+      'Content-Disposition': `inline; filename="${slug}.ics"`,
       'Cache-Control': 'no-cache, no-store',
     },
   })
