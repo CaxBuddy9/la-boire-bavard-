@@ -170,12 +170,29 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const [spaSent, setSpaSent] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showWifiQR, setShowWifiQR] = useState(false)
+  const [wifiStatus, setWifiStatus] = useState<'idle' | 'done'>('idle')
 
   const copyPassword = () => {
     navigator.clipboard.writeText(WIFI_PASSWORD).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2500)
     })
+  }
+
+  const connectWifi = async () => {
+    // 1. Copie le mot de passe dans le presse-papier
+    try { await navigator.clipboard.writeText(WIFI_PASSWORD) } catch { /* silencieux */ }
+
+    // 2. Tente d'ouvrir les réglages WiFi selon la plateforme
+    const ua = navigator.userAgent
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      window.location.href = 'App-prefs:root=WIFI'
+    } else if (/Android/.test(ua)) {
+      window.location.href = 'intent:#Intent;action=android.settings.WIFI_SETTINGS;end'
+    }
+
+    setWifiStatus('done')
+    setTimeout(() => setWifiStatus('idle'), 5000)
   }
 
   const { theme } = room
@@ -362,19 +379,21 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
           {/* Bouton connexion directe */}
           <div style={{ padding: '0.875rem 1.5rem 1.25rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)` }}>
-            <button
-              onClick={() => setShowWifiQR(v => !v)}
-              style={{ width: '100%', background: theme.accent, color: theme.pillActiveText, border: 'none', borderRadius: 14, padding: '0.875rem 1rem', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-            >
-              <span>📱</span>
-              {showWifiQR ? 'Masquer le QR code' : 'Se connecter en un scan'}
-            </button>
-            {showWifiQR && (
-              <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/photos/wifi-qr.jpg" alt="QR code WiFi" style={{ width: 190, height: 190, borderRadius: 16, display: 'block', margin: '0 auto', objectFit: 'cover' }} />
-                <p style={{ color: theme.textMuted, fontSize: '0.72rem', marginTop: '0.625rem', letterSpacing: '0.05em' }}>Scannez avec l'appareil photo de votre téléphone</p>
+            {wifiStatus === 'done' ? (
+              <div style={{ background: 'rgba(76,175,80,.12)', border: '1px solid rgba(76,175,80,.3)', borderRadius: 14, padding: '1rem 1.25rem', textAlign: 'center' }}>
+                <p style={{ color: '#4caf50', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 0.3rem' }}>✓ Mot de passe copié</p>
+                <p style={{ color: theme.textSub, fontSize: '0.8rem', margin: 0, lineHeight: 1.5 }}>
+                  Sélectionnez <strong style={{ color: theme.text }}>{WIFI_RESEAU}</strong> dans vos réglages WiFi et collez le mot de passe
+                </p>
               </div>
+            ) : (
+              <button
+                onClick={connectWifi}
+                style={{ width: '100%', background: theme.accent, color: theme.pillActiveText, border: 'none', borderRadius: 14, padding: '0.925rem 1rem', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}
+              >
+                <span style={{ fontSize: '1.1rem' }}>📶</span>
+                Se connecter au WiFi
+              </button>
             )}
           </div>
         </div>
