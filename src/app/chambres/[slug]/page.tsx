@@ -60,6 +60,32 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
           </div>
         </section>
 
+        {/* Double éclairage — 2 photos pleine largeur */}
+        {room.images.length >= 3 && (
+          <div className="grid grid-cols-2" style={{ height: 'clamp(220px, 40vw, 520px)' }}>
+            <div className="relative overflow-hidden group">
+              <Image
+                src={room.images[1]}
+                alt={`${room.name} — ambiance`}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                sizes="50vw"
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,.12) 0%, transparent 60%)' }} />
+            </div>
+            <div className="relative overflow-hidden group">
+              <Image
+                src={room.images[2]}
+                alt={`${room.name} — détail`}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                sizes="50vw"
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to left, rgba(0,0,0,.12) 0%, transparent 60%)' }} />
+            </div>
+          </div>
+        )}
+
         {/* Content */}
         <div style={{ background: '#192318' }} className="py-10 md:py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_380px] gap-8 md:gap-16">

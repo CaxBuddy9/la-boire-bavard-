@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const BASE_URL = 'https://la-boire-bavard.vercel.app'
 
 const CHAMBRES = [
-  { id: 'jardin',  label: 'Côté Jardin',  emoji: '🌿', couleur: '#1a3320', qrColor: '#1a3320' },
+  { id: 'jardin',  label: 'Côté Jardin',  emoji: '🌿', couleur: '#1c1008', qrColor: '#120c08' },
   { id: 'cedre',   label: 'Côté Cèdre',   emoji: '🌲', couleur: '#1e2a18', qrColor: '#08091a' },
   { id: 'vallee',  label: 'Côté Vallée',  emoji: '🏞️', couleur: '#1a2830', qrColor: '#1a2832' },
   { id: 'potager', label: 'Côté Potager', emoji: '🌱', couleur: '#1e2d16', qrColor: '#130e07' },
