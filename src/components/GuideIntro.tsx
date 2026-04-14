@@ -9,10 +9,10 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
   const [phase, setPhase] = useState<Phase>('enter')
 
   useEffect(() => {
-    const t0 = setTimeout(() => setPhase('show'),    80)
-    const t1 = setTimeout(() => setPhase('opening'), 2400)
-    const t2 = setTimeout(() => setPhase('fadeout'), 3900)
-    const t3 = setTimeout(() => setPhase('done'),    4600)
+    const t0 = setTimeout(() => setPhase('show'),    60)
+    const t1 = setTimeout(() => setPhase('opening'), 1200)
+    const t2 = setTimeout(() => setPhase('fadeout'), 2500)
+    const t3 = setTimeout(() => setPhase('done'),    3100)
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
   }, [])
 
@@ -76,7 +76,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
             width: '50%', height: '100%',
             transformOrigin: '0% 50%',
             transform: isOpen ? 'rotateY(-105deg)' : 'rotateY(0deg)',
-            transition: isOpen ? 'transform 1.5s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
+            transition: isOpen ? 'transform 1.1s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
             transformStyle: 'preserve-3d',
           }}>
             {/* Face porte gauche */}
@@ -122,7 +122,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
             width: '50%', height: '100%',
             transformOrigin: '100% 50%',
             transform: isOpen ? 'rotateY(105deg)' : 'rotateY(0deg)',
-            transition: isOpen ? 'transform 1.5s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
+            transition: isOpen ? 'transform 1.1s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
             transformStyle: 'preserve-3d',
           }}>
             <div style={{
