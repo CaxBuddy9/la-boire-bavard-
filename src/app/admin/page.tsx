@@ -703,7 +703,7 @@ function FacturationPanel() {
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Inter:wght@300;400&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',system-ui,sans-serif;font-weight:300;color:#1a1a1a;background:#faf9f7;max-width:860px;margin:auto}
-    .band{background:#162418;padding:32px 52px;display:flex;align-items:center;justify-content:space-between}
+    .band{background:#111111;padding:32px 52px;display:flex;align-items:center;justify-content:space-between}
     .band-logo{width:54px;height:54px;object-fit:contain}
     .band-center{text-align:center;flex:1;padding:0 28px}
     .band-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.6rem;font-weight:200;color:#fff;letter-spacing:0.14em}
@@ -734,8 +734,8 @@ function FacturationPanel() {
     .tot{display:flex;justify-content:flex-end;margin-top:28px}
     .tot-box{width:256px}
     .tr{display:flex;justify-content:space-between;padding:8px 0;font-size:0.72rem;color:#aaa;border-bottom:1px solid rgba(0,0,0,.06);font-weight:300}
-    .tr:last-child{border-bottom:none;border-top:1px solid #162418;margin-top:4px;padding-top:14px}
-    .tr:last-child span:first-child{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;font-weight:200;color:#162418;letter-spacing:0.04em}
+    .tr:last-child{border-bottom:none;border-top:1px solid #111111;margin-top:4px;padding-top:14px}
+    .tr:last-child span:first-child{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.1rem;font-weight:200;color:#111111;letter-spacing:0.04em}
     .tr:last-child span:last-child{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.2rem;font-weight:300;color:#c4a050}
     .note{background:#fff;border:1px solid rgba(0,0,0,.07);border-left:1px solid #c4a050;padding:16px 18px;font-size:0.72rem;color:#888;line-height:1.8;margin-top:28px;font-weight:300}
     .foot{padding:20px 52px 24px;display:flex;align-items:center;gap:18px;border-top:1px solid rgba(0,0,0,.07);background:#faf9f7}
@@ -784,7 +784,7 @@ function FacturationPanel() {
         ${n > 0 ? `<div class="sejour">${[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',n+' nuit'+(n>1?'s':'')],['Personnes',String(pers)]].map(([l,v])=>`<div class="sejour-item"><span class="sl">${l}</span><span class="sv">${v}</span></div>`).join('')}</div>` : ''}
         <table>
           <thead><tr><th style="text-align:left">Prestation</th><th>Qté</th><th>P.U.</th><th>Total</th></tr></thead>
-          <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td style="color:#999">${l.qty}</td><td style="color:#999">${l.pu.toFixed(2)} €</td><td style="font-weight:500;color:#1a3220">${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody>
+          <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td style="color:#999">${l.qty}</td><td style="color:#999">${l.pu.toFixed(2)} €</td><td style="font-weight:500;color:#111111">${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody>
         </table>
         <div class="total-wrap">
           <div class="total-box">
@@ -855,7 +855,7 @@ function FacturationPanel() {
         <img src="/logo-lbba.png" alt="" aria-hidden style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:280, height:280, objectFit:'contain', opacity:0.018, pointerEvents:'none' }} />
 
         {/* Bande header */}
-        <div style={{ background:'#162418', padding:'28px 40px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ background:'#111111', padding:'28px 40px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-lbba.png" alt="Logo" style={{ width:56, height:56, objectFit:'contain' }} />
           <div style={{ textAlign:'center', flex:1, padding:'0 20px' }}>
@@ -876,12 +876,12 @@ function FacturationPanel() {
           <div style={{ display:'flex', gap:32, marginBottom:28, paddingBottom:24, borderBottom:'1px solid #e8e4de' }}>
             <div style={{ flex:1 }}>
               <div style={{ fontSize:'0.48rem', letterSpacing:'0.26em', textTransform:'uppercase', color:'#c4a050', marginBottom:10 }}>Établissement</div>
-              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#162418', marginBottom:4 }}>La Boire Bavard</div>
+              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#111111', marginBottom:4 }}>La Boire Bavard</div>
               <div style={{ fontSize:'0.75rem', color:'#888', lineHeight:1.8 }}>4 chemin de la Boire Bavard<br/>Lieu-dit La Hutte<br/>49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35</div>
             </div>
             <div style={{ flex:1 }}>
               <div style={{ fontSize:'0.48rem', letterSpacing:'0.26em', textTransform:'uppercase', color:'#c4a050', marginBottom:10 }}>Facturé à</div>
-              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#1a3220', marginBottom:4 }}>{prenom || nom ? `${prenom} ${nom}`.trim() : <span style={{color:'#ccc'}}>Nom du client</span>}</div>
+              <div style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#111111', marginBottom:4 }}>{prenom || nom ? `${prenom} ${nom}`.trim() : <span style={{color:'#ccc'}}>Nom du client</span>}</div>
               <div style={{ fontSize:'0.75rem', color:'#888', lineHeight:1.8 }}>{adresse && <>{adresse}<br/></>}{email}</div>
             </div>
           </div>
@@ -913,7 +913,7 @@ function FacturationPanel() {
                   <td style={{ padding:'12px 0', fontSize:'0.82rem', borderBottom:'1px solid #f0ede8' }}>{l.label}</td>
                   <td style={{ padding:'12px 0', fontSize:'0.82rem', borderBottom:'1px solid #f0ede8', textAlign:'right', color:'#aaa' }}>{l.qty}</td>
                   <td style={{ padding:'12px 0', fontSize:'0.82rem', borderBottom:'1px solid #f0ede8', textAlign:'right', color:'#aaa' }}>{l.pu.toFixed(2)} €</td>
-                  <td style={{ padding:'12px 0', fontSize:'0.82rem', borderBottom:'1px solid #f0ede8', textAlign:'right', color:'#1a3220', fontWeight:500 }}>{l.total.toFixed(2)} €</td>
+                  <td style={{ padding:'12px 0', fontSize:'0.82rem', borderBottom:'1px solid #f0ede8', textAlign:'right', color:'#111111', fontWeight:500 }}>{l.total.toFixed(2)} €</td>
                 </tr>
               ))}
             </tbody>
@@ -924,7 +924,7 @@ function FacturationPanel() {
             <div style={{ width:240, border:'1px solid #e8e4de' }}>
               <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 16px', fontSize:'0.75rem', color:'#999', borderBottom:'1px solid #f0ede8' }}><span>Sous-total</span><span>{total.toFixed(2)} €</span></div>
               <div style={{ display:'flex', justifyContent:'space-between', padding:'8px 16px', fontSize:'0.75rem', color:'#999' }}><span>TVA</span><span>Non applicable</span></div>
-              <div style={{ display:'flex', justifyContent:'space-between', padding:'13px 16px', background:'#162418', borderTop:'1px solid rgba(196,160,80,.3)' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', padding:'13px 16px', background:'#111111', borderTop:'1px solid rgba(196,160,80,.3)' }}>
                 <span style={{ fontFamily:'Georgia,serif', fontSize:'1rem', fontWeight:400, color:'#f5f0e8' }}>Total TTC</span>
                 <span style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#c4a050' }}>{total.toFixed(2)} €</span>
               </div>
