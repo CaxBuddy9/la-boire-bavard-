@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useT } from '@/context/LangContext'
+import { LogoSVG } from '@/components/Logo'
 import {
   LogoLLA, LogoDestinationAnjou, LogoQualiteTourisme,
   LogoOfficeTourisme, LogoVignobles, LogoAccueilVelo,
@@ -37,12 +38,9 @@ export default function Footer() {
     <footer style={{ background: '#0d110e' }} className="font-sans">
       <div className="max-w-5xl mx-auto px-4 sm:px-8 py-12 text-center">
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-lbba.svg"
-          alt="La Boire Bavard"
-          style={{ height: 80, width: 'auto', display: 'block', margin: '0 auto 12px' }}
-        />
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+          <LogoSVG height={80} variant="dark-bg" />
+        </div>
         <div className="font-serif text-white text-xl tracking-wide mb-1">La Boire Bavard</div>
         <div className="text-[0.52rem] tracking-[0.38em] uppercase mb-8" style={{ color: 'rgba(196,160,80,.5)' }}>
           {t("Chambres d'Hôtes · Anjou", 'Bed & Breakfast · Anjou')}

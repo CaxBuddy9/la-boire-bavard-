@@ -371,17 +371,23 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
           {/* QR code WiFi + bouton copier */}
           <div style={{ padding: '1rem 1.5rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, textAlign: 'center' }}>
-            <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 1rem' }}>
-              Scannez pour vous connecter
+            <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
+              Appuyez sur le QR code pour vous connecter
             </p>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/photos/wifi-qr-lbb.png"
-              alt="QR code WiFi La Boire Bavard"
-              style={{ width: 210, height: 210, display: 'block', margin: '0 auto', borderRadius: 16 }}
-            />
-            <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.75rem 0 1rem', lineHeight: 1.5 }}>
-              Pointez l'appareil photo de votre téléphone sur le QR code
+            <a
+              href={`WIFI:T:WPA;S:${WIFI_RESEAU};P:${WIFI_PASSWORD};;`}
+              title="Touchez pour connecter automatiquement"
+              style={{ display: 'inline-block', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/photos/wifi-qr-lbb.png"
+                alt="QR code WiFi La Boire Bavard — appuyez pour connecter"
+                style={{ width: 210, height: 210, display: 'block', borderRadius: 16 }}
+              />
+            </a>
+            <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.6rem 0 1rem', lineHeight: 1.5 }}>
+              Ou scannez avec l'appareil photo
             </p>
             <button
               onClick={connectWifi}

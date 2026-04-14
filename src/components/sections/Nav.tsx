@@ -46,7 +46,7 @@ export default function Nav() {
 
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
-          <LogoSVG height={52} variant="gold" />
+          <LogoSVG height={52} variant="dark-bg" />
           <div className="flex flex-col leading-none">
             <span className={`font-serif text-[1.1rem] tracking-[0.06em] font-normal transition-colors duration-300 ${logoColor}`}>
               La Boire Bavard
