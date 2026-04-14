@@ -377,24 +377,26 @@ export default function GuideClient({ room }: { room: RoomData }) {
               {copied ? '✓ Copié' : 'Copier'}
             </button>
           </div>
-          {/* Bouton connexion directe */}
-          <div style={{ padding: '0.875rem 1.5rem 1.25rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)` }}>
-            {wifiStatus === 'done' ? (
-              <div style={{ background: 'rgba(76,175,80,.12)', border: '1px solid rgba(76,175,80,.3)', borderRadius: 14, padding: '1rem 1.25rem', textAlign: 'center' }}>
-                <p style={{ color: '#4caf50', fontWeight: 700, fontSize: '0.95rem', margin: '0 0 0.3rem' }}>✓ Mot de passe copié</p>
-                <p style={{ color: theme.textSub, fontSize: '0.8rem', margin: 0, lineHeight: 1.5 }}>
-                  Sélectionnez <strong style={{ color: theme.text }}>{WIFI_RESEAU}</strong> dans vos réglages WiFi et collez le mot de passe
-                </p>
-              </div>
-            ) : (
-              <button
-                onClick={connectWifi}
-                style={{ width: '100%', background: theme.accent, color: theme.pillActiveText, border: 'none', borderRadius: 14, padding: '0.925rem 1rem', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}
-              >
-                <span style={{ fontSize: '1.1rem' }}>📶</span>
-                Se connecter au WiFi
-              </button>
-            )}
+          {/* QR code WiFi + bouton copier */}
+          <div style={{ padding: '1rem 1.5rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, textAlign: 'center' }}>
+            <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 1rem' }}>
+              Scannez pour vous connecter
+            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/photos/wifi-qr-lbb.png"
+              alt="QR code WiFi La Boire Bavard"
+              style={{ width: 210, height: 210, display: 'block', margin: '0 auto', borderRadius: 16 }}
+            />
+            <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.75rem 0 1rem', lineHeight: 1.5 }}>
+              Pointez l'appareil photo de votre téléphone sur le QR code
+            </p>
+            <button
+              onClick={connectWifi}
+              style={{ width: '100%', background: `rgba(${theme.accentRgb},.15)`, color: theme.accent, border: `1px solid rgba(${theme.accentRgb},.3)`, borderRadius: 14, padding: '0.8rem 1rem', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              {wifiStatus === 'done' ? '✓ Mot de passe copié dans le presse-papier' : '📋 Copier le mot de passe & ouvrir le WiFi'}
+            </button>
           </div>
         </div>
 
