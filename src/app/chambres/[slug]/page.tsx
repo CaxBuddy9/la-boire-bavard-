@@ -61,7 +61,7 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
         </section>
 
         {/* Content */}
-        <div style={{ background: '#192318' }} className="py-10 md:py-20 px-4 md:px-8">
+        <div style={{ background: room.color.bg }} className="py-10 md:py-20 px-4 md:px-8">
           <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_380px] gap-8 md:gap-16">
             {/* Left: description + gallery */}
             <div>

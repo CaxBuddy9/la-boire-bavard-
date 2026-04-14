@@ -1,3 +1,16 @@
+export type RoomColor = {
+  bg: string        // fond principal (page chambre + livret)
+  accent: string    // couleur accent
+  accentRgb: string // accent en rgb pour rgba()
+}
+
+export const ROOM_COLORS: Record<string, RoomColor> = {
+  jardin:  { bg: '#0a1a0c', accent: '#c4a050', accentRgb: '196,160,80'  }, // vert forêt + or
+  cedre:   { bg: '#120c1a', accent: '#c4907a', accentRgb: '196,144,122' }, // plum nuit + rose
+  vallee:  { bg: '#081420', accent: '#4aa8c0', accentRgb: '74,168,192'  }, // bleu Loire + teal
+  potager: { bg: '#0c1808', accent: '#88b558', accentRgb: '136,181,88'  }, // vert nuit + herbe
+}
+
 export type Room = {
   id: string
   slug: string
@@ -10,6 +23,7 @@ export type Room = {
   features: string[]
   images: string[]
   character: string
+  color: RoomColor
 }
 
 export const ROOMS: Room[] = [
@@ -37,6 +51,7 @@ export const ROOMS: Room[] = [
       '/photos/chambre-jardin-large.jpg',
     ],
     character: 'Familiale & lumineuse',
+    color: ROOM_COLORS.jardin,
   },
   {
     id: 'cedre',
@@ -50,6 +65,7 @@ export const ROOMS: Room[] = [
     features: ['Baignoire', 'Accès piscine direct', 'Vue cèdre centenaire', 'WiFi', 'Petit-déjeuner inclus'],
     images: ['/photos/photo2.jpg', '/photos/photo7.jpg', '/photos/photo8.jpg'],
     character: 'Romantique & intime',
+    color: ROOM_COLORS.cedre,
   },
   {
     id: 'vallee',
@@ -63,6 +79,7 @@ export const ROOMS: Room[] = [
     features: ['Vue Loire', 'Escalier privé', 'Salle de douche', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: ['/photos/photo3.jpg', '/photos/photo5.jpg', '/photos/photo9.jpg'],
     character: 'Vue panoramique',
+    color: ROOM_COLORS.vallee,
   },
   {
     id: 'potager',
@@ -76,6 +93,7 @@ export const ROOMS: Room[] = [
     features: ['Vue potager', 'SdB séparée', 'Calme absolu', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: ['/photos/photo4.jpg', '/photos/photo6.jpg', '/photos/photo8.jpg'],
     character: 'Tranquille & ressourçante',
+    color: ROOM_COLORS.potager,
   },
 ]
 

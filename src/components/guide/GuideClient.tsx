@@ -259,7 +259,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
       <div style={{ background: theme.topbarBg, borderBottom: `1px solid ${theme.topbarBorder}`, position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <LogoSVG height={36} variant="white" />
+            <LogoSVG height={36} variant="dark-bg" />
             <div>
               <p style={{ fontSize: '0.65rem', color: theme.accent, letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>La Boire Bavard</p>
               <p style={{ fontSize: '0.82rem', fontWeight: 600, color: theme.heading, margin: 0 }}>{room.name}</p>
