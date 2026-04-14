@@ -1,9 +1,27 @@
 // Logo — La Boire Bavard (SVG vectoriel officiel)
 // viewBox recadré 675×1400 → ratio portrait ~0.482:1
 
+// Filtre CSS → gold : brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(5deg)
+// Filtre CSS → white : brightness(0) invert(1)
+
 // eslint-disable-next-line @next/next/no-img-element
-export function LogoSVG({ height = 66, className = '' }: { height?: number; className?: string }) {
+export function LogoSVG({
+  height = 66,
+  className = '',
+  variant = 'color',
+}: {
+  height?: number
+  className?: string
+  variant?: 'color' | 'white' | 'gold'
+}) {
   const width = Math.round(height * 0.482)
+  const filter =
+    variant === 'white'
+      ? 'brightness(0) invert(1)'
+      : variant === 'gold'
+      ? 'brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(5deg)'
+      : undefined
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -12,7 +30,7 @@ export function LogoSVG({ height = 66, className = '' }: { height?: number; clas
       height={height}
       width={width}
       className={className}
-      style={{ display: 'block', flexShrink: 0, height, width: 'auto' }}
+      style={{ display: 'block', flexShrink: 0, height, width: 'auto', filter }}
     />
   )
 }

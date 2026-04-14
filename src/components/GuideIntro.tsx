@@ -41,6 +41,8 @@ export default function GuideIntro({
             transform: phase === 'opening' ? 'rotateY(-105deg)' : 'rotateY(0deg)',
             transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
             transformStyle: 'preserve-3d',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}>
             {/* Face avant */}
             <div style={{
@@ -80,6 +82,8 @@ export default function GuideIntro({
             transform: phase === 'opening' ? 'rotateY(105deg)' : 'rotateY(0deg)',
             transition: 'transform 1.5s cubic-bezier(0.65, 0, 0.35, 1)',
             transformStyle: 'preserve-3d',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}>
             {/* Face avant */}
             <div style={{
@@ -135,7 +139,7 @@ export default function GuideIntro({
             textAlign: 'center',
             padding: '0 2rem',
           }}>
-            <LogoSVG height={148} />
+            <LogoSVG height={148} variant="white" />
             <div style={{ width: 44, height: 1, background: '#c4a050', margin: '1.5rem auto 1.5rem', opacity: 0.8 }} />
             <p style={{
               fontFamily: 'var(--font-playfair, Georgia, serif)',

@@ -259,7 +259,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
       <div style={{ background: theme.topbarBg, borderBottom: `1px solid ${theme.topbarBorder}`, position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <LogoSVG height={36} />
+            <LogoSVG height={36} variant="white" />
             <div>
               <p style={{ fontSize: '0.65rem', color: theme.accent, letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>La Boire Bavard</p>
               <p style={{ fontSize: '0.82rem', fontWeight: 600, color: theme.heading, margin: 0 }}>{room.name}</p>
@@ -364,18 +364,10 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <span style={{ color: theme.textSub, fontSize: '0.82rem' }}>{t('network')}</span>
             <span style={{ color: theme.heading, fontSize: '0.95rem', fontWeight: 700, fontFamily: 'monospace' }}>{WIFI_RESEAU}</span>
           </div>
-          {/* Mot de passe + bouton copier */}
-          <div style={{ padding: '0.875rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ minWidth: 0 }}>
-              <p style={{ color: theme.textSub, fontSize: '0.78rem', margin: '0 0 0.3rem' }}>{t('password')}</p>
-              <p style={{ color: theme.heading, fontSize: '1.05rem', fontWeight: 700, fontFamily: 'monospace', margin: 0, wordBreak: 'break-all' }}>{WIFI_PASSWORD}</p>
-            </div>
-            <button
-              onClick={copyPassword}
-              style={{ flexShrink: 0, background: copied ? 'rgba(76,175,80,.2)' : `rgba(${theme.accentRgb},.15)`, color: copied ? '#4caf50' : theme.accent, border: `1px solid ${copied ? '#4caf5040' : `rgba(${theme.accentRgb},.3)`}`, borderRadius: 10, padding: '0.5rem 1rem', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s', fontFamily: 'inherit', whiteSpace: 'nowrap' }}
-            >
-              {copied ? '✓ Copié' : 'Copier'}
-            </button>
+          {/* Mot de passe */}
+          <div style={{ padding: '0.875rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)` }}>
+            <p style={{ color: theme.textSub, fontSize: '0.78rem', margin: '0 0 0.3rem' }}>{t('password')}</p>
+            <p style={{ color: theme.heading, fontSize: '1.1rem', fontWeight: 700, fontFamily: 'monospace', margin: 0, letterSpacing: '0.04em', wordBreak: 'break-all' }}>{WIFI_PASSWORD}</p>
           </div>
           {/* QR code WiFi + bouton copier */}
           <div style={{ padding: '1rem 1.5rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, textAlign: 'center' }}>
