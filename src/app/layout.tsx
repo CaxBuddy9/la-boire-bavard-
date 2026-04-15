@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Playfair_Display, Raleway, EB_Garamond } from 'next/font/google'
 import './globals.css'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <RegisterSW />
         </LangProvider>
       </body>
+      <GoogleAnalytics gaId="G-29W0QG3LH5" />
     </html>
   )
 }
