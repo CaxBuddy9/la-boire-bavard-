@@ -74,7 +74,9 @@ export async function GET(
 
     if (error) throw error
 
-    const now = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
+    const d = new Date()
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const now = `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`
 
     const events = (data ?? []).map((r: { id: string; check_in: string; check_out: string }) => [
       'BEGIN:VEVENT',
