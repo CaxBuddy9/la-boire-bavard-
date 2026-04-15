@@ -1,6 +1,8 @@
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ROOMS } from '@/lib/rooms'
+import { useT } from '@/context/LangContext'
 
 const ROOM_IMAGES: Record<string, string> = {
   jardin:  '/photos/chambres/jardin/chambre-jardin-poutres.jpg',
@@ -10,15 +12,16 @@ const ROOM_IMAGES: Record<string, string> = {
 }
 
 export default function RoomsTeaser() {
+  const t = useT()
   return (
     <section className="py-24 px-12 bg-cream">
       <div className="text-center mb-16">
-        <p className="label-caps-dark mb-4">Hébergements</p>
+        <p className="label-caps-dark mb-4">{t('Hébergements', 'Accommodations')}</p>
         <h2 className="font-serif font-normal text-forest"
           style={{ fontSize: 'clamp(2.2rem,4vw,3.2rem)' }}
         >
-          Quatre chambres,<br />
-          <em className="italic">une maison</em>
+          {t('Quatre chambres,', 'Four rooms,')}<br />
+          <em className="italic">{t('une maison', 'one home')}</em>
         </h2>
       </div>
 
@@ -56,7 +59,7 @@ export default function RoomsTeaser() {
 
       <div className="text-center mt-12">
         <Link href="/chambres" className="btn-gold">
-          Voir toutes les chambres
+          {t('Voir toutes les chambres', 'View all rooms')}
         </Link>
       </div>
     </section>

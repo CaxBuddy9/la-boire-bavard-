@@ -18,8 +18,32 @@ export default function Hero() {
         sizes="100vw"
       />
 
-      {/* Voile */}
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, rgba(20,30,22,.7) 0%, rgba(20,30,22,.35) 60%, rgba(20,30,22,.55) 100%)' }} />
+      {/* Voile — plus léger */}
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, rgba(15,24,17,.58) 0%, rgba(15,24,17,.22) 55%, rgba(15,24,17,.45) 100%)' }} />
+
+      {/* Particules dorées */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {([
+          { top:'18%', left:'12%', d:'0s',   dur:'4.2s' },
+          { top:'32%', left:'28%', d:'1.1s', dur:'5.0s' },
+          { top:'55%', left:'8%',  d:'2.3s', dur:'4.6s' },
+          { top:'70%', left:'42%', d:'0.5s', dur:'3.8s' },
+          { top:'22%', left:'72%', d:'1.7s', dur:'5.2s' },
+          { top:'48%', left:'85%', d:'0.9s', dur:'4.4s' },
+          { top:'78%', left:'65%', d:'2.8s', dur:'4.0s' },
+          { top:'14%', left:'52%', d:'1.4s', dur:'5.6s' },
+          { top:'62%', left:'20%', d:'3.1s', dur:'4.8s' },
+          { top:'40%', left:'93%', d:'0.3s', dur:'3.6s' },
+        ] as {top:string;left:string;d:string;dur:string}[]).map((p, i) => (
+          <div key={i} style={{
+            position: 'absolute', top: p.top, left: p.left,
+            fontSize: i % 3 === 0 ? '10px' : '7px',
+            color: '#c4a050',
+            animation: `float-up ${p.dur} ${p.d} ease-out infinite`,
+            opacity: 0,
+          }}>✦</div>
+        ))}
+      </div>
 
       {/* Filigrane logo BB */}
       <LogoWatermark />
@@ -38,7 +62,7 @@ export default function Hero() {
           style={{ fontSize: 'clamp(3rem,7vw,6.5rem)', letterSpacing: '-0.01em' }}
         >
           La Boire<br />
-          <em className="font-serif italic text-white/65">Bavard</em>
+          <em className="font-serif italic" style={{ color: 'rgba(255,255,255,0.82)', animation: 'gold-shimmer 4s 1.5s ease-in-out infinite' }}>Bavard</em>
         </h1>
 
         <p className="font-sans text-[0.72rem] tracking-[0.38em] uppercase text-white/50 mb-14 animate-[rise_0.8s_0.45s_both]">

@@ -31,7 +31,7 @@ export default function Nav() {
 
   // Always dark — transparent when at top, solid dark when scrolled
   const navBg = scrolled
-    ? 'bg-[rgba(14,20,15,0.97)] backdrop-blur-md border-b border-white/5'
+    ? 'bg-[rgba(14,20,15,0.97)] backdrop-blur-md'
     : 'bg-[rgba(20,28,22,0.88)] backdrop-blur-sm'
 
   const logoColor = 'text-white'

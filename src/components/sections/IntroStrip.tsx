@@ -35,13 +35,13 @@ export default function IntroStrip() {
           <em className="italic text-white/65">{t('au fil de la Loire', 'along the Loire')}</em>
         </h2>
         <div className="gold-line mb-6" />
-        <p className="font-body text-white/65 text-[1.05rem] leading-[1.85] mb-4">
+        <p className="font-body text-white/80 text-[1.05rem] leading-[1.85] mb-4">
           {t(
             "Nichée entre vignoble et val de Loire, La Boire Bavard est une maison d'hôtes de caractère où Sandrine vous accueille avec passion. Quatre chambres d'exception, un jardin généreux, une piscine chauffée, un spa — tout est pensé pour votre bien-être.",
             "Nestled between vineyard and Loire valley, La Boire Bavard is a characterful bed & breakfast where Sandrine welcomes you with passion. Four exceptional rooms, a generous garden, a heated pool, a spa — everything is designed for your well-being."
           )}
         </p>
-        <p className="font-body text-white/65 text-[1.05rem] leading-[1.85] mb-10">
+        <p className="font-body text-white/80 text-[1.05rem] leading-[1.85] mb-10">
           {t(
             "Le petit-déjeuner maison, préparé chaque matin avec les produits du jardin et du marché, est un moment à part entière.",
             "The homemade breakfast, prepared each morning with produce from the garden and the market, is a moment in itself."

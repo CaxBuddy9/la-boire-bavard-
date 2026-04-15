@@ -6,6 +6,7 @@ import WhatsAppFloat from '@/components/WhatsAppFloat'
 import MeteoWidget from '@/components/MeteoWidget'
 import { LangProvider } from '@/context/LangContext'
 import RegisterSW from '@/components/RegisterSW'
+import PageTransition from '@/components/PageTransition'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -108,7 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <LangProvider>
-          {children}
+          <PageTransition>{children}</PageTransition>
           <WhatsAppFloat />
           <MeteoWidget />
           <RegisterSW />

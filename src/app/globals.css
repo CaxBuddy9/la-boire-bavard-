@@ -27,6 +27,30 @@
   input, textarea, select, button { font-family: inherit; }
 }
 
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  40%       { opacity: 0.9; transform: scale(1) rotate(120deg); }
+  60%       { opacity: 0.9; transform: scale(1) rotate(180deg); }
+}
+@keyframes float-up {
+  0%   { opacity: 0; transform: translateY(0px) scale(0.5); }
+  15%  { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(-55px) scale(0.2); }
+}
+@keyframes gold-shimmer {
+  0%   { text-shadow: 0 0 0px rgba(196,160,80,0); }
+  50%  { text-shadow: 0 0 22px rgba(196,160,80,0.45), 0 0 8px rgba(255,220,130,0.2); }
+  100% { text-shadow: 0 0 0px rgba(196,160,80,0); }
+}
+@keyframes star-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.15); }
+}
+@keyframes line-grow {
+  from { width: 0; opacity: 0; }
+  to   { width: 36px; opacity: 1; }
+}
+
 @layer utilities {
   .label-caps {
     @apply font-sans text-[0.58rem] tracking-[0.42em] uppercase text-gold;
@@ -39,7 +63,13 @@
   .gold-line {
     width: 36px;
     height: 1px;
-    background: rgba(196, 160, 80, 0.4);
+    background: rgba(196, 160, 80, 0.55);
+    animation: line-grow 1.2s 0.6s both;
+  }
+  .star-gold {
+    display: inline-block;
+    color: var(--gold);
+    animation: star-pulse 2.4s ease-in-out infinite;
   }
   .btn-gold {
     display: inline-block;
