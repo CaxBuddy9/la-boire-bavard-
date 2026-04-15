@@ -27,7 +27,7 @@ export default function IntroStrip() {
 
       {/* Texte */}
       <div className="bg-forest flex flex-col justify-center px-4 sm:px-8 md:px-16 py-10 md:py-20 lg:px-20">
-        <p className="label-caps mb-5">{t('Notre maison', 'Our home')}</p>
+        <p className="label-caps-dark mb-5">{t('Notre maison', 'Our home')}</p>
         <h2 className="font-serif font-normal text-cream leading-tight mb-6"
           style={{ fontSize: 'clamp(2rem,3.5vw,3rem)' }}
         >

@@ -1,5 +1,5 @@
 // Logo officiel — La Boire Bavard
-// PNG fond transparent, couleurs or + vert natifs.
+import Image from 'next/image'
 
 export function LogoSVG({
   height = 66,
@@ -8,9 +8,6 @@ export function LogoSVG({
 }: {
   height?: number
   className?: string
-  /** dark-bg : logo couleurs natives (or+vert) sur fond sombre — par défaut
-   *  color   : idem, fond clair
-   *  white   : silhouette blanche pure */
   variant?: 'color' | 'dark-bg' | 'white'
 }) {
   const style: React.CSSProperties = {
@@ -18,20 +15,18 @@ export function LogoSVG({
     flexShrink: 0,
     height,
     width: 'auto',
-    ...(variant === 'white' && {
-      filter: 'brightness(0) invert(1)',
-    }),
+    ...(variant === 'white' && { filter: 'brightness(0) invert(1)' }),
   }
 
-  // eslint-disable-next-line @next/next/no-img-element
   return (
-    <img
+    <Image
       src="/logo-lbba.png"
       alt="La Boire Bavard"
       height={height}
       width={height}
       className={className}
       style={style}
+      priority
     />
   )
 }
@@ -51,10 +46,11 @@ export function LogoWatermark() {
       }}
       aria-hidden="true"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src="/logo-lbba.png"
         alt=""
+        height={380}
+        width={380}
         style={{ height: 380, width: 'auto', display: 'block' }}
       />
     </div>

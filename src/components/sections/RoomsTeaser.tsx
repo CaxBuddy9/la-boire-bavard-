@@ -13,7 +13,7 @@ export default function RoomsTeaser() {
   return (
     <section className="py-24 px-12 bg-cream">
       <div className="text-center mb-16">
-        <p className="label-caps mb-4">Hébergements</p>
+        <p className="label-caps-dark mb-4">Hébergements</p>
         <h2 className="font-serif font-normal text-forest"
           style={{ fontSize: 'clamp(2.2rem,4vw,3.2rem)' }}
         >
