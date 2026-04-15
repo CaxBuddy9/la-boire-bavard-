@@ -32,6 +32,9 @@ const garamond = EB_Garamond({
 export const metadata: Metadata = {
   title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand. Note 9.9/10 · 88 €/nuit.",
+  verification: {
+    google: 'vAeSjGLdWvTqmQ6yYDvBjgzBSmRT4aIuybN0WpUTuto',
+  },
   manifest: '/manifest.json',
   icons: {
     icon: [
