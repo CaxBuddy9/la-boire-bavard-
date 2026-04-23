@@ -4,8 +4,11 @@ import { createClient } from '@supabase/supabase-js'
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Supabase non configuré')
-  return createClient(url, key)
+  const missing: string[] = []
+  if (!url) missing.push('SUPABASE_URL')
+  if (!key) missing.push('SUPABASE_SERVICE_ROLE_KEY')
+  if (missing.length) throw new Error(`Variables manquantes : ${missing.join(', ')}`)
+  return createClient(url!, key!)
 }
 
 function isValidEmail(email: string): boolean {
@@ -57,9 +60,13 @@ export async function POST(req: Request) {
         message,
       })
 
-    if (error) return NextResponse.json({ error: 'Erreur lors de l\'envoi' }, { status: 500 })
+    if (error) {
+      console.error('[contact] Supabase insert:', error.message)
+      return NextResponse.json({ error: `Envoi : ${error.message}` }, { status: 500 })
+    }
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
+  } catch (e: any) {
+    console.error('[contact] Exception:', e?.message)
+    return NextResponse.json({ error: e?.message || 'Requête invalide' }, { status: 400 })
   }
 }

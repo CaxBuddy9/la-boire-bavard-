@@ -20,6 +20,7 @@ export type Reservation = {
   status: 'pending' | 'confirmed' | 'cancelled' | 'paid'
   stripe_payment_intent?: string
   message?: string
+  table_hotes?: boolean
 }
 
 export type GuestbookEntry = {

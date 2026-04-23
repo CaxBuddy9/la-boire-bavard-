@@ -5,8 +5,11 @@ import { ROOMS } from '@/lib/rooms'
 function getSupabase() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) throw new Error('Supabase non configuré')
-  return createClient(url, key)
+  const missing: string[] = []
+  if (!url) missing.push('SUPABASE_URL')
+  if (!key) missing.push('SUPABASE_SERVICE_ROLE_KEY/ANON_KEY')
+  if (missing.length) throw new Error(`Variables manquantes : ${missing.join(', ')}`)
+  return createClient(url!, key!)
 }
 
 const VALID_ROOMS = ROOMS.map(r => r.name)
@@ -54,7 +57,8 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
-  } catch {
+  } catch (e: any) {
+    console.error('[availability]', e?.message)
     return NextResponse.json({ booked: [], taken: [] })
   }
 }
