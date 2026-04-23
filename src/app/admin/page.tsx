@@ -661,6 +661,8 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
 }
 
 // ── Facturation ────────────────────────────────────────────────────────────
+type Ligne = { id: string; label: string; qty: number; pu: number }
+const rid = () => Math.random().toString(36).slice(2, 9)
 const PRICE_NUIT  = 88
 const PRICE_TABLE = 25
 const TAXE_SEJOUR = 0.83
@@ -690,14 +692,47 @@ function FacturationPanel() {
   const [pers,        setPers]        = useState(2)
   const [tableHotes,  setTableHotes]  = useState(0)
   const [note,        setNote]        = useState('')
+  const [lignes,        setLignes]        = useState<Ligne[]>([])
+  const [customized,    setCustomized]    = useState(false)
+  const [overrideOn,    setOverrideOn]    = useState(false)
+  const [overrideTotal, setOverrideTotal] = useState(0)
 
   const n = nightsFact(arrive, depart)
-  const lignes = [
-    { label: `Chambre ${chambre} — ${n} nuit${n > 1 ? 's' : ''} × ${PRICE_NUIT} €`, qty: n, pu: PRICE_NUIT, total: n * PRICE_NUIT },
-    ...(tableHotes > 0 ? [{ label: `Table d'hôtes — ${tableHotes} convive${tableHotes > 1 ? 's' : ''}`, qty: tableHotes, pu: PRICE_TABLE, total: tableHotes * PRICE_TABLE }] : []),
-    ...(n > 0 ? [{ label: `Taxe de séjour — ${pers} pers. × ${n} nuit${n > 1 ? 's' : ''} × ${TAXE_SEJOUR} €`, qty: pers * n, pu: TAXE_SEJOUR, total: Math.round(pers * n * TAXE_SEJOUR * 100) / 100 }] : []),
-  ]
-  const total = lignes.reduce((s, l) => s + l.total, 0)
+
+  const buildAuto = (): Ligne[] => {
+    const out: Ligne[] = []
+    if (n > 0) out.push({ id: rid(), label: `Chambre ${chambre} — ${n} nuit${n > 1 ? 's' : ''}`, qty: n, pu: PRICE_NUIT })
+    if (tableHotes > 0) out.push({ id: rid(), label: `Table d'hôtes — ${tableHotes} convive${tableHotes > 1 ? 's' : ''}`, qty: tableHotes, pu: PRICE_TABLE })
+    if (n > 0) out.push({ id: rid(), label: `Taxe de séjour — ${pers} pers. × ${n} nuit${n > 1 ? 's' : ''}`, qty: pers * n, pu: TAXE_SEJOUR })
+    return out
+  }
+
+  useEffect(() => {
+    if (!customized) setLignes(buildAuto())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chambre, arrive, depart, pers, tableHotes, customized])
+
+  const updateLigne = (id: string, patch: Partial<Ligne>) => {
+    setCustomized(true)
+    setLignes(l => l.map(x => x.id === id ? { ...x, ...patch } : x))
+  }
+  const addLigne = () => {
+    setCustomized(true)
+    setLignes(l => [...l, { id: rid(), label: '', qty: 1, pu: 0 }])
+  }
+  const removeLigne = (id: string) => {
+    setCustomized(true)
+    setLignes(l => l.filter(x => x.id !== id))
+  }
+  const resetLignes = () => {
+    setCustomized(false)
+    setLignes(buildAuto())
+  }
+
+  const lignesView = lignes.map(l => ({ ...l, total: Math.round(l.qty * l.pu * 100) / 100 }))
+  const subtotal = lignesView.reduce((s, l) => s + l.total, 0)
+  const totalFinal = overrideOn ? overrideTotal : subtotal
+  const adjustment = overrideOn ? totalFinal - subtotal : 0
 
   const printCSS = `
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400&display=swap');
@@ -773,12 +808,13 @@ function FacturationPanel() {
       ${n > 0 ? `<div class="sejour">${[['Chambre',chambre],['Arrivée',fmtDateFact(arrive)],['Départ',fmtDateFact(depart)],['Durée',n+' nuit'+(n>1?'s':'')],['Personnes',String(pers)]].map(([l,v])=>`<div class="si"><span class="sl">${l}</span><span class="sv">${v}</span></div>`).join('')}</div>` : ''}
       <table>
         <thead><tr><th>Prestation</th><th>Qté</th><th>P.U.</th><th>Total</th></tr></thead>
-        <tbody>${lignes.map(l=>`<tr><td>${l.label}</td><td>${l.qty}</td><td>${l.pu.toFixed(2)} €</td><td>${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody>
+        <tbody>${lignesView.map(l=>`<tr><td>${l.label}</td><td>${l.qty}</td><td>${l.pu.toFixed(2)} €</td><td>${l.total.toFixed(2)} €</td></tr>`).join('')}</tbody>
       </table>
       <div class="tot"><div class="tot-inner">
-        <div class="trow"><span>Sous-total</span><span>${total.toFixed(2)} €</span></div>
+        <div class="trow"><span>Sous-total</span><span>${subtotal.toFixed(2)} €</span></div>
+        ${adjustment !== 0 ? `<div class="trow"><span>${adjustment < 0 ? 'Remise' : 'Supplément'}</span><span>${adjustment.toFixed(2)} €</span></div>` : ''}
         <div class="trow"><span>TVA</span><span>Non applicable (art. 293B CGI)</span></div>
-        <div class="trow final"><span>Total TTC</span><span>${total.toFixed(2)} €</span></div>
+        <div class="trow final"><span>Total TTC</span><span>${totalFinal.toFixed(2)} €</span></div>
       </div></div>
       ${note ? `<div class="note">${note}</div>` : ''}
       <div class="foot">La Boire Bavard · 4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com · Micro-entreprise — TVA non applicable, art. 293B du CGI</div>
@@ -826,6 +862,41 @@ function FacturationPanel() {
           <label style={lbl}><span style={cap}>Table d'hôtes</span><input style={inp} type="number" min={0} max={20} value={tableHotes} onChange={e => setTableHotes(+e.target.value)} /></label>
         </div>
         <label style={{...lbl, marginBottom: 16}}><span style={cap}>Note</span><textarea style={{...inp, resize:'vertical', minHeight:52}} value={note} onChange={e => setNote(e.target.value)} placeholder="Remise, message…" /></label>
+
+        <div style={{ height: 1, background: 'rgba(255,255,255,.06)', margin: '4px 0 12px' }} />
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 8 }}>
+          <p style={cap}>Lignes ({lignes.length})</p>
+          <button type="button" onClick={resetLignes} title="Régénérer depuis le séjour" style={{ background:'transparent', border:'1px solid rgba(196,160,80,.3)', color:'rgba(196,160,80,.85)', fontSize:'0.55rem', letterSpacing:'0.18em', textTransform:'uppercase', padding:'4px 8px', cursor:'pointer' }}>↺ Auto</button>
+        </div>
+        {lignes.map(l => (
+          <div key={l.id} style={{ marginBottom: 8, padding: 8, background:'rgba(255,255,255,.03)', border:'1px solid rgba(196,160,80,.1)' }}>
+            <input style={{...inp, marginBottom: 6, fontSize:'0.72rem'}} value={l.label} onChange={e => updateLigne(l.id, { label: e.target.value })} placeholder="Libellé" />
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 28px', gap: 6, alignItems:'stretch' }}>
+              <input style={{...inp, fontSize:'0.7rem', padding:'6px 8px'}} type="number" step="0.01" min={0} value={l.qty} onChange={e => updateLigne(l.id, { qty: +e.target.value })} placeholder="Qté" title="Quantité" />
+              <input style={{...inp, fontSize:'0.7rem', padding:'6px 8px'}} type="number" step="0.01" min={0} value={l.pu} onChange={e => updateLigne(l.id, { pu: +e.target.value })} placeholder="P.U." title="Prix unitaire €" />
+              <button type="button" onClick={() => removeLigne(l.id)} title="Supprimer" style={{ background:'transparent', border:'1px solid rgba(196,80,80,.3)', color:'rgba(220,120,120,.9)', fontSize:'0.7rem', cursor:'pointer' }}>✕</button>
+            </div>
+            <div style={{ marginTop:6, textAlign:'right', fontSize:'0.62rem', color:'rgba(255,255,255,.4)' }}>= {(Math.round(l.qty * l.pu * 100) / 100).toFixed(2)} €</div>
+          </div>
+        ))}
+        <button type="button" onClick={addLigne} style={{ width:'100%', marginBottom: 12, padding:'7px 0', background:'transparent', border:'1px dashed rgba(196,160,80,.3)', color:'rgba(196,160,80,.75)', fontSize:'0.6rem', letterSpacing:'0.18em', textTransform:'uppercase', cursor:'pointer' }}>+ Ajouter une ligne</button>
+
+        <div style={{ height: 1, background: 'rgba(255,255,255,.06)', margin: '4px 0 12px' }} />
+        <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.7rem', marginBottom: 10, color:'rgba(255,255,255,.65)' }}>
+          <span>Sous-total</span><span>{subtotal.toFixed(2)} €</span>
+        </div>
+        <label style={{ display:'flex', alignItems:'center', gap: 8, marginBottom: 8, fontSize:'0.68rem', color:'rgba(255,255,255,.7)', cursor:'pointer' }}>
+          <input type="checkbox" checked={overrideOn} onChange={e => { setOverrideOn(e.target.checked); if (e.target.checked) setOverrideTotal(subtotal) }} />
+          Forcer le prix total
+        </label>
+        {overrideOn && (
+          <input style={{...inp, marginBottom: 10}} type="number" step="0.01" min={0} value={overrideTotal} onChange={e => setOverrideTotal(+e.target.value)} placeholder="Total final €" />
+        )}
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop: 6, marginBottom: 16, paddingTop: 10, borderTop: '1px solid rgba(196,160,80,.3)' }}>
+          <span style={{ ...cap, color:'#c4a050' }}>Total TTC</span>
+          <span style={{ fontFamily:'Georgia,serif', fontSize:'1.05rem', color:'#c4a050' }}>{totalFinal.toFixed(2)} €</span>
+        </div>
+
         <button onClick={handlePrint} style={{ width:'100%', padding:'10px 0', background:'transparent', border:'1px solid #c4a050', color:'#c4a050', fontFamily:'system-ui,sans-serif', fontSize:'0.62rem', letterSpacing:'0.2em', textTransform:'uppercase', cursor:'pointer' }}>
           🖨 Imprimer / PDF
         </button>
@@ -885,9 +956,9 @@ function FacturationPanel() {
             </tr>
           </thead>
           <tbody>
-            {lignes.map((l,i) => (
-              <tr key={i}>
-                <td style={{ padding:'13px 0', fontSize:'0.78rem', borderBottom:'1px solid #f5f5f5', color:'#444', fontWeight:300 }}>{l.label}</td>
+            {lignesView.map(l => (
+              <tr key={l.id}>
+                <td style={{ padding:'13px 0', fontSize:'0.78rem', borderBottom:'1px solid #f5f5f5', color:'#444', fontWeight:300 }}>{l.label || <span style={{color:'#ddd'}}>—</span>}</td>
                 <td style={{ padding:'13px 0', fontSize:'0.78rem', borderBottom:'1px solid #f5f5f5', textAlign:'right', color:'#aaa', fontWeight:300 }}>{l.qty}</td>
                 <td style={{ padding:'13px 0', fontSize:'0.78rem', borderBottom:'1px solid #f5f5f5', textAlign:'right', color:'#aaa', fontWeight:300 }}>{l.pu.toFixed(2)} €</td>
                 <td style={{ padding:'13px 0', fontSize:'0.78rem', borderBottom:'1px solid #f5f5f5', textAlign:'right', color:'#444', fontWeight:300 }}>{l.total.toFixed(2)} €</td>
@@ -899,11 +970,14 @@ function FacturationPanel() {
         {/* Total */}
         <div style={{ display:'flex', justifyContent:'flex-end', marginTop:22 }}>
           <div style={{ width:240 }}>
-            <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', fontSize:'0.7rem', color:'#bbb', fontWeight:300 }}><span>Sous-total</span><span>{total.toFixed(2)} €</span></div>
+            <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', fontSize:'0.7rem', color:'#bbb', fontWeight:300 }}><span>Sous-total</span><span>{subtotal.toFixed(2)} €</span></div>
+            {adjustment !== 0 && (
+              <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', fontSize:'0.7rem', color:'#bbb', fontWeight:300 }}><span>{adjustment < 0 ? 'Remise' : 'Supplément'}</span><span>{adjustment.toFixed(2)} €</span></div>
+            )}
             <div style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', fontSize:'0.7rem', color:'#bbb', fontWeight:300 }}><span>TVA</span><span>Non applicable (art. 293B CGI)</span></div>
             <div style={{ display:'flex', justifyContent:'space-between', padding:'14px 0 6px', borderTop:'1px solid #2c2c2c', marginTop:6 }}>
               <span style={{ fontFamily:'Georgia,serif', fontSize:'1.05rem', fontWeight:300, color:'#2c2c2c' }}>Total TTC</span>
-              <span style={{ fontFamily:'Georgia,serif', fontSize:'1.15rem', fontWeight:400, color:'#b8962a' }}>{total.toFixed(2)} €</span>
+              <span style={{ fontFamily:'Georgia,serif', fontSize:'1.15rem', fontWeight:400, color:'#b8962a' }}>{totalFinal.toFixed(2)} €</span>
             </div>
           </div>
         </div>
