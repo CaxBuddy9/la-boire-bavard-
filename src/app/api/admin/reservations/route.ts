@@ -5,8 +5,11 @@ import { verifyAdminCookie } from '../login/route'
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) throw new Error('Supabase non configuré')
-  return createClient(url, key)
+  const missing: string[] = []
+  if (!url) missing.push('SUPABASE_URL')
+  if (!key) missing.push('SUPABASE_SERVICE_ROLE_KEY')
+  if (missing.length) throw new Error(`Variables manquantes : ${missing.join(', ')}`)
+  return createClient(url!, key!)
 }
 
 function requireAdmin(req: NextRequest) {
@@ -28,10 +31,10 @@ export async function GET(req: NextRequest) {
       .select('*')
       .order('check_in', { ascending: true })
 
-    if (error) return NextResponse.json({ error: 'Erreur base de données' }, { status: 500 })
+    if (error) return NextResponse.json({ error: `BDD : ${error.message}` }, { status: 500 })
     return NextResponse.json({ data: data || [] })
-  } catch {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message || 'Erreur serveur' }, { status: 500 })
   }
 }
 
@@ -65,10 +68,10 @@ export async function POST(req: NextRequest) {
         table_hotes: body.table_hotes === true,
       })
 
-    if (error) return NextResponse.json({ error: 'Erreur lors de l\'insertion' }, { status: 500 })
+    if (error) return NextResponse.json({ error: `Insertion : ${error.message}` }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message || 'Requête invalide' }, { status: 400 })
   }
 }
 
@@ -87,10 +90,10 @@ export async function DELETE(req: NextRequest) {
       .delete()
       .eq('id', id)
 
-    if (error) return NextResponse.json({ error: 'Erreur lors de la suppression' }, { status: 500 })
+    if (error) return NextResponse.json({ error: `Suppression : ${error.message}` }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message || 'Requête invalide' }, { status: 400 })
   }
 }
 
@@ -113,9 +116,9 @@ export async function PATCH(req: NextRequest) {
       .update({ status })
       .eq('id', id)
 
-    if (error) return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 })
+    if (error) return NextResponse.json({ error: `Mise à jour : ${error.message}` }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch {
-    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message || 'Requête invalide' }, { status: 400 })
   }
 }
