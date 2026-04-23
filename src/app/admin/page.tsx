@@ -692,6 +692,9 @@ function FacturationPanel() {
   const [pers,        setPers]        = useState(2)
   const [tableHotes,  setTableHotes]  = useState(0)
   const [note,        setNote]        = useState('')
+  const [prixNuit,      setPrixNuit]      = useState(PRICE_NUIT)
+  const [prixTable,     setPrixTable]     = useState(PRICE_TABLE)
+  const [taxeSejour,    setTaxeSejour]    = useState(TAXE_SEJOUR)
   const [lignes,        setLignes]        = useState<Ligne[]>([])
   const [customized,    setCustomized]    = useState(false)
   const [overrideOn,    setOverrideOn]    = useState(false)
@@ -701,16 +704,16 @@ function FacturationPanel() {
 
   const buildAuto = (): Ligne[] => {
     const out: Ligne[] = []
-    if (n > 0) out.push({ id: rid(), label: `Chambre ${chambre} — ${n} nuit${n > 1 ? 's' : ''}`, qty: n, pu: PRICE_NUIT })
-    if (tableHotes > 0) out.push({ id: rid(), label: `Table d'hôtes — ${tableHotes} convive${tableHotes > 1 ? 's' : ''}`, qty: tableHotes, pu: PRICE_TABLE })
-    if (n > 0) out.push({ id: rid(), label: `Taxe de séjour — ${pers} pers. × ${n} nuit${n > 1 ? 's' : ''}`, qty: pers * n, pu: TAXE_SEJOUR })
+    if (n > 0) out.push({ id: rid(), label: `Chambre ${chambre} — ${n} nuit${n > 1 ? 's' : ''}`, qty: n, pu: prixNuit })
+    if (tableHotes > 0) out.push({ id: rid(), label: `Table d'hôtes — ${tableHotes} convive${tableHotes > 1 ? 's' : ''}`, qty: tableHotes, pu: prixTable })
+    if (n > 0 && taxeSejour > 0) out.push({ id: rid(), label: `Taxe de séjour — ${pers} pers. × ${n} nuit${n > 1 ? 's' : ''}`, qty: pers * n, pu: taxeSejour })
     return out
   }
 
   useEffect(() => {
     if (!customized) setLignes(buildAuto())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chambre, arrive, depart, pers, tableHotes, customized])
+  }, [chambre, arrive, depart, pers, tableHotes, prixNuit, prixTable, taxeSejour, customized])
 
   const updateLigne = (id: string, patch: Partial<Ligne>) => {
     setCustomized(true)
@@ -860,6 +863,11 @@ function FacturationPanel() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
           <label style={lbl}><span style={cap}>Personnes</span><input style={inp} type="number" min={1} max={4} value={pers} onChange={e => setPers(+e.target.value)} /></label>
           <label style={lbl}><span style={cap}>Table d'hôtes</span><input style={inp} type="number" min={0} max={20} value={tableHotes} onChange={e => setTableHotes(+e.target.value)} /></label>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 10 }}>
+          <label style={lbl}><span style={cap}>Prix/nuit €</span><input style={inp} type="number" min={0} step="0.01" value={prixNuit} onChange={e => setPrixNuit(+e.target.value)} /></label>
+          <label style={lbl}><span style={cap}>Table €/pers</span><input style={inp} type="number" min={0} step="0.01" value={prixTable} onChange={e => setPrixTable(+e.target.value)} /></label>
+          <label style={lbl}><span style={cap}>Taxe séj. €</span><input style={inp} type="number" min={0} step="0.01" value={taxeSejour} onChange={e => setTaxeSejour(+e.target.value)} /></label>
         </div>
         <label style={{...lbl, marginBottom: 16}}><span style={cap}>Note</span><textarea style={{...inp, resize:'vertical', minHeight:52}} value={note} onChange={e => setNote(e.target.value)} placeholder="Remise, message…" /></label>
 
