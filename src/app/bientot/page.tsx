@@ -1,272 +1,388 @@
 'use client'
 
+const CHARS = 'Coming soon'.split('')
+const LOOP  = 5.8   // durée totale d'un cycle (s)
+const WRITE = 2.6   // durée de l'écriture (s)
+
 export default function BientotPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Raleway:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,300&family=Raleway:wght@300;400&display=swap');
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { min-height: 100vh; background: #09110b; color: #f0e8d4; font-family: 'Raleway', sans-serif; overflow: hidden; }
-
-        .page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 0;
-          padding: 3rem 2rem;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{
+          min-height:100vh;
+          background:#080f09;
+          color:#f0e8d4;
+          font-family:'Raleway',sans-serif;
+          overflow:hidden;
         }
 
-        /* Lueur ambiante */
-        .page::before {
-          content: '';
-          position: fixed;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          width: 700px; height: 500px;
-          border-radius: 50%;
-          background: radial-gradient(ellipse, rgba(196,160,80,.04) 0%, transparent 68%);
-          pointer-events: none;
-          animation: breathe 7s ease-in-out infinite;
-        }
-        @keyframes breathe {
-          0%,100% { transform: translate(-50%,-50%) scale(1); opacity:.6; }
-          50%      { transform: translate(-50%,-50%) scale(1.15); opacity:1; }
+        /* ─── Fond ─── */
+        .page{
+          min-height:100vh;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:center;
+          padding:2.5rem 2rem;
+          position:relative;
         }
 
-        .inner {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both;
-        }
-        @keyframes fade-up {
-          from { opacity:0; transform:translateY(20px); }
-          to   { opacity:1; transform:none; }
+        /* Vignette */
+        .page::after{
+          content:'';
+          position:fixed;
+          inset:0;
+          background:radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(4,8,5,.7) 100%);
+          pointer-events:none;
+          z-index:0;
         }
 
-        .label {
-          font-size: .65rem;
-          letter-spacing: .32em;
-          text-transform: uppercase;
-          color: rgba(196,160,80,.55);
-          margin-bottom: 1.1rem;
+        /* Lueur chaude centrale */
+        .glow{
+          position:fixed;
+          top:52%;left:50%;
+          transform:translate(-50%,-50%);
+          width:800px;height:600px;
+          border-radius:50%;
+          background:radial-gradient(ellipse, rgba(196,160,80,.055) 0%, transparent 65%);
+          pointer-events:none;
+          animation:breathe 8s ease-in-out infinite;
+          z-index:0;
+        }
+        @keyframes breathe{
+          0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1);}
+          50%    {opacity:1; transform:translate(-50%,-50%) scale(1.12);}
         }
 
-        h1 {
-          font-family: 'Playfair Display', serif;
-          font-style: italic;
-          font-size: clamp(1.6rem, 4.5vw, 2.6rem);
-          font-weight: 400;
-          color: #f0e8d4;
-          letter-spacing: .02em;
-          margin-bottom: 0;
+        /* ─── Inner ─── */
+        .inner{
+          position:relative;
+          z-index:1;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          text-align:center;
+          gap:0;
         }
 
-        .gold-line {
-          width: 0;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #c4a050, transparent);
-          margin: 1.6rem auto 2.2rem;
-          animation: line-grow 1s ease forwards .6s;
+        .label{
+          font-size:.62rem;
+          letter-spacing:.34em;
+          text-transform:uppercase;
+          color:rgba(196,160,80,.5);
+          margin-bottom:1rem;
+          animation:fade-up .9s ease both;
         }
-        @keyframes line-grow { to { width: 140px; } }
-
-        /* ══════════════════════════════════
-           SCÈNE PLUME + TEXTE
-        ══════════════════════════════════ */
-        .writing-scene {
-          position: relative;
-          margin-bottom: 2.4rem;
-          height: 110px;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
+        h1{
+          font-family:'Cormorant Garamond',serif;
+          font-style:italic;
+          font-weight:300;
+          font-size:clamp(1.5rem,4vw,2.3rem);
+          letter-spacing:.06em;
+          color:rgba(240,232,212,.85);
+          animation:fade-up .9s ease both .1s;
         }
-
-        /* Wrap texte + plume ensemble */
-        .writing-wrap {
-          position: relative;
-          display: inline-block;
+        @keyframes fade-up{
+          from{opacity:0;transform:translateY(16px);}
+          to{opacity:1;transform:none;}
         }
 
-        /* Texte "Coming soon" révélé gauche → droite */
-        .cs-text {
-          font-family: 'Playfair Display', serif;
-          font-style: italic;
-          font-size: clamp(2.4rem, 7vw, 4rem);
-          font-weight: 400;
-          color: #e8dccc;
-          white-space: nowrap;
-          display: block;
-          /* clip-path reveal */
-          clip-path: inset(0 100% 0 0);
-          animation: text-reveal 3.2s cubic-bezier(.4,0,.2,1) infinite;
+        /* Ligne */
+        .sep{
+          display:flex;
+          align-items:center;
+          gap:.7rem;
+          margin:1.5rem 0 2rem;
+          animation:fade-up .9s ease both .2s;
+          color:rgba(196,160,80,.35);
+          font-size:.55rem;
         }
-        @keyframes text-reveal {
-          0%          { clip-path: inset(0 100% 0 0); opacity:1; }
-          55%         { clip-path: inset(0 0% 0 0);   opacity:1; }
-          80%         { clip-path: inset(0 0% 0 0);   opacity:1; }
-          92%         { clip-path: inset(0 0% 0 0);   opacity:0; }
-          100%        { clip-path: inset(0 100% 0 0); opacity:0; }
+        .sep::before,.sep::after{
+          content:'';
+          width:60px;height:1px;
+          background:linear-gradient(90deg,transparent,rgba(196,160,80,.35),transparent);
         }
 
-        /* Conteneur de la plume — se déplace de gauche à droite */
-        .feather-wrap {
-          position: absolute;
-          bottom: calc(100% - 8px);
-          left: 0;
-          transform: translateX(-42%) rotate(-38deg);
-          transform-origin: bottom center;
-          pointer-events: none;
-          animation: feather-move 3.2s cubic-bezier(.4,0,.2,1) infinite,
-                     feather-jiggle 0.18s ease-in-out infinite;
-        }
-        @keyframes feather-move {
-          0%          { left: 0%;   opacity:1; }
-          55%         { left: 100%; opacity:1; }
-          80%         { left: 100%; opacity:1; }
-          92%         { left: 100%; opacity:0; }
-          100%        { left: 0%;   opacity:0; }
-        }
-        /* Micro-tremblement pendant l'écriture */
-        @keyframes feather-jiggle {
-          0%,100% { rotate: 0deg; }
-          50%     { rotate: 1.5deg; }
+        /* ─── Scène écriture ─── */
+        .scene{
+          position:relative;
+          margin-bottom:2.4rem;
+          animation:fade-up .9s ease both .28s;
+          display:flex;
+          align-items:flex-end;
+          justify-content:center;
         }
 
-        /* Encre au bout de la plume */
-        .ink-dot {
-          position: absolute;
-          bottom: -3px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 3px; height: 3px;
-          border-radius: 50%;
-          background: #c4a050;
-          box-shadow: 0 0 6px 2px rgba(196,160,80,.5);
-          animation: ink-pulse .4s ease-in-out infinite;
-        }
-        @keyframes ink-pulse {
-          0%,100% { transform: translateX(-50%) scale(1); opacity:.9; }
-          50%     { transform: translateX(-50%) scale(1.6); opacity:.5; }
+        /* Wrap relatif : la plume est positionnée par rapport à lui */
+        .wrap{
+          position:relative;
+          display:inline-flex;
+          align-items:baseline;
         }
 
-        /* ── SVG Plume ── */
-        .feather-svg { display: block; filter: drop-shadow(0 0 8px rgba(196,160,80,.25)); }
+        /* ── Texte lettre par lettre ── */
+        .cs{
+          font-family:'Great Vibes',cursive;
+          font-size:clamp(3rem,9vw,5.5rem);
+          color:#e8dcc8;
+          white-space:nowrap;
+          display:flex;
+          align-items:baseline;
+          line-height:1;
+          text-shadow:0 2px 40px rgba(196,160,80,.12);
+        }
+        .ch{
+          display:inline-block;
+          opacity:0;
+          transform:translateY(6px) rotate(-4deg) scale(.88);
+          animation:char-in .22s cubic-bezier(.34,1.56,.64,1) forwards;
+          /* animation-delay est mis inline */
+        }
+        /* Espace */
+        .sp{display:inline-block;width:.28em;opacity:0;animation:char-in .1s ease forwards;}
 
-        .desc {
-          font-family: 'Playfair Display', serif;
-          font-style: italic;
-          font-size: .95rem;
-          color: rgba(240,232,212,.48);
-          line-height: 1.9;
-          max-width: 380px;
-          margin-bottom: 2.2rem;
-          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both .35s;
+        @keyframes char-in{
+          to{opacity:1;transform:none;}
         }
 
-        .contacts {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: .85rem;
-          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both .48s;
+        /* Fade out de tout le texte à la fin du cycle */
+        .cs{
+          animation:text-loop ${LOOP}s ease infinite;
         }
-        .links { display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; }
-        .links a { color:rgba(240,232,212,.45); text-decoration:none; font-size:.8rem; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
-        .links a:hover { color:#c4a050; }
-        .wa { display:inline-flex; align-items:center; gap:.5rem; padding:.58rem 1.5rem; border:1px solid rgba(196,160,80,.3); color:#c4a050; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; text-decoration:none; transition:background .2s,border-color .2s; }
-        .wa:hover { background:rgba(196,160,80,.07); border-color:#c4a050; }
+        @keyframes text-loop{
+          0%      {opacity:1;}
+          ${Math.round((WRITE+1.4)/LOOP*100)}%  {opacity:1;}
+          ${Math.round((WRITE+2.0)/LOOP*100)}%  {opacity:0;}
+          99%     {opacity:0;}
+          100%    {opacity:1;}
+        }
+
+        /* ── Plume ── */
+        .feather{
+          position:absolute;
+          bottom:88%;
+          left:0;
+          transform:rotate(-42deg) translateX(-44%);
+          transform-origin:bottom center;
+          pointer-events:none;
+          animation:feather-glide ${LOOP}s cubic-bezier(.4,0,.2,1) infinite,
+                     feather-loop-opacity ${LOOP}s ease infinite;
+          will-change:left;
+        }
+        @keyframes feather-glide{
+          0%                                      {left:0%;}
+          ${Math.round(WRITE/LOOP*100)}%          {left:100%;}
+          ${Math.round((WRITE+1.9)/LOOP*100)}%    {left:100%;}
+          ${Math.round((WRITE+2.0)/LOOP*100)}%    {left:100%;}
+          99%                                     {left:0%;}
+          100%                                    {left:0%;}
+        }
+        @keyframes feather-loop-opacity{
+          0%                                      {opacity:1;}
+          ${Math.round((WRITE+1.5)/LOOP*100)}%    {opacity:1;}
+          ${Math.round((WRITE+1.9)/LOOP*100)}%    {opacity:0;}
+          99%                                     {opacity:0;}
+          100%                                    {opacity:1;}
+        }
+
+        /* Micro-vibration de la plume pendant l'écriture */
+        .feather-inner{
+          animation:quill-jitter .12s ease-in-out infinite;
+        }
+        @keyframes quill-jitter{
+          0%,100%{transform:rotate(0deg) translateY(0);}
+          50%    {transform:rotate(.8deg) translateY(-.4px);}
+        }
+
+        /* Point d'encre à la pointe */
+        .nib-glow{
+          position:absolute;
+          bottom:-4px;left:50%;
+          transform:translateX(-50%);
+          width:5px;height:5px;
+          border-radius:50%;
+          background:#c4a050;
+          box-shadow:0 0 10px 4px rgba(196,160,80,.5),
+                     0 0 20px 6px rgba(196,160,80,.2);
+          animation:nib-pulse .35s ease-in-out infinite;
+        }
+        @keyframes nib-pulse{
+          0%,100%{transform:translateX(-50%) scale(1);opacity:.95;}
+          50%    {transform:translateX(-50%) scale(1.7);opacity:.55;}
+        }
+
+        /* Traînée d'encre sous le texte */
+        .ink-trail{
+          position:absolute;
+          bottom:-3px;
+          left:0;
+          height:1px;
+          width:0;
+          background:linear-gradient(90deg,rgba(196,160,80,.3),rgba(196,160,80,.08));
+          animation:trail ${LOOP}s ease infinite;
+        }
+        @keyframes trail{
+          0%                                   {width:0;opacity:1;}
+          ${Math.round(WRITE/LOOP*100)}%       {width:100%;opacity:.6;}
+          ${Math.round((WRITE+1.4)/LOOP*100)}% {width:100%;opacity:.4;}
+          ${Math.round((WRITE+2)/LOOP*100)}%   {width:100%;opacity:0;}
+          99%                                  {width:0;opacity:0;}
+          100%                                 {width:0;opacity:1;}
+        }
+
+        /* ─── Desc ─── */
+        .desc{
+          font-family:'Cormorant Garamond',serif;
+          font-style:italic;
+          font-weight:300;
+          font-size:.98rem;
+          color:rgba(240,232,212,.42);
+          line-height:2;
+          max-width:360px;
+          margin-bottom:2rem;
+          animation:fade-up .9s ease both .45s;
+          letter-spacing:.02em;
+        }
+
+        /* ─── Contacts ─── */
+        .contacts{
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:.8rem;
+          animation:fade-up .9s ease both .55s;
+        }
+        .links{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem 1.4rem;}
+        .links a{color:rgba(240,232,212,.38);text-decoration:none;font-size:.78rem;display:flex;align-items:center;gap:.4rem;transition:color .2s;letter-spacing:.02em;}
+        .links a:hover{color:#c4a050;}
+        .wa{
+          display:inline-flex;align-items:center;gap:.5rem;
+          padding:.55rem 1.5rem;
+          border:1px solid rgba(196,160,80,.25);
+          color:rgba(196,160,80,.8);
+          font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+          text-decoration:none;
+          transition:background .2s,border-color .2s,color .2s;
+        }
+        .wa:hover{background:rgba(196,160,80,.07);border-color:rgba(196,160,80,.6);color:#c4a050;}
       `}</style>
 
       <div className="page">
+        <div className="glow" aria-hidden />
+
         <div className="inner">
           <p className="label">Chambre d'hôtes · Anjou · France</p>
           <h1>La Boire Bavard</h1>
-          <div className="gold-line" />
 
-          {/* Animation plume */}
-          <div className="writing-scene">
-            <div className="writing-wrap">
+          <div className="sep"><span>✦</span></div>
 
-              {/* Plume animée */}
-              <div className="feather-wrap">
-                <svg
-                  className="feather-svg"
-                  viewBox="0 0 38 108"
-                  width="38" height="108"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Vane gauche */}
-                  <path
-                    d="M19,4 Q3,16 5,34 Q7,50 11,62 Q13,72 15,80 Q16,86 19,94
-                       Q18,86 17,78 Q16,68 17,58 Q18,46 19,34 Q20,20 19,4 Z"
-                    fill="rgba(196,160,80,.38)"
-                  />
-                  {/* Vane droite */}
-                  <path
-                    d="M19,4 Q35,16 33,34 Q31,50 27,62 Q25,72 23,80 Q22,86 19,94
-                       Q20,86 21,78 Q22,68 21,58 Q20,46 19,34 Q18,20 19,4 Z"
-                    fill="rgba(196,160,80,.55)"
-                  />
-                  {/* Détails barbules gauche */}
-                  {[14,22,30,38,46,54,62].map((y,i) => (
-                    <line key={i}
-                      x1={19} y1={y}
-                      x2={19 - 8 + i * .4} y2={y + 6}
-                      stroke="rgba(196,160,80,.2)" strokeWidth=".7"
+          {/* ── Scène plume ── */}
+          <div className="scene">
+            <div className="wrap">
+
+              {/* Plume */}
+              <div className="feather" aria-hidden>
+                <div className="feather-inner">
+                  <svg
+                    viewBox="0 0 44 130"
+                    width="44" height="130"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{filter:'drop-shadow(0 0 12px rgba(196,160,80,.22))'}}
+                  >
+                    {/* ── Vane arrière (plus sombre) ── */}
+                    <path
+                      d="M22,6 Q2,18 4,38 Q6,56 10,70 Q13,82 16,92 Q18,100 22,112
+                         Q21,100 20,90 Q19,78 20,66 Q21,52 22,38 Q23,22 22,6 Z"
+                      fill="rgba(180,140,50,.28)"
                     />
-                  ))}
-                  {/* Détails barbules droite */}
-                  {[14,22,30,38,46,54,62].map((y,i) => (
-                    <line key={i}
-                      x1={19} y1={y}
-                      x2={19 + 8 - i * .4} y2={y + 6}
-                      stroke="rgba(196,160,80,.25)" strokeWidth=".7"
+                    {/* ── Vane avant (plus lumineuse) ── */}
+                    <path
+                      d="M22,6 Q42,18 40,38 Q38,56 34,70 Q31,82 28,92 Q26,100 22,112
+                         Q23,100 24,90 Q25,78 24,66 Q23,52 22,38 Q21,22 22,6 Z"
+                      fill="rgba(210,170,70,.48)"
                     />
-                  ))}
-                  {/* Rachis (tige centrale) */}
-                  <path
-                    d="M19,4 Q19.5,48 19,94"
-                    stroke="#c4a050"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                  {/* Calamus (tuyau de la plume) */}
-                  <path
-                    d="M18,82 Q17,90 19,100 Q21,90 20,82 Z"
-                    fill="rgba(196,160,80,.7)"
-                  />
-                  {/* Pointe (bec) */}
-                  <path
-                    d="M19,96 Q18.2,102 19,108 Q19.8,102 19,96 Z"
-                    fill="#c4a050"
-                  />
-                  {/* Reflet sur la vane */}
-                  <path
-                    d="M19,8 Q26,18 25,32 Q23,44 21,54"
-                    stroke="rgba(255,240,180,.12)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <div className="ink-dot" />
+                    {/* ── Reflet lumineux sur vane droite ── */}
+                    <path
+                      d="M22,8 Q36,20 35,36 Q33,50 29,62 Q26,72 23,82"
+                      stroke="rgba(255,240,180,.1)"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                    {/* ── Barbules gauche ── */}
+                    {[10,18,26,34,42,52,62,72,82].map((y,i) => (
+                      <path key={`l${i}`}
+                        d={`M22,${y} Q${22-10+i*.3},${y+5} ${22-13+i*.5},${y+9}`}
+                        stroke="rgba(196,160,80,.22)"
+                        strokeWidth=".7"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
+                    ))}
+                    {/* ── Barbules droite ── */}
+                    {[10,18,26,34,42,52,62,72,82].map((y,i) => (
+                      <path key={`r${i}`}
+                        d={`M22,${y} Q${22+10-i*.3},${y+5} ${22+13-i*.5},${y+9}`}
+                        stroke="rgba(196,160,80,.28)"
+                        strokeWidth=".7"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
+                    ))}
+                    {/* ── Rachis (tige) ── */}
+                    <path
+                      d="M22,5 Q22.4,60 22,115"
+                      stroke="#c4a050"
+                      strokeWidth="1.1"
+                      strokeLinecap="round"
+                    />
+                    {/* ── Calamus (tuyau creux) ── */}
+                    <path
+                      d="M20,96 Q19,106 22,120 Q25,106 24,96 Z"
+                      fill="rgba(196,160,80,.55)"
+                    />
+                    <path
+                      d="M21,108 Q20.5,114 22,122 Q23.5,114 23,108 Z"
+                      fill="rgba(196,160,80,.8)"
+                    />
+                    {/* ── Pointe bec ── */}
+                    <path
+                      d="M21.2,118 Q20.5,124 22,130 Q23.5,124 22.8,118 Z"
+                      fill="#c4a050"
+                    />
+                    {/* ── Bout de plume (tip) ── */}
+                    <path
+                      d="M22,4 Q26,1 28,5 Q24,8 22,6 Q20,8 16,5 Q18,1 22,4 Z"
+                      fill="rgba(196,160,80,.5)"
+                    />
+                  </svg>
+                  <div className="nib-glow" />
+                </div>
               </div>
 
               {/* Texte Coming soon */}
-              <span className="cs-text">Coming soon</span>
+              <div className="cs" aria-label="Coming soon">
+                {CHARS.map((ch, i) =>
+                  ch === ' '
+                    ? <span key={i} className="sp" style={{animationDelay:`${i*(WRITE/CHARS.length)}s`,animationIterationCount:'infinite',animationDuration:`${LOOP}s`}}>&nbsp;</span>
+                    : <span key={i} className="ch" style={{
+                        animationDelay:`${i*(WRITE/CHARS.length)}s`,
+                        animationIterationCount:'infinite',
+                        animationDuration:`${LOOP}s`,
+                      }}>{ch}</span>
+                )}
+              </div>
+
+              {/* Traînée d'encre */}
+              <div className="ink-trail" aria-hidden />
             </div>
           </div>
 
           <p className="desc">
-            Une maison d'hôtes de charme entre Angers et Saumur.<br />
+            Maison d'hôtes de charme entre Angers et Saumur.<br />
             Piscine · Spa · Petit-déjeuner gourmand · 4 chambres.
           </p>
 
