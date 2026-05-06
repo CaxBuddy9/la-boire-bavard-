@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const MAINTENANCE = true
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // Mode maintenance : redirige tout vers /bientot sauf les assets et la page elle-même
