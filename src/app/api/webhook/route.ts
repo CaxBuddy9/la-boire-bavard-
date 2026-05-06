@@ -9,8 +9,6 @@ function getSupabaseAdmin() {
   return createClient(url, key)
 }
 
-export const config = { api: { bodyParser: false } }
-
 // Convertit dd/mm/yyyy ou yyyy-mm-dd → yyyy-mm-dd
 function parseDate(s: string): string | null {
   if (!s) return null
