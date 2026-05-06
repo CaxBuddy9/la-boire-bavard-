@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Carte de visite — La Boire Bavard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,500;1,600;1,700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --gold: #c4a050;
+    --gold-bright: #d9b868;
+    --gold-deep: #8b6f2b;
+    --cream: #f5f0e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #b7b0a4;
+    font-family: 'Raleway', system-ui, sans-serif;
+    color: #333;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .workshop {
+    min-height: 100vh;
+    padding: 60px 20px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .workshop h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: #2a2a2a;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .workshop h2 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #666;
+    margin-top: 36px;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .workshop .hint {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    text-align: center;
+  }
+
+  /* Preview ~2.5x → 212.5 x 137.5 mm */
+  .card-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 212.5mm;
+    height: 137.5mm;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5mm;
+    box-shadow:
+      0 28px 55px rgba(0,0,0,0.32),
+      0 10px 18px rgba(0,0,0,0.14);
+  }
+
+  .card-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ===============================================
+     RECTO — exact copie de image copy.png
+     =============================================== */
+  .card.recto {
+    background: linear-gradient(135deg, #1a2e1a 0%, #0f1d12 55%, #081008 100%);
+    color: var(--cream);
+    padding: 12.5mm 12.5mm 12.5mm 17.5mm;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Bande or verticale à gauche */
+  .recto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2.5mm;
+    background: linear-gradient(180deg, #8b6f2b 0%, #d9b868 50%, #8b6f2b 100%);
+    z-index: 2;
+  }
+
+  /* Filigrane léger du logo, décentré vers la droite */
+  .recto-watermark {
+    position: absolute;
+    top: 52%;
+    left: 78%;
+    transform: translate(-50%, -50%);
+    height: 72mm;
+    width: auto;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .recto > *:not(.recto-watermark) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TITRE GROS EN HAUT CENTRÉ */
+  .recto-brand {
+    text-align: center;
+    margin-top: 12.5mm;
+  }
+  .recto-brand .name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 15mm;
+    color: var(--gold-bright);
+    line-height: 1;
+    letter-spacing: 0.3mm;
+  }
+  .recto-brand .sub {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 3.2mm;
+    letter-spacing: 2.5mm;
+    text-transform: uppercase;
+    color: rgba(245, 240, 232, 0.65);
+    margin-top: 3mm;
+    padding-left: 2.5mm;
+  }
+
+  .recto-divider {
+    height: 0.3mm;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(196, 160, 80, 0.55) 10%,
+      rgba(196, 160, 80, 0.75) 50%,
+      rgba(196, 160, 80, 0.55) 90%,
+      transparent 100%);
+    margin: 5mm 0 5mm;
+  }
+
+  .recto-main {
+    flex: 0 0 auto;
+    margin-top: 15mm;
+  }
+  .recto-main .who {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 11mm;
+    line-height: 1;
+    color: var(--cream);
+    letter-spacing: 0.2mm;
+    white-space: nowrap;
+  }
+  .recto-main .role {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 2.8mm;
+    letter-spacing: 2.2mm;
+    text-transform: uppercase;
+    color: rgba(217, 184, 104, 0.85);
+    margin-top: 2.5mm;
+    padding-left: 2.2mm;
+  }
+
+  .recto-contact {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4mm;
+    font-size: 4.4mm;
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .recto-contact .row {
+    display: flex;
+    align-items: center;
+    gap: 3.2mm;
+  }
+  .recto-contact .icon {
+    width: 5mm;
+    height: 5mm;
+    flex-shrink: 0;
+    stroke: var(--gold-bright);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Bandeau services entre Sandrine et contact */
+  .recto-services {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-top: 6mm;
+    margin-bottom: 6mm;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 2.6mm;
+    letter-spacing: 1.4mm;
+    text-transform: uppercase;
+    color: rgba(217, 184, 104, 0.75);
+    padding-left: 1.4mm;
+  }
+  .recto-services .dot {
+    width: 1mm;
+    height: 1mm;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* Badge note Booking en bas à droite */
+  .recto-badge {
+    position: absolute;
+    right: 10mm;
+    bottom: 8mm;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.8mm;
+    z-index: 1;
+  }
+  .recto-badge .stars {
+    font-size: 4mm;
+    color: var(--gold-bright);
+    letter-spacing: 0.6mm;
+    line-height: 1;
+  }
+  .recto-badge .rating {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 6mm;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .recto-badge .label {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 2.2mm;
+    letter-spacing: 1mm;
+    text-transform: uppercase;
+    color: rgba(217, 184, 104, 0.7);
+    padding-left: 1mm;
+  }
+
+  /* ===============================================
+     VERSO — logo seul au centre
+     Cadre rectangulaire or double filet (comme référence)
+     4 couleurs de fond différentes
+     =============================================== */
+  .card.verso {
+    padding: 6mm;
+  }
+
+  .verso-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 3mm;
+    border: 0.4mm solid rgba(217, 184, 104, 0.55);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .verso-frame::before {
+    content: '';
+    position: absolute;
+    inset: 2.5mm;
+    border-radius: 2mm;
+    border: 0.25mm solid rgba(217, 184, 104, 0.35);
+    pointer-events: none;
+  }
+
+  /* Logo PNG transparent — couleurs identiques sur tous les fonds */
+  .verso-logo {
+    height: 85mm;
+    width: auto;
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ 4 VARIANTES COULEUR ============ */
+  .verso.v1 {
+    background: linear-gradient(135deg, #1a2e1a 0%, #0f1d12 55%, #081008 100%);
+  }
+  .verso.v2 {
+    background: linear-gradient(135deg, #1c2a4a 0%, #0d1528 55%, #060a18 100%);
+  }
+  .verso.v3 {
+    background: linear-gradient(135deg, #5c1e1e 0%, #2e0f0f 55%, #180707 100%);
+  }
+  .verso.v4 {
+    background: linear-gradient(135deg, #2a2a2a 0%, #121212 55%, #050505 100%);
+  }
+
+  /* ========== IMPRESSION VISTAPRINT 89x59 (85x55 trim + 2mm bleed) ========== */
+  @page {
+    size: 89mm 59mm;
+    margin: 0;
+  }
+
+  @media print {
+    html, body { background: #fff; }
+    .workshop { padding: 0; display: block; gap: 0; }
+    .workshop h1, .workshop h2, .workshop .hint, .card-label { display: none; }
+    .card-wrap { margin: 0; }
+    .card {
+      width: 89mm;
+      height: 59mm;
+      border-radius: 0;
+      box-shadow: none;
+      page-break-after: always;
+    }
+    .card:last-child { page-break-after: auto; }
+
+    /* Recto : padding + 2mm de bleed + safe zone élargie pour bords arrondis */
+    .card.recto { padding: 7mm 7mm 7mm 9mm; }
+    .recto::before { left: 0; width: 3mm; }
+    .recto-watermark { height: 26mm; }
+    .recto-brand { margin-top: 5mm; }
+    .recto-brand .name { font-size: 6mm; letter-spacing: 0.12mm; }
+    .recto-brand .sub { font-size: 1.3mm; letter-spacing: 1mm; margin-top: 1.2mm; padding-left: 1mm; }
+    .recto-divider { margin: 3mm 0 3mm; height: 0.12mm; }
+    .recto-main { margin-top: 6mm; }
+    .recto-main .who { font-size: 4.4mm; letter-spacing: 0.08mm; }
+    .recto-main .role { font-size: 1.12mm; letter-spacing: 0.88mm; margin-top: 1mm; padding-left: 0.88mm; }
+    .recto-contact { gap: 1mm; font-size: 1.76mm; }
+    .recto-contact .row { gap: 1.4mm; }
+    .recto-contact .icon { width: 2mm; height: 2mm; stroke-width: 1.6; }
+    .recto-services { gap: 1.2mm; margin-top: 2.4mm; margin-bottom: 2.4mm; font-size: 1.04mm; letter-spacing: 0.56mm; padding-left: 0.56mm; }
+    .recto-services .dot { width: 0.4mm; height: 0.4mm; }
+    .recto-badge { right: 5mm; bottom: 5mm; gap: 0.32mm; }
+    .recto-badge .stars { font-size: 1.6mm; letter-spacing: 0.24mm; }
+    .recto-badge .rating { font-size: 2.4mm; }
+    .recto-badge .label { font-size: 0.88mm; letter-spacing: 0.4mm; padding-left: 0.4mm; }
+
+    /* Verso : padding + 2mm de bleed + safe zone élargie pour bords arrondis */
+    .card.verso { padding: 6mm; }
+    .verso-frame { border-radius: 1.2mm; border-width: 0.16mm; }
+    .verso-frame::before { inset: 1mm; border-radius: 0.8mm; border-width: 0.1mm; }
+    .verso-logo { height: 34mm; }
+  }
+</style>
+<script>
+  // Mode impression : ?only=recto|v1|v2|v3|v4 cache tout sauf la carte demandée
+  (function () {
+    const only = new URLSearchParams(location.search).get('only');
+    if (!only) return;
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.workshop > *').forEach(el => {
+        if (!el.classList.contains('card-wrap')) el.style.display = 'none';
+      });
+      document.querySelectorAll('.card-wrap').forEach(w => {
+        const card = w.querySelector('.card');
+        const keep = (only === 'recto' && card.classList.contains('recto'))
+                  || card.classList.contains(only);
+        if (!keep) w.style.display = 'none';
+        else w.querySelectorAll('.card-label').forEach(l => l.style.display = 'none');
+      });
+      document.body.style.background = '#fff';
+      const ws = document.querySelector('.workshop');
+      if (ws) { ws.style.padding = '0'; ws.style.minHeight = 'auto'; ws.style.gap = '0'; }
+    });
+  })();
+</script>
+</head>
+<body>
+
+<div class="workshop">
+  <header>
+    <h1>Carte de visite — La Boire Bavard</h1>
+    <p class="hint">Format 85 × 55 mm · 1 recto + 4 versos (4 couleurs)</p>
+  </header>
+
+  <!-- ============== RECTO ============== -->
+  <h2>Recto</h2>
+  <div class="card-wrap">
+    <article class="card recto" aria-label="Recto">
+      <img class="recto-watermark" src="./public/logo-lbba-clean.png" alt="" aria-hidden="true" />
+
+      <div class="recto-brand">
+        <div class="name">La Boire Bavard</div>
+        <div class="sub">Chambres d'Hôtes · Anjou</div>
+      </div>
+
+      <div class="recto-divider" aria-hidden="true"></div>
+
+      <div class="recto-main">
+        <div class="who">Sandrine Moulinoux</div>
+        <div class="role">Propriétaire &amp; Hôtesse</div>
+      </div>
+
+      <div class="recto-contact">
+        <div class="row">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <span>06 75 78 63 35</span>
+        </div>
+        <div class="row">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <span>sandrinemoulinoux@gmail.com</span>
+        </div>
+        <div class="row">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>4 chemin de la Boire Bavard · La Hutte · 49320 Blaison-Saint-Sulpice</span>
+        </div>
+      </div>
+    </article>
+    <span class="card-label">Recto</span>
+  </div>
+
+  <!-- ============== VERSOS ============== -->
+  <h2>Verso — 4 couleurs au choix</h2>
+
+  <div class="card-wrap">
+    <article class="card verso v1" aria-label="Verso vert forêt">
+      <div class="verso-frame">
+        <img class="verso-logo" src="./public/logo-lbba-clean.png" alt="" />
+      </div>
+    </article>
+    <span class="card-label">V1 — Vert Forêt</span>
+  </div>
+
+  <div class="card-wrap">
+    <article class="card verso v2" aria-label="Verso bleu nuit">
+      <div class="verso-frame">
+        <img class="verso-logo" src="./public/logo-lbba-clean.png" alt="" />
+      </div>
+    </article>
+    <span class="card-label">V2 — Bleu Nuit</span>
+  </div>
+
+  <div class="card-wrap">
+    <article class="card verso v3" aria-label="Verso bordeaux">
+      <div class="verso-frame">
+        <img class="verso-logo" src="./public/logo-lbba-clean.png" alt="" />
+      </div>
+    </article>
+    <span class="card-label">V3 — Bordeaux</span>
+  </div>
+
+  <div class="card-wrap">
+    <article class="card verso v4" aria-label="Verso graphite">
+      <div class="verso-frame">
+        <img class="verso-logo" src="./public/logo-lbba-clean.png" alt="" />
+      </div>
+    </article>
+    <span class="card-label">V4 — Graphite</span>
+  </div>
+
+  <p class="hint" style="margin-top: 40px;">Ctrl / Cmd + P pour imprimer ou exporter en PDF</p>
+</div>
+
+</body>
+</html>

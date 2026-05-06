@@ -121,11 +121,11 @@ export default function PropriетеPage() {
                 { src: '/photos/exterieur/maison-exterieure-fleurs.jpg', alt: 'La maison au printemps' },
                 { src: '/photos/exterieur/maison-exterieure-ete.jpg', alt: 'Vue extérieure été' },
                 { src: '/photos/exterieur/propriete-jardin-cedre.jpg', alt: 'Le jardin et le cèdre centenaire' },
-                { src: '/photos/chambres/jardin/chambre-jardin-ensemble.jpg', alt: 'Chambre Côté Jardin' },
-                { src: '/photos/chambres/jardin/chambre-jardin-lit-terrasse.jpg', alt: 'Lit avec vue sur le jardin' },
-                { src: '/photos/chambres/jardin/chambre-jardin-cheminee.jpg', alt: 'Cheminée en tuffeau' },
-                { src: '/photos/chambres/jardin/chambre-jardin-console.jpg', alt: 'Console et miroir' },
-                { src: '/photos/chambres/jardin/chambre-jardin-entree.jpg', alt: 'Entrée depuis la terrasse' },
+                { src: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', alt: 'Chambre Côté Jardin' },
+                { src: '/photos/chambres/jardin/chambre-jardin-lit-terrasse-ouvert.jpeg', alt: 'Lit avec vue sur le jardin' },
+                { src: '/photos/chambres/jardin/chambre-jardin-cheminee-bureau.jpeg', alt: 'Cheminée en tuffeau' },
+                { src: '/photos/chambres/jardin/chambre-jardin-console-miroir.jpeg', alt: 'Console et miroir' },
+                { src: '/photos/chambres/jardin/chambre-jardin-acces-jardin.jpeg', alt: 'Entrée depuis la terrasse' },
               ]}
             />
           </div>

@@ -59,7 +59,7 @@ export default function BienetreePage() {
         {/* Piscine */}
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-            <Image src="/photos/chambres/jardin/chambre-jardin-combles.jpg" alt="Piscine chauffée" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/maison-exterieure-piscine.jpg" alt="Piscine chauffée" fill className="object-cover" sizes="50vw" />
           </div>
           <div style={{ background: '#141f15' }} className="flex flex-col justify-center px-12 py-20 md:px-16">
             <p className="label-caps mb-5">Mai – Septembre</p>

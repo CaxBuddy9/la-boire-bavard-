@@ -25,7 +25,7 @@ export default function PetitDejPage() {
         {/* Hero */}
         <section className="relative h-[60vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/chambres/jardin/chambre-jardin-baignoire.jpg"
+            src="/photos/petitdej/petit-dejeuner-01.jpeg"
             alt="Petit-déjeuner La Boire Bavard"
             fill priority
             className="object-cover"
