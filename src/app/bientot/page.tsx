@@ -1,24 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
 export default function BientotPage() {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => { setMounted(true) }, [])
-
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Raleway:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Raleway:wght@300;400&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body {
-          min-height: 100vh;
-          background: #0a130c;
-          color: #f0e8d4;
-          font-family: 'Raleway', sans-serif;
-          overflow-x: hidden;
-        }
+        html, body { min-height: 100vh; background: #09110b; color: #f0e8d4; font-family: 'Raleway', sans-serif; overflow: hidden; }
 
         .page {
           min-height: 100vh;
@@ -26,46 +15,27 @@ export default function BientotPage() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 3rem 1.5rem;
           gap: 0;
+          padding: 3rem 2rem;
         }
 
-        /* Lueur de fond */
+        /* Lueur ambiante */
         .page::before {
           content: '';
           position: fixed;
-          top: 40%;
-          left: 50%;
+          top: 50%; left: 50%;
           transform: translate(-50%, -50%);
-          width: 600px;
-          height: 600px;
+          width: 700px; height: 500px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(196,160,80,.05) 0%, transparent 65%);
+          background: radial-gradient(ellipse, rgba(196,160,80,.04) 0%, transparent 68%);
           pointer-events: none;
-          animation: breathe 6s ease-in-out infinite;
+          animation: breathe 7s ease-in-out infinite;
         }
         @keyframes breathe {
-          0%,100% { opacity: .6; transform: translate(-50%,-50%) scale(1); }
-          50%      { opacity: 1; transform: translate(-50%,-50%) scale(1.12); }
+          0%,100% { transform: translate(-50%,-50%) scale(1); opacity:.6; }
+          50%      { transform: translate(-50%,-50%) scale(1.15); opacity:1; }
         }
 
-        /* Lucioles discrètes */
-        .ff {
-          position: fixed;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(196,160,80,.9) 0%, transparent 70%);
-          pointer-events: none;
-          opacity: 0;
-          animation: ff var(--d) ease-in-out infinite var(--del);
-        }
-        @keyframes ff {
-          0%   { opacity: 0; transform: translate(0,0); }
-          20%  { opacity: .55; }
-          80%  { opacity: .4; }
-          100% { opacity: 0; transform: translate(var(--x), var(--y)); }
-        }
-
-        /* Contenu */
         .inner {
           position: relative;
           z-index: 1;
@@ -73,268 +43,230 @@ export default function BientotPage() {
           flex-direction: column;
           align-items: center;
           text-align: center;
-          gap: 0;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both;
+          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both;
         }
-        @keyframes up {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: none; }
+        @keyframes fade-up {
+          from { opacity:0; transform:translateY(20px); }
+          to   { opacity:1; transform:none; }
         }
 
-        /* Label */
         .label {
-          font-size: .68rem;
-          letter-spacing: .3em;
+          font-size: .65rem;
+          letter-spacing: .32em;
           text-transform: uppercase;
-          color: rgba(196,160,80,.6);
-          margin-bottom: 1.2rem;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both .1s;
+          color: rgba(196,160,80,.55);
+          margin-bottom: 1.1rem;
         }
 
-        /* Titre */
         h1 {
           font-family: 'Playfair Display', serif;
-          font-size: clamp(2rem, 6vw, 3.4rem);
-          font-weight: 400;
-          line-height: 1.15;
-          margin-bottom: .5rem;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both .18s;
-        }
-        h1 em {
           font-style: italic;
-          color: #c4a050;
-          display: block;
-          font-size: .75em;
+          font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+          font-weight: 400;
+          color: #f0e8d4;
+          letter-spacing: .02em;
+          margin-bottom: 0;
         }
 
-        /* Ligne */
-        .line {
+        .gold-line {
           width: 0;
           height: 1px;
           background: linear-gradient(90deg, transparent, #c4a050, transparent);
-          margin: 1.8rem auto;
-          animation: expand 1s ease forwards .5s;
+          margin: 1.6rem auto 2.2rem;
+          animation: line-grow 1s ease forwards .6s;
         }
-        @keyframes expand { to { width: 160px; } }
+        @keyframes line-grow { to { width: 140px; } }
 
-        /* ── Personnage SVG ── */
-        .character {
-          margin: .4rem 0 1.6rem;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both .3s;
-        }
-
-        /* Bras + pioche */
-        .arm {
-          transform-origin: 50px 46px;
-          animation: swing 1.2s cubic-bezier(.4,0,.2,1) infinite;
-        }
-        @keyframes swing {
-          0%   { transform: rotate(-35deg); }
-          40%  { transform: rotate(20deg); }
-          55%  { transform: rotate(22deg); }
-          100% { transform: rotate(-35deg); }
+        /* ══════════════════════════════════
+           SCÈNE PLUME + TEXTE
+        ══════════════════════════════════ */
+        .writing-scene {
+          position: relative;
+          margin-bottom: 2.4rem;
+          height: 110px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
         }
 
-        /* Pierre tremble à l'impact */
-        .rock {
-          transform-origin: 118px 68px;
-          animation: shake 1.2s ease-in-out infinite;
-        }
-        @keyframes shake {
-          0%,38%,55%,100% { transform: translate(0,0); }
-          44% { transform: translate(1.5px,-1px); }
-          48% { transform: translate(-1px,.5px); }
+        /* Wrap texte + plume ensemble */
+        .writing-wrap {
+          position: relative;
+          display: inline-block;
         }
 
-        /* Étincelles */
-        .spark { animation: spark 1.2s ease-out infinite; opacity: 0; transform-origin: 118px 58px; }
-        .s2 { animation-delay: .04s; }
-        .s3 { animation-delay: .08s; }
-        @keyframes spark {
-          0%,38% { opacity: 0; transform: translate(0,0) scale(1); }
-          43%    { opacity: 1; }
-          100%   { opacity: 0; transform: translate(var(--sx,8px), var(--sy,-12px)) scale(0); }
+        /* Texte "Coming soon" révélé gauche → droite */
+        .cs-text {
+          font-family: 'Playfair Display', serif;
+          font-style: italic;
+          font-size: clamp(2.4rem, 7vw, 4rem);
+          font-weight: 400;
+          color: #e8dccc;
+          white-space: nowrap;
+          display: block;
+          /* clip-path reveal */
+          clip-path: inset(0 100% 0 0);
+          animation: text-reveal 3.2s cubic-bezier(.4,0,.2,1) infinite;
+        }
+        @keyframes text-reveal {
+          0%          { clip-path: inset(0 100% 0 0); opacity:1; }
+          55%         { clip-path: inset(0 0% 0 0);   opacity:1; }
+          80%         { clip-path: inset(0 0% 0 0);   opacity:1; }
+          92%         { clip-path: inset(0 0% 0 0);   opacity:0; }
+          100%        { clip-path: inset(0 100% 0 0); opacity:0; }
         }
 
-        /* Corps bounce */
-        .body { animation: bounce 1.2s ease-in-out infinite; transform-origin: 50px 65px; }
-        @keyframes bounce {
-          0%,100% { transform: translateY(0); }
-          44%     { transform: translateY(2px); }
+        /* Conteneur de la plume — se déplace de gauche à droite */
+        .feather-wrap {
+          position: absolute;
+          bottom: calc(100% - 8px);
+          left: 0;
+          transform: translateX(-42%) rotate(-38deg);
+          transform-origin: bottom center;
+          pointer-events: none;
+          animation: feather-move 3.2s cubic-bezier(.4,0,.2,1) infinite,
+                     feather-jiggle 0.18s ease-in-out infinite;
+        }
+        @keyframes feather-move {
+          0%          { left: 0%;   opacity:1; }
+          55%         { left: 100%; opacity:1; }
+          80%         { left: 100%; opacity:1; }
+          92%         { left: 100%; opacity:0; }
+          100%        { left: 0%;   opacity:0; }
+        }
+        /* Micro-tremblement pendant l'écriture */
+        @keyframes feather-jiggle {
+          0%,100% { rotate: 0deg; }
+          50%     { rotate: 1.5deg; }
         }
 
-        /* Bulle */
-        .bubble {
-          animation: float-bubble 3s ease-in-out infinite;
-          transform-origin: 78px 18px;
+        /* Encre au bout de la plume */
+        .ink-dot {
+          position: absolute;
+          bottom: -3px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 3px; height: 3px;
+          border-radius: 50%;
+          background: #c4a050;
+          box-shadow: 0 0 6px 2px rgba(196,160,80,.5);
+          animation: ink-pulse .4s ease-in-out infinite;
         }
-        @keyframes float-bubble {
-          0%,100% { transform: translateY(0) rotate(-.4deg); }
-          50%     { transform: translateY(-2.5px) rotate(.4deg); }
+        @keyframes ink-pulse {
+          0%,100% { transform: translateX(-50%) scale(1); opacity:.9; }
+          50%     { transform: translateX(-50%) scale(1.6); opacity:.5; }
         }
 
-        /* Description */
+        /* ── SVG Plume ── */
+        .feather-svg { display: block; filter: drop-shadow(0 0 8px rgba(196,160,80,.25)); }
+
         .desc {
           font-family: 'Playfair Display', serif;
           font-style: italic;
-          font-size: 1rem;
-          color: rgba(240,232,212,.55);
-          line-height: 1.8;
-          max-width: 420px;
-          margin-bottom: 2.4rem;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both .4s;
+          font-size: .95rem;
+          color: rgba(240,232,212,.48);
+          line-height: 1.9;
+          max-width: 380px;
+          margin-bottom: 2.2rem;
+          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both .35s;
         }
 
-        /* Contacts */
         .contacts {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: .9rem;
-          animation: up 1s cubic-bezier(.16,1,.3,1) both .5s;
+          gap: .85rem;
+          animation: fade-up 1s cubic-bezier(.16,1,.3,1) both .48s;
         }
-        .links {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: .4rem 1.6rem;
-        }
-        .links a {
-          color: rgba(240,232,212,.5);
-          text-decoration: none;
-          font-size: .82rem;
-          display: flex;
-          align-items: center;
-          gap: .4rem;
-          transition: color .2s;
-        }
-        .links a:hover { color: #c4a050; }
-
-        .wa {
-          display: inline-flex;
-          align-items: center;
-          gap: .55rem;
-          padding: .6rem 1.6rem;
-          border: 1px solid rgba(196,160,80,.35);
-          color: #c4a050;
-          font-size: .72rem;
-          letter-spacing: .14em;
-          text-transform: uppercase;
-          text-decoration: none;
-          transition: background .2s, border-color .2s;
-        }
-        .wa:hover { background: rgba(196,160,80,.08); border-color: #c4a050; }
+        .links { display:flex; flex-wrap:wrap; justify-content:center; gap:.4rem 1.4rem; }
+        .links a { color:rgba(240,232,212,.45); text-decoration:none; font-size:.8rem; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
+        .links a:hover { color:#c4a050; }
+        .wa { display:inline-flex; align-items:center; gap:.5rem; padding:.58rem 1.5rem; border:1px solid rgba(196,160,80,.3); color:#c4a050; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; text-decoration:none; transition:background .2s,border-color .2s; }
+        .wa:hover { background:rgba(196,160,80,.07); border-color:#c4a050; }
       `}</style>
 
       <div className="page">
-        {/* Lucioles */}
-        {mounted && [
-          { s:6,  x:'18%', y:'65%', tx:'20px',  ty:'-90px',  d:'14s', del:'0s'   },
-          { s:8,  x:'75%', y:'72%', tx:'-25px', ty:'-70px',  d:'17s', del:'3s'   },
-          { s:5,  x:'88%', y:'45%', tx:'-15px', ty:'-110px', d:'12s', del:'6s'   },
-          { s:7,  x:'10%', y:'55%', tx:'30px',  ty:'-80px',  d:'16s', del:'1.5s' },
-        ].map((f,i) => (
-          <div key={i} className="ff" style={{
-            width: f.s, height: f.s, left: f.x, top: f.y,
-            '--x': f.tx, '--y': f.ty, '--d': f.d, '--del': f.del,
-          } as React.CSSProperties} />
-        ))}
-
         <div className="inner">
           <p className="label">Chambre d'hôtes · Anjou · France</p>
+          <h1>La Boire Bavard</h1>
+          <div className="gold-line" />
 
-          <h1>
-            La Boire Bavard
-            <em>Bientôt disponible</em>
-          </h1>
+          {/* Animation plume */}
+          <div className="writing-scene">
+            <div className="writing-wrap">
 
-          <div className="line" />
+              {/* Plume animée */}
+              <div className="feather-wrap">
+                <svg
+                  className="feather-svg"
+                  viewBox="0 0 38 108"
+                  width="38" height="108"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Vane gauche */}
+                  <path
+                    d="M19,4 Q3,16 5,34 Q7,50 11,62 Q13,72 15,80 Q16,86 19,94
+                       Q18,86 17,78 Q16,68 17,58 Q18,46 19,34 Q20,20 19,4 Z"
+                    fill="rgba(196,160,80,.38)"
+                  />
+                  {/* Vane droite */}
+                  <path
+                    d="M19,4 Q35,16 33,34 Q31,50 27,62 Q25,72 23,80 Q22,86 19,94
+                       Q20,86 21,78 Q22,68 21,58 Q20,46 19,34 Q18,20 19,4 Z"
+                    fill="rgba(196,160,80,.55)"
+                  />
+                  {/* Détails barbules gauche */}
+                  {[14,22,30,38,46,54,62].map((y,i) => (
+                    <line key={i}
+                      x1={19} y1={y}
+                      x2={19 - 8 + i * .4} y2={y + 6}
+                      stroke="rgba(196,160,80,.2)" strokeWidth=".7"
+                    />
+                  ))}
+                  {/* Détails barbules droite */}
+                  {[14,22,30,38,46,54,62].map((y,i) => (
+                    <line key={i}
+                      x1={19} y1={y}
+                      x2={19 + 8 - i * .4} y2={y + 6}
+                      stroke="rgba(196,160,80,.25)" strokeWidth=".7"
+                    />
+                  ))}
+                  {/* Rachis (tige centrale) */}
+                  <path
+                    d="M19,4 Q19.5,48 19,94"
+                    stroke="#c4a050"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  {/* Calamus (tuyau de la plume) */}
+                  <path
+                    d="M18,82 Q17,90 19,100 Q21,90 20,82 Z"
+                    fill="rgba(196,160,80,.7)"
+                  />
+                  {/* Pointe (bec) */}
+                  <path
+                    d="M19,96 Q18.2,102 19,108 Q19.8,102 19,96 Z"
+                    fill="#c4a050"
+                  />
+                  {/* Reflet sur la vane */}
+                  <path
+                    d="M19,8 Q26,18 25,32 Q23,44 21,54"
+                    stroke="rgba(255,240,180,.12)"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="ink-dot" />
+              </div>
 
-          {/* Personnage */}
-          <div className="character">
-            <svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-              {/* Pierre */}
-              <g className="rock">
-                <ellipse cx="120" cy="90" rx="22" ry="4" fill="rgba(0,0,0,.3)"/>
-                <polygon points="98,88 104,64 116,56 134,58 144,70 140,88" fill="#182818" stroke="rgba(196,160,80,.3)" strokeWidth=".8"/>
-                <polygon points="104,64 116,56 120,62 110,70" fill="rgba(196,160,80,.06)"/>
-                <path d="M112,70 L118,62 L122,68" stroke="rgba(196,160,80,.2)" strokeWidth=".7" fill="none"/>
-              </g>
-
-              {/* Étincelles */}
-              <circle className="spark s1" cx="116" cy="58" r="1.2" fill="#ffd700" style={{'--sx':'8px','--sy':'-12px'} as React.CSSProperties}/>
-              <circle className="spark s2" cx="116" cy="58" r="1" fill="#ffaa00" style={{'--sx':'-6px','--sy':'-10px'} as React.CSSProperties}/>
-              <circle className="spark s3" cx="116" cy="58" r=".8" fill="#fff" style={{'--sx':'12px','--sy':'-6px'} as React.CSSProperties}/>
-
-              {/* Corps */}
-              <g className="body">
-                {/* Ombre */}
-                <ellipse cx="50" cy="94" rx="14" ry="2.5" fill="rgba(0,0,0,.28)"/>
-                {/* Jambes */}
-                <rect x="44" y="80" width="6" height="14" rx="3" fill="#1a3820"/>
-                <rect x="52" y="80" width="6" height="14" rx="3" fill="#1a3820"/>
-                {/* Pieds */}
-                <rect x="42" y="91" width="9" height="4" rx="2" fill="#231408"/>
-                <rect x="51" y="91" width="9" height="4" rx="2" fill="#231408"/>
-
-                {/* Tronc */}
-                <rect x="40" y="55" width="22" height="28" rx="7" fill="#1a3820"/>
-
-                {/* Bras gauche */}
-                <rect x="28" y="59" width="13" height="5" rx="2.5" fill="#1a3820"/>
-                <circle cx="26" cy="61" r="3.5" fill="#b87040"/>
-
-                {/* Bras droit + pioche */}
-                <g className="arm">
-                  <rect x="60" y="53" width="5" height="15" rx="2.5" fill="#1a3820" transform="rotate(-10,62,58)"/>
-                  {/* manche */}
-                  <rect x="64" y="36" width="3.5" height="26" rx="1.5" fill="#6b3a10" transform="rotate(-38,66,48)"/>
-                  {/* tête pioche */}
-                  <path d="M80,20 L90,14 L93,22 L86,28 Z" fill="#6a7a6a" transform="rotate(-38,86,21)"/>
-                  <path d="M86,28 L93,22 L98,28 L88,32 Z" fill="#8a9a8a" transform="rotate(-38,92,27)"/>
-                </g>
-
-                {/* Tête */}
-                <circle cx="51" cy="40" r="16" fill="#b87040"/>
-                <circle cx="46" cy="43" r="3.5" fill="rgba(200,100,60,.3)"/>
-                <circle cx="56" cy="43" r="3.5" fill="rgba(200,100,60,.3)"/>
-                {/* Yeux */}
-                <ellipse cx="46" cy="38" rx="3" ry="3.5" fill="#111"/>
-                <ellipse cx="56" cy="38" rx="3" ry="3.5" fill="#111"/>
-                <circle cx="47" cy="37" r="1" fill="white"/>
-                <circle cx="57" cy="37" r="1" fill="white"/>
-                {/* Bouche */}
-                <path d="M46,46 Q51,49 56,46" stroke="#7a3510" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
-                {/* Sourcils */}
-                <path d="M42,34 L50,36" stroke="#6a3010" strokeWidth="1.8" strokeLinecap="round"/>
-                <path d="M52,36 L60,34" stroke="#6a3010" strokeWidth="1.8" strokeLinecap="round"/>
-
-                {/* Chapeau */}
-                <path d="M35,36 L51,14 L67,36 Z" fill="#224422"/>
-                <rect x="33" y="34" width="36" height="5" rx="2" fill="#1a3318"/>
-                <rect x="35" y="36" width="32" height="2.5" rx="1" fill="rgba(196,160,80,.45)"/>
-
-                {/* Plume */}
-                <path d="M65,32 Q71,20 67,13 Q63,21 65,28" fill="rgba(196,160,80,.65)"/>
-
-                {/* Bulle "Work in progress" */}
-                <g className="bubble">
-                  <polygon points="68,14 74,18 72,22" fill="#162614" stroke="rgba(196,160,80,.45)" strokeWidth=".7"/>
-                  <rect x="72" y="3" width="72" height="17" rx="4.5" fill="#162614" stroke="rgba(196,160,80,.45)" strokeWidth=".7"/>
-                  <text x="108" y="14.5" textAnchor="middle"
-                    fontFamily="'Raleway', sans-serif"
-                    fontSize="6.2" fontWeight="400"
-                    fill="#c4a050" letterSpacing=".6">
-                    Work in progress...
-                  </text>
-                </g>
-              </g>
-            </svg>
+              {/* Texte Coming soon */}
+              <span className="cs-text">Coming soon</span>
+            </div>
           </div>
 
           <p className="desc">
-            Une maison d'hôtes de charme entre Angers et Saumur.<br/>
+            Une maison d'hôtes de charme entre Angers et Saumur.<br />
             Piscine · Spa · Petit-déjeuner gourmand · 4 chambres.
           </p>
 
