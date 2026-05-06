@@ -262,6 +262,16 @@ export default function BientotPage() {
         }
         .dust2 { animation-delay: .06s; transform-origin: 155px 82px; }
 
+        /* Bulle de dialogue */
+        .speech-bubble {
+          animation: bubble-float 3s ease-in-out infinite;
+          transform-origin: 88px 22px;
+        }
+        @keyframes bubble-float {
+          0%,100% { transform: translateY(0) rotate(-.5deg); }
+          50%     { transform: translateY(-2px) rotate(.5deg); }
+        }
+
         /* Sueurs (stress du perso) */
         .sweat {
           animation: sweat-drop 2.8s ease-in infinite;
@@ -475,6 +485,23 @@ export default function BientotPage() {
                   <rect x="48" y="34" width="40" height="6" rx="2" fill="#1e4520"/>
                   {/* Plume */}
                   <path d="M84,34 Q90,22 86,16 Q82,24 84,30" fill="rgba(196,160,80,.7)"/>
+
+                  {/* Bulle "Work in progress" qui part de la plume */}
+                  <g className="speech-bubble">
+                    {/* Queue de bulle pointant vers la plume */}
+                    <polygon points="88,18 94,22 90,26" fill="#1e3a22" stroke="rgba(196,160,80,.55)" strokeWidth=".8"/>
+                    {/* Corps de la bulle */}
+                    <rect x="91" y="4" width="68" height="20" rx="5" fill="#1e3a22" stroke="rgba(196,160,80,.55)" strokeWidth=".8"/>
+                    {/* Texte */}
+                    <text x="125" y="17" textAnchor="middle"
+                      fontFamily="'Raleway', sans-serif"
+                      fontSize="6.5"
+                      fontWeight="500"
+                      fill="#c4a050"
+                      letterSpacing=".8">
+                      Work in progress...
+                    </text>
+                  </g>
                   {/* Bande dorée chapeau */}
                   <rect x="50" y="36" width="36" height="3" rx="1" fill="rgba(196,160,80,.5)"/>
                   <circle cx="68" cy="37" r="1.5" fill="#c4a050"/>
