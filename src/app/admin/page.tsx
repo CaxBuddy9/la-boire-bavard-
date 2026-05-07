@@ -622,10 +622,10 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
       {/* Tooltip */}
       {tooltip && (
         <div style={{ position: 'fixed', zIndex: 100, top: tooltip.y + 12, left: Math.min(tooltip.x + 8, window.innerWidth - 230), background: '#1e2a1e', border: '1px solid rgba(196,160,80,.3)', padding: '12px 14px', borderRadius: 4, fontSize: '0.78rem', color: '#f5f0e8', boxShadow: '0 8px 32px rgba(0,0,0,.6)', pointerEvents: 'none', minWidth: 200 }}>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>{tooltip.r.guest_name}</div>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>{tooltip.r.guest_email === 'ical-sync@external' ? 'Booking.com' : tooltip.r.guest_name}</div>
           <div style={{ color: 'rgba(255,255,255,.5)', fontSize: '0.7rem', marginBottom: 3 }}>{tooltip.r.room_id}</div>
           <div style={{ color: '#c4a050', fontSize: '0.7rem', marginBottom: 3 }}>{fmtDate(tooltip.r.check_in)} → {fmtDate(tooltip.r.check_out)}</div>
-          <div style={{ color: 'rgba(255,255,255,.4)', fontSize: '0.68rem' }}>{tooltip.r.guests} pers. · {nights(tooltip.r.check_in, tooltip.r.check_out)} nuits · {tooltip.r.total_price} €</div>
+          <div style={{ color: 'rgba(255,255,255,.4)', fontSize: '0.68rem' }}>{nights(tooltip.r.check_in, tooltip.r.check_out)} nuits · {tooltip.r.guest_email === 'ical-sync@external' ? `${nights(tooltip.r.check_in, tooltip.r.check_out) * 88} €` : `${tooltip.r.total_price} €`}</div>
           {tooltip.r.guest_phone && <div style={{ color: 'rgba(196,160,80,.7)', fontSize: '0.68rem', marginTop: 4 }}>{tooltip.r.guest_phone}</div>}
         </div>
       )}
