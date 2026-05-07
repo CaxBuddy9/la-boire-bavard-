@@ -96,7 +96,8 @@ async function syncRoom(slug: string) {
     message:               `Import automatique iCal (${e.platform})`,
   }))
 
-  const { error } = await supabase.from('reservations').insert(rows)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await supabase.from('reservations').insert(rows as any)
   if (error) throw error
 
   return { slug, synced: unique.length }
