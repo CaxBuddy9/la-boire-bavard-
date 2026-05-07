@@ -63,7 +63,7 @@ const jsonLd = {
   '@type': 'BedAndBreakfast',
   name: 'La Boire Bavard',
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand. Note 9.9/10.",
-  url: 'https://la-boire-bavard.vercel.app',
+  url: 'https://laboirebavard.com',
   telephone: '+33675786335',
   email: 'laboirebavard@gmail.com',
   priceRange: '88€',
@@ -95,7 +95,7 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Jardin',                value: true },
   ],
   hasMap: 'https://maps.google.com/?q=47.368,-0.511',
-  image: 'https://la-boire-bavard.vercel.app/photos/exterieur/maison-facade-printemps.jpg',
+  image: 'https://laboirebavard.com/photos/exterieur/maison-facade-printemps.jpg',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

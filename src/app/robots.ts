@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/api/'],
     },
-    sitemap: 'https://la-boire-bavard.vercel.app/sitemap.xml',
+    sitemap: 'https://laboirebavard.com/sitemap.xml',
   }
 }

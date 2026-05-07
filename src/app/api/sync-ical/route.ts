@@ -8,12 +8,13 @@ const SLUG_TO_ROOM: Record<string, string> = {
   potager: 'Côté Potager',
 }
 
+const PLATFORMS = ['BOOKING', 'AGODA', 'TRIPADVISOR']
+
 function getSupabase() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!url || !key) throw new Error('Supabase non configuré')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return createClient(url, key) as any
+  return createClient(url, key) as ReturnType<typeof createClient>
 }
 
 function parseICal(text: string) {
@@ -35,33 +36,55 @@ function parseICal(text: string) {
   return events
 }
 
-async function syncRoom(slug: string, icalUrl: string) {
+async function syncRoom(slug: string) {
   const roomName = SLUG_TO_ROOM[slug]
   if (!roomName) throw new Error(`Slug inconnu : ${slug}`)
 
   const supabase = getSupabase()
+  const allEvents: { uid: string; start: string; end: string; platform: string }[] = []
 
-  // 1. Télécharger le calendrier externe
-  const res = await fetch(icalUrl, { cache: 'no-store' })
-  if (!res.ok) throw new Error(`Échec téléchargement iCal ${slug}: ${res.status}`)
-  const text = await res.text()
+  // Collecter les événements de toutes les plateformes configurées
+  for (const platform of PLATFORMS) {
+    // Supporte ICAL_JARDIN_BOOKING_URL et l'ancien format ICAL_JARDIN_URL
+    const envKey = `ICAL_${slug.toUpperCase()}_${platform}_URL`
+    const legacyKey = `ICAL_${slug.toUpperCase()}_URL`
+    const url = process.env[envKey] || (platform === 'BOOKING' ? process.env[legacyKey] : undefined)
+    if (!url) continue
 
-  // 2. Parser les événements
-  const events = parseICal(text)
+    try {
+      const res = await fetch(url, { cache: 'no-store' })
+      if (!res.ok) {
+        console.warn(`[sync-ical] ${slug}/${platform}: HTTP ${res.status}`)
+        continue
+      }
+      const text = await res.text()
+      const events = parseICal(text)
+      allEvents.push(...events.map(e => ({ ...e, platform })))
+    } catch (e) {
+      console.warn(`[sync-ical] ${slug}/${platform}: ${String(e)}`)
+    }
+  }
 
-  // 3. Supprimer les anciens blocs de sync pour cette chambre
+  // Supprimer les anciens blocs de sync pour cette chambre
   await supabase
     .from('reservations')
     .delete()
     .eq('room_id', roomName)
     .eq('guest_email', 'ical-sync@external')
 
-  if (events.length === 0) return { slug, synced: 0 }
+  if (allEvents.length === 0) return { slug, synced: 0 }
 
-  // 4. Insérer les nouveaux blocs
-  const rows = events.map((e: { uid: string; start: string; end: string }) => ({
+  // Dédupliquer par UID (au cas où une réservation apparaît dans 2 exports)
+  const seen = new Set<string>()
+  const unique = allEvents.filter(e => {
+    if (seen.has(e.uid)) return false
+    seen.add(e.uid)
+    return true
+  })
+
+  const rows = unique.map(e => ({
     room_id:               roomName,
-    guest_name:            `Sync iCal – ${slug}`,
+    guest_name:            `Sync iCal – ${e.platform}`,
     guest_email:           'ical-sync@external',
     guest_phone:           '',
     check_in:              e.start,
@@ -70,16 +93,17 @@ async function syncRoom(slug: string, icalUrl: string) {
     total_price:           0,
     status:                'confirmed',
     stripe_payment_intent: e.uid,
-    message:               'Import automatique iCal',
+    message:               `Import automatique iCal (${e.platform})`,
   }))
 
   const { error } = await supabase.from('reservations').insert(rows)
   if (error) throw error
 
-  return { slug, synced: events.length }
+  return { slug, synced: unique.length }
 }
 
 // GET /api/sync-ical?key=VOTRE_CLE — synchronise toutes les chambres configurées
+// Appelé automatiquement par le cron Vercel toutes les heures
 export async function GET(req: NextRequest) {
   const key     = req.nextUrl.searchParams.get('key')
   const syncKey = process.env.ICAL_SYNC_KEY
@@ -91,10 +115,8 @@ export async function GET(req: NextRequest) {
   const errors  = []
 
   for (const slug of Object.keys(SLUG_TO_ROOM)) {
-    const icalUrl = process.env[`ICAL_${slug.toUpperCase()}_URL`]
-    if (!icalUrl) continue
     try {
-      results.push(await syncRoom(slug, icalUrl))
+      results.push(await syncRoom(slug))
     } catch (e) {
       errors.push({ slug, error: String(e) })
     }
@@ -104,7 +126,7 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/sync-ical — synchronise une chambre spécifique
-// Body: { key: "...", room: "jardin", url: "https://..." }
+// Body: { key: "...", room: "jardin" }
 export async function POST(req: NextRequest) {
   const body    = await req.json().catch(() => ({}))
   const syncKey = process.env.ICAL_SYNC_KEY
@@ -112,13 +134,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
   }
 
-  const { room, url } = body
-  if (!room || !url) {
-    return NextResponse.json({ error: 'Paramètres manquants : room, url' }, { status: 400 })
+  const { room } = body
+  if (!room) {
+    return NextResponse.json({ error: 'Paramètre manquant : room' }, { status: 400 })
   }
 
   try {
-    const result = await syncRoom(room, url)
+    const result = await syncRoom(room)
     return NextResponse.json({ ok: true, ...result, synced_at: new Date().toISOString() })
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 })
