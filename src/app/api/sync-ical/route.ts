@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
     try {
       results.push(await syncRoom(slug))
     } catch (e) {
-      errors.push({ slug, error: String(e) })
+      errors.push({ slug, error: e instanceof Error ? e.message : JSON.stringify(e) })
     }
   }
 
