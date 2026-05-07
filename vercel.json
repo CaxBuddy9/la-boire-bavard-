@@ -1,8 +1,5 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/sync-ical",
-      "schedule": "0 6 * * *"
-    }
-  ]
+  "images": {
+    "formats": ["image/avif", "image/webp"]
+  }
 }
