@@ -51,7 +51,8 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
 
   const active = reservations.filter(r => r.status !== 'cancelled')
-  const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
+  const realActive = active.filter(r => r.guest_email !== 'ical-sync@external')
+  const thisMonth = realActive.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
 
   // Nuits occupées ce mois
   const daysInMonth = new Date(y, m+1, 0).getDate()
@@ -591,9 +592,9 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
                       <div key={r.id}
                         onMouseEnter={e => setTooltip({ r, x: e.clientX, y: e.clientY })}
                         onMouseLeave={() => setTooltip(null)}
-                        style={{ position: 'absolute', top: 4, height: 28, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(255,255,255,.4)' : 'none' }}>
-                        <span style={{ fontSize: '0.65rem', fontWeight: 600, color: '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {r.guest_name}{isPending ? ' · en attente' : ''}
+                        style={{ position: 'absolute', top: 4, height: 28, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: r.guest_email === 'ical-sync@external' ? 'repeating-linear-gradient(45deg,#3a6fd8,#3a6fd8 4px,#2a5bc8 4px,#2a5bc8 8px)' : ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(255,255,255,.4)' : 'none' }}>
+                        <span style={{ fontSize: '0.65rem', fontWeight: 600, color: r.guest_email === 'ical-sync@external' ? '#fff' : '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {r.guest_email === 'ical-sync@external' ? 'Booking.com' : r.guest_name}{isPending ? ' · en attente' : ''}
                         </span>
                       </div>
                     )

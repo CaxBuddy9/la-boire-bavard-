@@ -29,7 +29,6 @@ export async function GET(req: NextRequest) {
     const { data, error } = await getSupabaseAdmin()
       .from('reservations')
       .select('*')
-      .neq('guest_email', 'ical-sync@external')
       .order('check_in', { ascending: true })
 
     if (error) return NextResponse.json({ error: `BDD : ${error.message}` }, { status: 500 })
