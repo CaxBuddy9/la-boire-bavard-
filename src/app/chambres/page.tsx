@@ -40,7 +40,7 @@ export default function ChambresPage() {
         </div>
 
         {/* Chambres en alternance */}
-        {ROOMS.map((room, i) => {
+        {ROOMS.filter(r => r.id !== 'potager').map((room, i) => {
           const s = BG_STYLES[i]
           const reverse = i % 2 === 1
           return (

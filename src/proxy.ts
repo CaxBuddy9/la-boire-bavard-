@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const MAINTENANCE = true
+const MAINTENANCE   = true
+const BYPASS_COOKIE = 'lbb_preview'
+const BYPASS_PATHS  = ['/bientot', '/_next', '/favicon', '/manifest', '/icons', '/api', '/preview']
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  // Mode maintenance : redirige tout vers /bientot sauf les assets et la page elle-même
-  if (MAINTENANCE) {
-    const bypass = ['/bientot', '/_next', '/favicon', '/manifest', '/icons', '/api']
-    if (!bypass.some(p => pathname.startsWith(p))) {
-      return NextResponse.redirect(new URL('/bientot', req.url))
-    }
+  if (BYPASS_PATHS.some(p => pathname.startsWith(p))) {
     return NextResponse.next()
+  }
+
+  if (MAINTENANCE) {
+    // Bypass si cookie preview valide
+    const secret = process.env.PREVIEW_SECRET || 'lbb-preview-2026'
+    const cookie = req.cookies.get(BYPASS_COOKIE)?.value
+    if (cookie === secret) return NextResponse.next()
+
+    return NextResponse.redirect(new URL('/bientot', req.url))
   }
 
   // Protection des routes admin
@@ -24,5 +30,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|icons|manifest.json).*)'],
 }
