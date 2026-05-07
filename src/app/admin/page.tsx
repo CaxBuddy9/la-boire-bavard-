@@ -50,9 +50,12 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const m = now.getMonth()
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
 
+  const PRICE = 88
+  const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
+
   const active = reservations.filter(r => r.status !== 'cancelled')
   const realActive = active.filter(r => r.guest_email !== 'ical-sync@external')
-  const thisMonth = realActive.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
+  const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
 
   // Nuits occupées ce mois
   const daysInMonth = new Date(y, m+1, 0).getDate()
@@ -65,9 +68,9 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const occupancy = Math.round((nightsOccupied / (daysInMonth * 4)) * 100) // 4 chambres
 
   // CA ce mois
-  const revenueMonth = thisMonth.reduce((s, r) => s + r.total_price, 0)
+  const revenueMonth = thisMonth.reduce((s, r) => s + getPrice(r), 0)
   // CA année
-  const revenueYear  = active.filter(r => r.check_in.startsWith(String(y))).reduce((s, r) => s + r.total_price, 0)
+  const revenueYear  = active.filter(r => r.check_in.startsWith(String(y))).reduce((s, r) => s + getPrice(r), 0)
   // Durée moy
   const avgNights = active.length
     ? Math.round(active.reduce((s, r) => s + nights(r.check_in, r.check_out), 0) / active.length * 10) / 10
