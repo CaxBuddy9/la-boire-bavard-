@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const MAINTENANCE   = true
+const MAINTENANCE   = false
 const BYPASS_COOKIE = 'lbb_preview'
 const BYPASS_PATHS  = ['/bientot', '/_next', '/favicon', '/manifest', '/icons', '/api', '/preview']
 
