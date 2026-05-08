@@ -16,7 +16,7 @@ Tu travailles exclusivement dans `src/app/` et `src/components/`.
 | Propriétaire | **Sandrine** (ne jamais écrire Maryline) |
 | Adresse | 4 chemin de la Boire Bavard, Lieu-dit La Hutte, 49320 Blaison-Saint-Sulpice |
 | Téléphone | 06 75 78 63 35 |
-| Email | laboirebavard@gmail.com |
+| Email | contact@laboirebavard.com |
 | WhatsApp | https://wa.me/33675786335 |
 | Note Booking | 9.9/10 — Exceptionnel |
 | Tarif | 88 €/nuit petit-déjeuner inclus |
