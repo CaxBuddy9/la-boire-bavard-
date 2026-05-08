@@ -72,7 +72,7 @@ Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous
 ✅ À 25 min d'Angers, sur la Loire à Vélo
 
 📞 06 75 78 63 35
-📧 laboirebavard@gmail.com
+📧 contact@laboirebavard.com
 🌐 Réservation en ligne disponible
 
 Sandrine vous attend 🌿`,

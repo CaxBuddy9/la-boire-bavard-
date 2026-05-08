@@ -38,7 +38,7 @@ export default function MentionsLegalesPage() {
                   <a href="tel:0675786335" className="text-gold hover:text-white transition-colors">06 75 78 63 35</a>
                 </p>
                 <p><strong style={{ color: 'rgba(255,255,255,.85)' }}>Email :</strong>{' '}
-                  <a href="mailto:laboirebavard@gmail.com" className="text-gold hover:text-white transition-colors">laboirebavard@gmail.com</a>
+                  <a href="mailto:contact@laboirebavard.com" className="text-gold hover:text-white transition-colors">contact@laboirebavard.com</a>
                 </p>
                 <p><strong style={{ color: 'rgba(255,255,255,.85)' }}>Statut :</strong> Particulier — chambre d'hôtes déclarée</p>
               </div>
@@ -84,8 +84,8 @@ export default function MentionsLegalesPage() {
               </p>
               <p>
                 Pour exercer ce droit, contactez-nous par email à{' '}
-                <a href="mailto:laboirebavard@gmail.com" className="text-gold hover:text-white transition-colors">
-                  laboirebavard@gmail.com
+                <a href="mailto:contact@laboirebavard.com" className="text-gold hover:text-white transition-colors">
+                  contact@laboirebavard.com
                 </a>
               </p>
             </div>

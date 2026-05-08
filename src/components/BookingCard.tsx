@@ -333,7 +333,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[
           { href: 'tel:0675786335',                icon: '✆', label: '06 75 78 63 35' },
-          { href: 'mailto:laboirebavard@gmail.com', icon: '✉', label: 'laboirebavard@gmail.com' },
+          { href: 'mailto:contact@laboirebavard.com', icon: '✉', label: 'contact@laboirebavard.com' },
           { href: 'https://wa.me/33675786335',      icon: '◇', label: 'WhatsApp', external: true },
         ].map(({ href, icon, label, external }) => (
           <a

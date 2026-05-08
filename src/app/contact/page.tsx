@@ -205,7 +205,7 @@ function ContactInner() {
                 {[
                   { lbl: 'Adresse', val: '4 chemin de la Boire Bavard\n49320 Blaison-Saint-Sulpice' },
                   { lbl: 'Téléphone', val: '06 75 78 63 35', href: 'tel:0675786335' },
-                  { lbl: 'Email', val: 'laboirebavard@gmail.com', href: 'mailto:laboirebavard@gmail.com' },
+                  { lbl: 'Email', val: 'contact@laboirebavard.com', href: 'mailto:contact@laboirebavard.com' },
                 ].map(({ lbl, val, href }) => (
                   <div key={lbl} style={{ marginBottom: 18 }}>
                     <p style={{ fontSize: '.52rem', letterSpacing: '.28em', textTransform: 'uppercase', color: 'rgba(184,192,180,.35)', fontFamily: 'var(--font-raleway)', marginBottom: 4 }}>{lbl}</p>

@@ -797,7 +797,7 @@ function FacturationPanel() {
         <img src="${origin}/logo-lbba.png" alt=""/>
         <div class="top-name">La Boire Bavard</div>
         <div class="top-sub">Chambres d'Hôtes · Anjou</div>
-        <div class="top-addr">4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · laboirebavard@gmail.com</div>
+        <div class="top-addr">4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · contact@laboirebavard.com</div>
       </div>
       <span class="gold"></span>
       <div class="meta">
@@ -824,7 +824,7 @@ function FacturationPanel() {
         <div class="trow final"><span>Total TTC</span><span>${totalFinal.toFixed(2)} €</span></div>
       </div></div>
       ${note ? `<div class="note">${note}</div>` : ''}
-      <div class="foot">La Boire Bavard · 4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com · Micro-entreprise — TVA non applicable, art. 293B du CGI</div>
+      <div class="foot">La Boire Bavard · 4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>Sandrine · 06 75 78 63 35 · contact@laboirebavard.com · Micro-entreprise — TVA non applicable, art. 293B du CGI</div>
     </body></html>`)
     win.document.close()
     win.focus()
@@ -926,7 +926,7 @@ function FacturationPanel() {
           <img src="/logo-lbba.png" alt="Logo" style={{ width:60, height:60, objectFit:'contain', display:'block', margin:'0 auto 12px' }} />
           <div style={{ fontFamily:'Georgia,serif', fontSize:'1.5rem', fontWeight:300, letterSpacing:'0.16em', color:'#2c2c2c' }}>La Boire Bavard</div>
           <div style={{ fontSize:'0.42rem', letterSpacing:'0.42em', textTransform:'uppercase', color:'#b8962a', marginTop:5 }}>Chambres d'Hôtes · Anjou</div>
-          <div style={{ fontSize:'0.68rem', color:'#bbb', marginTop:8, lineHeight:1.8 }}>4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · laboirebavard@gmail.com</div>
+          <div style={{ fontSize:'0.68rem', color:'#bbb', marginTop:8, lineHeight:1.8 }}>4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>06 75 78 63 35 · contact@laboirebavard.com</div>
         </div>
 
         {/* Filet or */}
@@ -999,7 +999,7 @@ function FacturationPanel() {
         {/* Footer */}
         <div style={{ marginTop:44, paddingTop:16, borderTop:'1px solid #ebebeb', textAlign:'center', fontSize:'0.6rem', color:'#ccc', lineHeight:1.9, fontWeight:300 }}>
           La Boire Bavard · 4 chemin de la Boire Bavard, Lieu-dit La Hutte · 49320 Blaison-Saint-Sulpice<br/>
-          Sandrine · 06 75 78 63 35 · laboirebavard@gmail.com · Micro-entreprise — TVA non applicable, art. 293B du CGI
+          Sandrine · 06 75 78 63 35 · contact@laboirebavard.com · Micro-entreprise — TVA non applicable, art. 293B du CGI
         </div>
       </div>
     </div>

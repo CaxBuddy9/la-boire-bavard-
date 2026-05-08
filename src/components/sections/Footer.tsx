@@ -90,7 +90,7 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[0.68rem] text-white/35 mb-6">
           <a href="tel:0675786335" className="hover:text-gold transition-colors">06 75 78 63 35</a>
           <span style={{ color: 'rgba(255,255,255,.12)' }}>·</span>
-          <a href="mailto:laboirebavard@gmail.com" className="hover:text-gold transition-colors">laboirebavard@gmail.com</a>
+          <a href="mailto:contact@laboirebavard.com" className="hover:text-gold transition-colors">contact@laboirebavard.com</a>
           <span style={{ color: 'rgba(255,255,255,.12)' }}>·</span>
           <a href="https://wa.me/33675786335" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">WhatsApp</a>
         </div>

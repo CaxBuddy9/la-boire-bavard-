@@ -65,7 +65,7 @@ const jsonLd = {
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand. Note 9.9/10.",
   url: 'https://laboirebavard.com',
   telephone: '+33675786335',
-  email: 'laboirebavard@gmail.com',
+  email: 'contact@laboirebavard.com',
   priceRange: '88€',
   currenciesAccepted: 'EUR',
   address: {

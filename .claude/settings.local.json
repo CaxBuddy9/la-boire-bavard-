@@ -110,7 +110,9 @@
       "Bash(mv a-trier/photo-23.jpeg chambres/cedre/chambre-cedre-console-terrasse.jpeg)",
       "Bash(Get-ChildItem -Recurse -Filter \"proxy.ts\")",
       "Bash(Select-Object FullName)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(vercel --prod)",
+      "Bash(vercel dns *)"
     ]
   }
 }
