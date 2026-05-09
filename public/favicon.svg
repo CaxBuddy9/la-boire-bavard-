@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="10" fill="#1a3220"/>
-  <image href="/favicon.png" x="0" y="0" width="64" height="64"/>
+  <text x="32" y="45"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="30"
+    font-weight="400"
+    font-style="italic"
+    fill="#c4a050"
+    text-anchor="middle"
+    letter-spacing="2">LB</text>
 </svg>

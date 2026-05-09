@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
+import nodemailer from 'nodemailer'
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -9,16 +10,112 @@ function getSupabaseAdmin() {
   return createClient(url, key)
 }
 
-// Convertit dd/mm/yyyy ou yyyy-mm-dd → yyyy-mm-dd
+function getMailer() {
+  const user = process.env.GMAIL_USER
+  const pass = process.env.GMAIL_APP_PASSWORD
+  if (!user || !pass) return null
+  return nodemailer.createTransport({ service: 'gmail', auth: { user, pass } })
+}
+
 function parseDate(s: string): string | null {
   if (!s) return null
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s
   const match = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
   if (!match) return null
   const [, d, m, y] = match
-  const date = new Date(`${y}-${m}-${d}`)
-  if (isNaN(date.getTime())) return null
   return `${y}-${m}-${d}`
+}
+
+function fmtDate(iso: string) {
+  const [y, m, d] = iso.split('-')
+  return `${d}/${m}/${y}`
+}
+
+const CHAMBRES_LABELS: Record<string, string> = {
+  jardin:  'Côté Jardin',
+  cedre:   'Côté Cèdre',
+  vallee:  'Côté Vallée',
+  potager: 'Côté Potager',
+}
+
+async function sendConfirmationEmail(meta: Record<string, string>, checkIn: string, checkOut: string, totalEur: number) {
+  const mailer = getMailer()
+  if (!mailer) return
+
+  const gmailUser   = process.env.GMAIL_USER!
+  const guestEmail  = meta.email
+  const guestName   = meta.nom || 'Cher hôte'
+  const chambreLib  = CHAMBRES_LABELS[meta.chambre] || meta.chambre || '—'
+  const nuits       = Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000)
+  const tableHotes  = meta.tableHotes === 'oui'
+
+  // Email de confirmation au client
+  if (guestEmail) {
+    const html = `
+      <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#f5f0e8;padding:36px;border-radius:8px;">
+        <h1 style="color:#1a3220;font-size:24px;margin:0 0 4px">Réservation confirmée ✓</h1>
+        <p style="color:#c4a050;font-size:13px;margin:0 0 28px;letter-spacing:.08em;text-transform:uppercase">La Boire Bavard · Anjou</p>
+        <p style="font-size:16px;color:#2a2a2a;line-height:1.8">Merci ${guestName.split(' ')[0]}, votre paiement a bien été reçu. Nous vous attendons avec impatience !</p>
+
+        <div style="margin:28px 0;padding:20px;background:#1a3220;border-radius:8px;color:#f0e8d4;">
+          <p style="margin:0 0 12px;color:#c4a050;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Votre réservation</p>
+          <table style="width:100%;font-size:15px;line-height:2;">
+            <tr><td style="color:rgba(240,232,212,.6);width:140px">Chambre</td><td style="font-weight:500">${chambreLib}</td></tr>
+            <tr><td style="color:rgba(240,232,212,.6)">Arrivée</td><td>${fmtDate(checkIn)}</td></tr>
+            <tr><td style="color:rgba(240,232,212,.6)">Départ</td><td>${fmtDate(checkOut)}</td></tr>
+            <tr><td style="color:rgba(240,232,212,.6)">Durée</td><td>${nuits} nuit${nuits > 1 ? 's' : ''}</td></tr>
+            <tr><td style="color:rgba(240,232,212,.6)">Voyageurs</td><td>${meta.pers || '2'} pers.</td></tr>
+            ${tableHotes ? `<tr><td style="color:rgba(240,232,212,.6)">Table d'hôtes</td><td>Incluse ✓</td></tr>` : ''}
+            <tr><td style="color:rgba(240,232,212,.6)">Total payé</td><td style="color:#c4a050;font-weight:600">${totalEur} €</td></tr>
+          </table>
+        </div>
+
+        <div style="margin:24px 0;padding:16px;border-left:3px solid #c4a050;font-size:14px;color:#2a2a2a;line-height:1.8;">
+          <strong style="display:block;margin-bottom:6px;color:#1a3220">Infos pratiques</strong>
+          4 chemin de la Boire Bavard, Lieu-dit La Hutte<br>
+          49320 Blaison-Saint-Sulpice<br>
+          📞 <a href="tel:+33675786335" style="color:#c4a050">06 75 78 63 35</a><br>
+          💬 <a href="https://wa.me/33675786335" style="color:#c4a050">WhatsApp</a>
+        </div>
+
+        <p style="font-size:13px;color:#999;margin-top:24px;line-height:1.7">
+          En cas de question, répondez directement à cet email ou contactez Sandrine.<br>
+          <em>La Boire Bavard — Maison d'hôtes de charme en Anjou</em>
+        </p>
+      </div>`
+
+    await mailer.sendMail({
+      from:    `"Sandrine — La Boire Bavard" <${gmailUser}>`,
+      to:      guestEmail,
+      subject: `✅ Réservation confirmée — ${chambreLib} · ${fmtDate(checkIn)}`,
+      html,
+    })
+  }
+
+  // Notification à Sandrine
+  await mailer.sendMail({
+    from:    `"La Boire Bavard Site" <${gmailUser}>`,
+    to:      gmailUser,
+    replyTo: guestEmail || gmailUser,
+    subject: `💳 Paiement reçu — ${chambreLib} · ${fmtDate(checkIn)} → ${fmtDate(checkOut)}`,
+    html: `
+      <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#f5f0e8;padding:32px;border-radius:8px;">
+        <h2 style="color:#1a3220;font-size:20px;margin:0 0 8px">Nouveau paiement reçu ✓</h2>
+        <p style="color:#c4a050;font-size:12px;margin:0 0 20px;text-transform:uppercase;letter-spacing:.08em">La Boire Bavard</p>
+        <table style="width:100%;font-size:15px;line-height:2.2;border-collapse:collapse;">
+          <tr><td style="color:#666;width:130px">Client</td><td style="color:#1a2e1a;font-weight:500">${meta.nom || '—'}</td></tr>
+          <tr><td style="color:#666">Email</td><td><a href="mailto:${guestEmail}" style="color:#c4a050">${guestEmail || '—'}</a></td></tr>
+          ${meta.tel ? `<tr><td style="color:#666">Téléphone</td><td><a href="tel:${meta.tel}" style="color:#c4a050">${meta.tel}</a></td></tr>` : ''}
+          <tr><td style="color:#666">Chambre</td><td>${chambreLib}</td></tr>
+          <tr><td style="color:#666">Arrivée</td><td>${fmtDate(checkIn)}</td></tr>
+          <tr><td style="color:#666">Départ</td><td>${fmtDate(checkOut)}</td></tr>
+          <tr><td style="color:#666">Nuits</td><td>${nuits}</td></tr>
+          <tr><td style="color:#666">Voyageurs</td><td>${meta.pers || '2'} pers.</td></tr>
+          ${tableHotes ? `<tr><td style="color:#666">Table d'hôtes</td><td>Oui ✓</td></tr>` : ''}
+          <tr><td style="color:#666">Montant</td><td style="color:#1a3220;font-weight:700;font-size:18px">${totalEur} €</td></tr>
+        </table>
+      </div>`,
+  })
 }
 
 export async function POST(req: NextRequest) {
@@ -26,7 +123,6 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get('stripe-signature') ?? ''
   const secret    = process.env.STRIPE_WEBHOOK_SECRET
 
-  // En production, la signature est OBLIGATOIRE
   if (!secret) {
     if (process.env.NODE_ENV === 'production') {
       console.error('[webhook] STRIPE_WEBHOOK_SECRET non configuré')
@@ -43,7 +139,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Signature invalide' }, { status: 400 })
     }
   } else {
-    // Dev uniquement — jamais en production
     try { event = JSON.parse(body) } catch {
       return NextResponse.json({ error: 'JSON invalide' }, { status: 400 })
     }
@@ -63,7 +158,6 @@ export async function POST(req: NextRequest) {
 
     try {
       const supabase = getSupabaseAdmin()
-
       const { data: existing } = await supabase
         .from('reservations')
         .select('id')
@@ -87,8 +181,11 @@ export async function POST(req: NextRequest) {
           table_hotes:           meta.tableHotes === 'oui',
         })
       }
+
+      // Envoi des emails de confirmation
+      await sendConfirmationEmail(meta, checkIn, checkOut, Math.round(pi.amount / 100))
     } catch (err: any) {
-      console.error('[webhook] Erreur Supabase:', err.message)
+      console.error('[webhook] Erreur:', err.message)
     }
   }
 
