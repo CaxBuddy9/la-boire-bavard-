@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Playfair_Display, Raleway, EB_Garamond } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
 import MeteoWidget from '@/components/MeteoWidget'
@@ -116,6 +118,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </LangProvider>
       </body>
       <GoogleAnalytics gaId="G-29W0QG3LH5" />
+      <SpeedInsights />
+      {process.env.NEXT_PUBLIC_CLARITY_ID && (
+        <Script id="clarity" strategy="afterInteractive">{`
+          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_ID}");
+        `}</Script>
+      )}
     </html>
   )
 }

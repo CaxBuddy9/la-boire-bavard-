@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import nodemailer from 'nodemailer'
+import { sendEmail, notifyWhatsApp, NOTIF_TO } from '@/lib/mailer'
 
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -10,16 +10,6 @@ function getSupabaseAdmin() {
   if (!key) missing.push('SUPABASE_SERVICE_ROLE_KEY')
   if (missing.length) throw new Error(`Variables manquantes : ${missing.join(', ')}`)
   return createClient(url!, key!)
-}
-
-function getMailer() {
-  const user = process.env.GMAIL_USER
-  const pass = process.env.GMAIL_APP_PASSWORD
-  if (!user || !pass) return null
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  })
 }
 
 function isValidEmail(email: string): boolean {
@@ -52,52 +42,47 @@ export async function POST(req: Request) {
     const depart  = sanitize(body.depart, 20)
     const adultes = Math.max(1, Math.min(10, Number(body.adultes) || 2))
 
-    if (!prenom || !nom) {
+    if (!prenom || !nom)
       return NextResponse.json({ error: 'Prénom et nom requis' }, { status: 400 })
-    }
-    if (!email || !isValidEmail(email)) {
+    if (!email || !isValidEmail(email))
       return NextResponse.json({ error: 'Email invalide' }, { status: 400 })
-    }
 
     const guestName  = `${prenom} ${nom}`.trim()
     const today      = new Date().toISOString().split('T')[0]
     const chambreLib = CHAMBRES_LABELS[chambre] || chambre || 'Sans préférence'
 
-    // ── Sauvegarde Supabase ──
+    // ── Supabase ──
     try {
-      const { error } = await getSupabaseAdmin()
-        .from('reservations')
-        .insert({
-          room_id:     chambre || 'Sans préférence',
-          guest_name:  guestName,
-          guest_email: email,
-          guest_phone: tel,
-          check_in:    arrivee || today,
-          check_out:   depart  || today,
-          guests:      adultes,
-          total_price: 0,
-          status:      'pending',
-          message,
-        })
-      if (error) console.error('[contact] Supabase insert:', error.message)
+      const { error } = await getSupabaseAdmin().from('reservations').insert({
+        room_id:     chambre || 'Sans préférence',
+        guest_name:  guestName,
+        guest_email: email,
+        guest_phone: tel,
+        check_in:    arrivee || today,
+        check_out:   depart  || today,
+        guests:      adultes,
+        total_price: 0,
+        status:      'pending',
+        message,
+      })
+      if (error) console.error('[contact] Supabase:', error.message)
     } catch (e: any) {
-      console.error('[contact] Supabase error:', e?.message)
+      console.error('[contact] Supabase:', e?.message)
     }
 
-    // ── Envoi Gmail ──
-    const mailer = getMailer()
-    if (mailer) {
-      const gmailUser = process.env.GMAIL_USER!
-
-      // Email de notification à Sandrine
-      const notifHtml = `
+    // ── Email notification à Sandrine ──
+    await sendEmail({
+      to: NOTIF_TO,
+      replyTo: email,
+      subject: `✉️ Demande de ${guestName}${chambreLib ? ` — ${chambreLib}` : ''}`,
+      html: `
         <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#f5f0e8;padding:32px;border-radius:8px;">
           <h2 style="color:#1a3220;font-size:22px;margin:0 0 8px">Nouvelle demande de contact</h2>
           <p style="color:#c4a050;font-size:13px;margin:0 0 24px;letter-spacing:.06em;text-transform:uppercase">La Boire Bavard</p>
           <table style="width:100%;border-collapse:collapse;font-size:15px;">
             <tr><td style="padding:8px 0;color:#666;width:130px">Nom</td><td style="padding:8px 0;color:#1a2e1a;font-weight:500">${guestName}</td></tr>
-            <tr><td style="padding:8px 0;color:#666">Email</td><td style="padding:8px 0;color:#1a2e1a"><a href="mailto:${email}" style="color:#c4a050">${email}</a></td></tr>
-            ${tel ? `<tr><td style="padding:8px 0;color:#666">Téléphone</td><td style="padding:8px 0;color:#1a2e1a"><a href="tel:${tel}" style="color:#c4a050">${tel}</a></td></tr>` : ''}
+            <tr><td style="padding:8px 0;color:#666">Email</td><td style="padding:8px 0"><a href="mailto:${email}" style="color:#c4a050">${email}</a></td></tr>
+            ${tel ? `<tr><td style="padding:8px 0;color:#666">Téléphone</td><td style="padding:8px 0"><a href="tel:${tel}" style="color:#c4a050">${tel}</a></td></tr>` : ''}
             ${chambreLib ? `<tr><td style="padding:8px 0;color:#666">Chambre</td><td style="padding:8px 0;color:#1a2e1a">${chambreLib}</td></tr>` : ''}
             ${arrivee ? `<tr><td style="padding:8px 0;color:#666">Arrivée</td><td style="padding:8px 0;color:#1a2e1a">${arrivee}</td></tr>` : ''}
             ${depart ? `<tr><td style="padding:8px 0;color:#666">Départ</td><td style="padding:8px 0;color:#1a2e1a">${depart}</td></tr>` : ''}
@@ -105,18 +90,14 @@ export async function POST(req: Request) {
           </table>
           ${message ? `<div style="margin-top:20px;padding:16px;background:#fff;border-left:3px solid #c4a050;border-radius:4px;font-size:15px;color:#2a2a2a;line-height:1.7">${message.replace(/\n/g, '<br>')}</div>` : ''}
           <p style="margin-top:24px;font-size:12px;color:#999">Répondre directement à cet email pour contacter ${prenom}.</p>
-        </div>`
+        </div>`,
+    })
 
-      await mailer.sendMail({
-        from: `"La Boire Bavard" <${gmailUser}>`,
-        to: gmailUser,
-        replyTo: email,
-        subject: `✉️ Demande de ${guestName}${chambreLib ? ` — ${chambreLib}` : ''}`,
-        html: notifHtml,
-      })
-
-      // Email de confirmation au client
-      const confirmHtml = `
+    // ── Email de confirmation au client ──
+    await sendEmail({
+      to: email,
+      subject: 'Votre demande a bien été reçue — La Boire Bavard',
+      html: `
         <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;background:#f5f0e8;padding:32px;border-radius:8px;">
           <h2 style="color:#1a3220;font-size:22px;margin:0 0 4px">Merci, ${prenom} !</h2>
           <p style="color:#c4a050;font-size:13px;margin:0 0 24px;letter-spacing:.06em;text-transform:uppercase">La Boire Bavard · Anjou</p>
@@ -133,17 +114,13 @@ export async function POST(req: Request) {
             💬 <a href="https://wa.me/33675786335" style="color:#c4a050">WhatsApp</a>
           </p>
           <p style="margin-top:24px;font-size:13px;color:#999">Sandrine — La Boire Bavard<br>4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice</p>
-        </div>`
+        </div>`,
+    })
 
-      await mailer.sendMail({
-        from: `"Sandrine — La Boire Bavard" <${gmailUser}>`,
-        to: email,
-        subject: 'Votre demande a bien été reçue — La Boire Bavard',
-        html: confirmHtml,
-      })
-    } else {
-      console.warn('[contact] Gmail non configuré (GMAIL_USER / GMAIL_APP_PASSWORD manquants)')
-    }
+    // ── Notification WhatsApp à Sandrine ──
+    await notifyWhatsApp(
+      `📩 Nouvelle demande de ${guestName}${chambreLib ? ` (${chambreLib})` : ''}${arrivee ? ` · ${arrivee}` : ''}${depart ? ` → ${depart}` : ''} · ${adultes} pers. · ${email}${tel ? ` · ${tel}` : ''}`
+    )
 
     return NextResponse.json({ ok: true })
   } catch (e: any) {
