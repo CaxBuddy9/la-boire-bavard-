@@ -12,15 +12,17 @@ export function proxy(req: NextRequest) {
   }
 
   if (MAINTENANCE) {
-    // Bypass si cookie preview valide
     const secret = process.env.PREVIEW_SECRET || 'lbb-preview-2026'
     const cookie = req.cookies.get(BYPASS_COOKIE)?.value
     if (cookie === secret) return NextResponse.next()
 
-    return NextResponse.redirect(new URL('/bientot', req.url))
+    // Rewrite (pas redirect) pour conserver l'URL et éviter les signaux 3xx vers Google
+    const response = NextResponse.rewrite(new URL('/bientot', req.url))
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+    response.headers.set('Retry-After', '86400')
+    return response
   }
 
-  // Protection des routes admin
   const token = req.cookies.get('admin_token')?.value
   if (pathname.startsWith('/api/admin') && !token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
