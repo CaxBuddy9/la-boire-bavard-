@@ -18,8 +18,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Réécrire vers /bientot sans changer l'URL visible
-  return NextResponse.rewrite(new URL('/bientot', request.url))
+  // Réécrire vers /bientot sans changer l'URL visible, avec 503 pour les crawlers
+  const response = NextResponse.rewrite(new URL('/bientot', request.url))
+  response.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  response.headers.set('Retry-After', '86400')
+  return response
 }
 
 export const config = {

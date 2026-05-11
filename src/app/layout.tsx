@@ -43,9 +43,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.png', type: 'image/png' },
+      { url: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-16.png', type: 'image/png', sizes: '16x16' },
     ],
-    apple: '/icons/icon-192.png',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
