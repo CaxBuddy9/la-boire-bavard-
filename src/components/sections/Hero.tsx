@@ -50,22 +50,22 @@ export default function Hero() {
 
       {/* Contenu */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-        <p className="label-caps mb-7 animate-[rise_0.8s_0s_both]">
+        <p className="label-caps mb-6 animate-[rise_0.8s_0s_both]">
           {t("Chambres d'Hôtes · Anjou · France", 'Bed & Breakfast · Anjou · France')}
         </p>
 
-        <div className="flex justify-center mb-4 animate-[rise_0.9s_0.15s_both]">
-          <LogoSVG height={96} variant="dark-bg" />
-        </div>
-
-        <h1 className="font-serif font-normal leading-none mb-5 animate-[rise_0.8s_0.35s_both]"
+        <h1 className="font-serif font-normal leading-none mb-6 animate-[rise_0.8s_0.2s_both]"
           style={{ fontSize: 'clamp(3rem,7vw,6.5rem)', letterSpacing: '-0.01em' }}
         >
           La Boire<br />
           <em className="font-serif italic" style={{ color: 'rgba(255,255,255,0.82)', animation: 'gold-shimmer 4s 1.5s ease-in-out infinite' }}>Bavard</em>
         </h1>
 
-        <p className="font-sans text-[0.72rem] tracking-[0.38em] uppercase text-white/50 mb-14 animate-[rise_0.8s_0.45s_both]">
+        <div className="flex justify-center mb-6 animate-[rise_0.9s_0.35s_both]">
+          <LogoSVG height={88} variant="dark-bg" />
+        </div>
+
+        <p className="font-sans text-[0.72rem] tracking-[0.38em] uppercase text-white/50 mb-12 animate-[rise_0.8s_0.45s_both]">
           4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice
         </p>
 
@@ -75,10 +75,11 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-9 left-1/2 animate-bob flex flex-col items-center gap-2">
-        <div className="w-px h-11 bg-white/35" />
-        <span className="font-sans text-[0.52rem] tracking-[0.3em] uppercase text-white/40">{t('Défiler', 'Scroll')}</span>
+      {/* Scroll indicator — chevron minimaliste */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bob pointer-events-none">
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L10 10L19 1" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
     </section>
   )
