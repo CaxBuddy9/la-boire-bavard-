@@ -49,21 +49,21 @@ export default function Hero() {
       <LogoWatermark />
 
       {/* Contenu */}
-      <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-        <p className="label-caps mb-6 animate-[rise_0.8s_0s_both]">
+      <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-20">
+        <div className="flex justify-center mb-5 animate-[rise_0.9s_0s_both]">
+          <LogoSVG height={88} variant="dark-bg" />
+        </div>
+
+        <p className="label-caps mb-5 animate-[rise_0.8s_0.15s_both]">
           {t("Chambres d'Hôtes · Anjou · France", 'Bed & Breakfast · Anjou · France')}
         </p>
 
-        <h1 className="font-serif font-normal leading-none mb-6 animate-[rise_0.8s_0.2s_both]"
+        <h1 className="font-serif font-normal leading-none mb-6 animate-[rise_0.8s_0.3s_both]"
           style={{ fontSize: 'clamp(3rem,7vw,6.5rem)', letterSpacing: '-0.01em' }}
         >
           La Boire<br />
           <em className="font-serif italic" style={{ color: 'rgba(255,255,255,0.82)', animation: 'gold-shimmer 4s 1.5s ease-in-out infinite' }}>Bavard</em>
         </h1>
-
-        <div className="flex justify-center mb-6 animate-[rise_0.9s_0.35s_both]">
-          <LogoSVG height={88} variant="dark-bg" />
-        </div>
 
         <p className="font-sans text-[0.72rem] tracking-[0.38em] uppercase text-white/50 mb-12 animate-[rise_0.8s_0.45s_both]">
           4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice
