@@ -50,13 +50,13 @@ export default function Hero() {
 
       {/* Contenu */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-        <div className="flex justify-center mb-6 animate-[rise_0.9s_0s_both]">
-          <LogoSVG height={120} variant="dark-bg" />
-        </div>
-
-        <p className="label-caps mb-5 animate-[rise_0.8s_0.2s_both]">
+        <p className="label-caps mb-7 animate-[rise_0.8s_0s_both]">
           {t("Chambres d'Hôtes · Anjou · France", 'Bed & Breakfast · Anjou · France')}
         </p>
+
+        <div className="flex justify-center mb-4 animate-[rise_0.9s_0.15s_both]">
+          <LogoSVG height={96} variant="dark-bg" />
+        </div>
 
         <h1 className="font-serif font-normal leading-none mb-5 animate-[rise_0.8s_0.35s_both]"
           style={{ fontSize: 'clamp(3rem,7vw,6.5rem)', letterSpacing: '-0.01em' }}
