@@ -50,7 +50,9 @@ export default function Hero() {
 
       {/* Contenu */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-20">
-        <div className="flex justify-center mb-5 animate-[rise_0.9s_0s_both]">
+        <div className="flex justify-center mb-5 animate-[rise_0.9s_0s_both]"
+          style={{ filter: 'brightness(0.78) saturate(0.6)' }}
+        >
           <LogoSVG height={140} variant="dark-bg" />
         </div>
 
