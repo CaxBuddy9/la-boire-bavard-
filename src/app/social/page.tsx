@@ -67,7 +67,7 @@ Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous
 
 ✅ Note Exceptionnel 9.9/10 sur Booking
 ✅ Petit-déjeuner gourmand inclus — 88€/nuit
-✅ Piscine chauffée, spa, jardin
+✅ Piscine chauffée, jacuzzi, jardin
 ✅ Table d'hôtes le vendredi soir (25€/pers.)
 ✅ À 25 min d'Angers, sur la Loire à Vélo
 
@@ -114,7 +114,7 @@ const HASHTAGS = {
 }
 
 const OG_SPECS = [
-  { page: 'Accueil', file: '/photos/exterieur/maison-facade-printemps.jpg', title: "La Boire Bavard — Chambres d'Hôtes en Anjou", desc: "Maison d'hôtes de charme 9.9/10. Piscine, spa, petit-déjeuner gourmand. 88€/nuit." },
+  { page: 'Accueil', file: '/photos/exterieur/maison-facade-printemps.jpg', title: "La Boire Bavard — Chambres d'Hôtes en Anjou", desc: "Maison d'hôtes de charme 9.9/10. Piscine, jacuzzi, petit-déjeuner gourmand. 88€/nuit." },
   { page: 'Chambres', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "4 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée, Côté Potager. Vue Loire, piscine, cheminée." },
   { page: 'Avis', file: '/photos/chambres/potager/chambre-potager-entree.jpeg', title: "Avis 9.9/10 — La Boire Bavard", desc: "200+ avis Exceptionnel. Découvrez ce que nos hôtes disent de leur séjour." },
   { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures maison, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },

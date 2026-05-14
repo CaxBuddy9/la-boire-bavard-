@@ -5,14 +5,14 @@ import Footer from '@/components/sections/Footer'
 
 export const metadata = {
   title: "Bien-être & Nature — La Boire Bavard",
-  description: "Piscine chauffée, spa, sauna finlandais et jardins. Un espace de détente au cœur de l'Anjou, à La Boire Bavard.",
+  description: "Piscine chauffée, sauna finlandais et jardins. Un espace de détente au cœur de l'Anjou, à La Boire Bavard.",
 }
 
 const SAISONS = [
   { s: 'Printemps', mois: 'Avril – Juin', dispo: 'Jardin & terrasse · Piscine dès mai', ico: '🌿' },
-  { s: 'Été',       mois: 'Juil – Août',  dispo: 'Piscine · Spa · Terrasse & barbecue', ico: '☀️' },
+  { s: 'Été',       mois: 'Juil – Août',  dispo: 'Piscine · Jacuzzi · Terrasse & barbecue', ico: '☀️' },
   { s: 'Automne',   mois: 'Sept – Oct',   dispo: 'Piscine jusqu\'à fin sept. · Sauna', ico: '🍂' },
-  { s: 'Hiver',     mois: 'Nov – Mars',   dispo: 'Sauna & spa · Cheminées allumées', ico: '❄️' },
+  { s: 'Hiver',     mois: 'Nov – Mars',   dispo: 'Sauna & jacuzzi · Cheminées allumées', ico: '❄️' },
 ]
 
 export default function BienetreePage() {
@@ -99,18 +99,18 @@ export default function BienetreePage() {
             <p className="label-caps mb-5">Toute l'année</p>
             <h2 className="font-serif font-normal text-white leading-tight mb-6"
               style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)' }}>
-              Spa & sauna finlandais
+              Jacuzzi & sauna finlandais
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
-              Le spa privatif et le sauna finlandais sont disponibles sur réservation, inclus dans votre séjour.
+              Le jacuzzi privatif et le sauna finlandais sont disponibles sur réservation, inclus dans votre séjour.
               Idéal en arrière-saison, après une journée de vélo sur les bords de Loire ou de visite des châteaux.
             </p>
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-10">
               Pensez à réserver votre créneau auprès de Sandrine — en général 1h à 1h30 par session.
             </p>
             <div className="flex flex-wrap gap-3">
-              {['Sauna finlandais', 'Spa privatif', 'Sur réservation', 'Inclus dans le séjour'].map(tag => (
+              {['Sauna finlandais', 'Jacuzzi privatif', 'Sur réservation', 'Inclus dans le séjour'].map(tag => (
                 <span key={tag}
                   style={{ border: '1px solid rgba(196,160,80,.25)', padding: '6px 14px' }}
                   className="font-sans text-[0.6rem] tracking-[0.15em] uppercase text-white/55">
@@ -120,7 +120,7 @@ export default function BienetreePage() {
             </div>
           </div>
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-            <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt="Spa et sauna" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt="Jacuzzi et sauna" fill className="object-cover" sizes="50vw" />
           </div>
         </div>
 
@@ -180,7 +180,7 @@ export default function BienetreePage() {
           <p className="label-caps mb-4">Tout inclus dans votre séjour</p>
           <h2 className="font-serif font-normal mb-4"
             style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'rgba(253,252,249,.85)' }}>
-            Piscine · Spa · Sauna · Jardin
+            Piscine · Jacuzzi · Sauna · Jardin
           </h2>
           <p className="font-sans text-white/45 mb-10 text-[1rem]">88 €/nuit · Petit-déjeuner inclus · Accès libre aux espaces bien-être</p>
           <div className="flex flex-wrap gap-4 justify-center">

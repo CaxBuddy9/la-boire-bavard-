@@ -5,9 +5,9 @@ import { useT } from '@/context/LangContext'
 
 const SAISONS_DATA = [
   { key: 'spring', s_fr: 'Printemps', s_en: 'Spring', mois_fr: 'Avril – Juin', mois_en: 'Apr – Jun', dispo_fr: 'Jardin & terrasse · Piscine dès mai', dispo_en: 'Garden & terrace · Pool from May', ico: '🌿' },
-  { key: 'summer', s_fr: 'Été',       s_en: 'Summer', mois_fr: 'Juil – Août',  mois_en: 'Jul – Aug', dispo_fr: 'Piscine · Spa · Terrasse & barbecue', dispo_en: 'Pool · Spa · Terrace & barbecue', ico: '☀️' },
+  { key: 'summer', s_fr: 'Été',       s_en: 'Summer', mois_fr: 'Juil – Août',  mois_en: 'Jul – Aug', dispo_fr: 'Piscine · Jacuzzi · Terrasse & barbecue', dispo_en: 'Pool · Jacuzzi · Terrace & barbecue', ico: '☀️' },
   { key: 'autumn', s_fr: 'Automne',   s_en: 'Autumn', mois_fr: 'Sept – Oct',   mois_en: 'Sep – Oct', dispo_fr: "Piscine jusqu'à fin sept. · Sauna", dispo_en: 'Pool until end of Sept. · Sauna', ico: '🍂' },
-  { key: 'winter', s_fr: 'Hiver',     s_en: 'Winter', mois_fr: 'Nov – Mars',   mois_en: 'Nov – Mar', dispo_fr: 'Sauna & spa · Cheminées allumées', dispo_en: 'Sauna & spa · Fireplaces lit', ico: '❄️' },
+  { key: 'winter', s_fr: 'Hiver',     s_en: 'Winter', mois_fr: 'Nov – Mars',   mois_en: 'Nov – Mar', dispo_fr: 'Sauna & jacuzzi · Cheminées allumées', dispo_en: 'Sauna & jacuzzi · Fireplaces lit', ico: '❄️' },
 ]
 
 export default function BienetreContent() {
@@ -102,13 +102,13 @@ export default function BienetreContent() {
           <p className="label-caps mb-5">{t('Toute l\'année', 'Year-round')}</p>
           <h2 className="font-serif font-normal text-white leading-tight mb-6"
             style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)' }}>
-            {t('Spa & sauna finlandais', 'Spa & Finnish sauna')}
+            {t('Jacuzzi & sauna finlandais', 'Jacuzzi & Finnish sauna')}
           </h2>
           <div className="gold-line mb-8" />
           <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
             {t(
-              "Le spa privatif et le sauna finlandais sont disponibles sur réservation, inclus dans votre séjour. Idéal en arrière-saison, après une journée de vélo sur les bords de Loire ou de visite des châteaux.",
-              "The private spa and Finnish sauna are available on reservation, included in your stay. Perfect in the off-season, after a day cycling along the Loire or visiting châteaux."
+              "Le jacuzzi privatif et le sauna finlandais sont disponibles sur réservation, inclus dans votre séjour. Idéal en arrière-saison, après une journée de vélo sur les bords de Loire ou de visite des châteaux.",
+              "The private jacuzzi and Finnish sauna are available on reservation, included in your stay. Perfect in the off-season, after a day cycling along the Loire or visiting châteaux."
             )}
           </p>
           <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-10">
@@ -120,7 +120,7 @@ export default function BienetreContent() {
           <div className="flex flex-wrap gap-3">
             {[
               t('Sauna finlandais', 'Finnish sauna'),
-              t('Spa privatif', 'Private spa'),
+              t('Jacuzzi privatif', 'Private jacuzzi'),
               t('Sur réservation', 'On reservation'),
               t('Inclus dans le séjour', 'Included in stay'),
             ].map(tag => (
@@ -133,7 +133,7 @@ export default function BienetreContent() {
           </div>
         </div>
         <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-          <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt={t('Spa et sauna', 'Spa and sauna')} fill className="object-cover" sizes="50vw" />
+          <Image src="/photos/exterieur/propriete-jacuzzi-terrasse.jpg" alt={t('Jacuzzi et sauna', 'Jacuzzi and sauna')} fill className="object-cover" sizes="50vw" />
         </div>
       </div>
 
@@ -212,7 +212,7 @@ export default function BienetreContent() {
         <p className="label-caps mb-4">{t('Tout inclus dans votre séjour', 'All included in your stay')}</p>
         <h2 className="font-serif font-normal mb-4"
           style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'rgba(253,252,249,.85)' }}>
-          {t('Piscine · Spa · Sauna · Jardin', 'Pool · Spa · Sauna · Garden')}
+          {t('Piscine · Jacuzzi · Sauna · Jardin', 'Pool · Jacuzzi · Sauna · Garden')}
         </h2>
         <p className="font-sans text-white/45 mb-10 text-[1rem]">
           {t('88 €/nuit · Petit-déjeuner inclus · Accès libre aux espaces bien-être', '88 €/night · Breakfast included · Free access to wellness areas')}

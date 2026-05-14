@@ -35,7 +35,7 @@ const garamond = EB_Garamond({
 
 export const metadata: Metadata = {
   title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
-  description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand. Note 9.9/10 · 88 €/nuit.",
+  description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, jacuzzi, petit-déjeuner gourmand. Note 9.9/10 · 88 €/nuit.",
   verification: {
     google: 'siMyIWDcGoVyg9ERTP0Ff4WLyoO4NqADvZt4J69m5oI',
   },
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
-    description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand.",
+    description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, jacuzzi, petit-déjeuner gourmand.",
     images: ['/photos/exterieur/maison-facade-printemps.jpg'],
     siteName: "La Boire Bavard — Chambres d'Hôtes",
     locale: 'fr_FR',
@@ -75,7 +75,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BedAndBreakfast',
   name: 'La Boire Bavard',
-  description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, spa, petit-déjeuner gourmand. Note 9.9/10.",
+  description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, jacuzzi, petit-déjeuner gourmand. Note 9.9/10.",
   url: 'https://laboirebavard.com',
   telephone: '+33675786335',
   email: 'contact@laboirebavard.com',
@@ -101,7 +101,7 @@ const jsonLd = {
   },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Piscine chauffée',      value: true },
-    { '@type': 'LocationFeatureSpecification', name: 'Spa / Jacuzzi',         value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Jacuzzi',                value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Petit-déjeuner inclus', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'WiFi gratuit',          value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Table d\'hôtes',        value: true },

@@ -37,8 +37,8 @@ export default function IntroStrip() {
         <div className="gold-line mb-6" />
         <p className="font-body text-white/80 text-[1.05rem] leading-[1.85] mb-4">
           {t(
-            "Nichée entre vignoble et val de Loire, La Boire Bavard est une maison d'hôtes de caractère où Sandrine vous accueille avec passion. Quatre chambres d'exception, un jardin généreux, une piscine chauffée, un spa — tout est pensé pour votre bien-être.",
-            "Nestled between vineyard and Loire valley, La Boire Bavard is a characterful bed & breakfast where Sandrine welcomes you with passion. Four exceptional rooms, a generous garden, a heated pool, a spa — everything is designed for your well-being."
+            "Nichée entre vignoble et val de Loire, La Boire Bavard est une maison d'hôtes de caractère où Sandrine vous accueille avec passion. Quatre chambres d'exception, un jardin généreux, une piscine chauffée — tout est pensé pour votre bien-être.",
+            "Nestled between vineyard and Loire valley, La Boire Bavard is a characterful bed & breakfast where Sandrine welcomes you with passion. Four exceptional rooms, a generous garden, a heated pool — everything is designed for your well-being."
           )}
         </p>
         <p className="font-body text-white/80 text-[1.05rem] leading-[1.85] mb-10">

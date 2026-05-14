@@ -407,7 +407,7 @@ function HotesPanel() {
           {[
             { icon: '🥗', label: 'Régimes alimentaires', count: totalDiets, color: '#6db87a' },
             { icon: '🍽️', label: 'Dîners réservés', count: totalDinners, color: '#c4a050' },
-            { icon: '🛁', label: 'Jacuzzi / Spa réservé', count: totalSpas, color: '#7ab8c4' },
+            { icon: '🛁', label: 'Jacuzzi réservé', count: totalSpas, color: '#7ab8c4' },
           ].map(k => (
             <div key={k.label} style={{ background: '#131a13', border: `1px solid ${k.count > 0 ? k.color + '40' : 'rgba(255,255,255,.07)'}`, borderRadius: 4, padding: '14px 16px', textAlign: 'center' }}>
               <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{k.icon}</div>

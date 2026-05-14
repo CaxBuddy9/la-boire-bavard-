@@ -6,12 +6,12 @@ import PhotoGallery from '@/components/PhotoGallery'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
-  description: "Découvrez la longère angevine de La Boire Bavard : piscine chauffée, spa, jardin, vignoble et val de Loire.",
+  description: "Découvrez la longère angevine de La Boire Bavard : piscine chauffée, jacuzzi, jardin, vignoble et val de Loire.",
 }
 
 const FEATURES = [
   { icon: '≋', title: 'Piscine chauffée', desc: 'Profitez de la piscine chauffée ouverte de mai à octobre, entourée d\'un jardin préservé.' },
-  { icon: '∿', title: 'Spa & balnéo', desc: 'Jacuzzi privatisable sur demande — un moment de détente absolue après une journée de découvertes.' },
+  { icon: '∿', title: 'Jacuzzi & balnéo', desc: 'Jacuzzi privatisable sur demande — un moment de détente absolue après une journée de découvertes.' },
   { icon: '❧', title: 'Jardin & potager', desc: 'Un jardin généreux avec potager, verger et herbes aromatiques cueillis le matin pour votre petit-déjeuner.' },
   { icon: '✦', title: 'Vue Loire & vignoble', desc: 'La propriété est nichée entre la vallée de la Loire et les vignes de l\'Anjou, offrant des panoramas exceptionnels.' },
   { icon: '◇', title: 'Table d\'hôtes', desc: 'Le vendredi soir, Sandrine propose une table d\'hôtes à 25 €/pers. avec produits du jardin et vins locaux.' },
