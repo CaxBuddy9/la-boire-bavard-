@@ -12,6 +12,7 @@ const links = [
   { href: '/bienetre',  fr: 'Bien-être',        en: 'Wellness',            es: 'Bienestar',        pt: 'Bem-estar' },
   { href: '/petitdej',  fr: 'Petit-déjeuner',   en: 'Breakfast',           es: 'Desayuno',         pt: 'Pequeno-almoço' },
   { href: '/avis',      fr: 'Avis',             en: 'Reviews',             es: 'Opiniones',        pt: 'Avaliações' },
+  { href: '/blog',      fr: 'Journal',          en: 'Journal',             es: 'Diario',           pt: 'Diário' },
   { href: '/contact',   fr: 'Contact & Accès',  en: 'Contact & Directions',es: 'Contacto',         pt: 'Contacto' },
 ]
 

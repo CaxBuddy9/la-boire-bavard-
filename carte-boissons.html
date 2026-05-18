@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Carte des boissons — La Boire Bavard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:    #b8922a;
+    --gold-dim:rgba(184,146,42,.45);
+    --forest:  #1a2e1a;
+    --ink:     #2c2a23;
+    --body:    rgba(44,42,35,.62);
+    --faint:   rgba(44,42,35,.42);
+    --hair:    rgba(184,146,42,.28);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #ddd7c9;
+    font-family: 'Raleway', sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---- Carte format A4 portrait plein ---- */
+  .carte {
+    width: 210mm;
+    height: 297mm;
+    margin: 12mm auto;
+    padding: 15mm 22mm 13mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse at 50% 22%, #fefcf6 0%, #f7f1e4 62%, #f1ead9 100%);
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    overflow: hidden;
+  }
+
+  /* filet or fin */
+  .cadre {
+    position: absolute;
+    inset: 9mm;
+    border: 1px solid var(--gold-dim);
+    pointer-events: none;
+  }
+
+  /* ---- En-tête ---- */
+  .entete {
+    text-align: center;
+    padding: 0 0 1mm;
+  }
+
+  .logo {
+    height: 27mm;
+    width: auto;
+    display: block;
+    margin: 0 auto 4mm;
+  }
+
+  .maison {
+    font-family: 'Playfair Display', serif;
+    font-size: 28pt;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: .02em;
+  }
+
+  .lieu {
+    font-size: 9pt;
+    font-weight: 500;
+    letter-spacing: .40em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 4mm;
+  }
+
+  /* ---- Titre carte ---- */
+  .titre {
+    text-align: center;
+    margin: 2mm 0 1mm;
+  }
+  .titre .deco {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5mm;
+    color: var(--gold);
+  }
+  .titre .deco .trait {
+    width: 22mm; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+  .titre .deco .trait.r {
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+  }
+  .titre .deco .pt { font-size: 9pt; }
+  .titre .mot {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 23pt;
+    color: var(--ink);
+    margin-top: 3mm;
+    display: block;
+  }
+
+  /* ---- Sections ---- */
+  .contenu {
+    display: flex;
+    flex-direction: column;
+    gap: 7mm;
+  }
+
+  .section-titre {
+    font-size: 11pt;
+    font-weight: 500;
+    letter-spacing: .30em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 3.5mm;
+  }
+
+  .ligne {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 2.6mm 1mm;
+  }
+  .ligne + .ligne {
+    border-top: 0.8px solid var(--hair);
+  }
+
+  .nom {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21pt;
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: .015em;
+  }
+  .vol {
+    font-family: 'Raleway', sans-serif;
+    font-size: 9.5pt;
+    color: var(--faint);
+    margin-left: 3mm;
+    letter-spacing: .04em;
+  }
+
+  .prix {
+    font-family: 'Playfair Display', serif;
+    font-size: 18pt;
+    font-weight: 600;
+    color: var(--gold);
+    white-space: nowrap;
+    padding-left: 8mm;
+  }
+
+  /* ---- Pied ---- */
+  .pied {
+    text-align: center;
+    padding-top: 6mm;
+    border-top: 0.8px solid var(--hair);
+  }
+  .pied .service {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13pt;
+    color: var(--forest);
+  }
+  .pied .infos {
+    font-size: 9.5pt;
+    color: var(--body);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-top: 3.5mm;
+  }
+  .pied .legal {
+    font-size: 8pt;
+    color: var(--faint);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-top: 3.5mm;
+  }
+
+  /* ---- Impression ---- */
+  @page { size: A4 portrait; margin: 0; }
+
+  @media print {
+    html, body { background: #fff; }
+    .carte {
+      margin: 0;
+      box-shadow: none;
+      width: 210mm;
+      height: 297mm;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="carte">
+    <div class="cadre"></div>
+
+    <div class="entete">
+      <img class="logo" src="public/logo-lbba.png" alt="La Boire Bavard">
+      <div class="maison">La Boire Bavard</div>
+      <div class="lieu">Maison d'hôtes &middot; Anjou</div>
+    </div>
+
+    <div class="titre">
+      <div class="deco">
+        <span class="trait"></span>
+        <span class="pt">&#10022;</span>
+        <span class="trait r"></span>
+      </div>
+      <span class="mot">Carte des boissons</span>
+    </div>
+
+    <div class="contenu">
+
+      <div class="section">
+        <div class="section-titre">Boissons fraîches</div>
+        <div class="ligne">
+          <span class="nom">Coca-Cola<span class="vol">33 cl</span></span>
+          <span class="prix">2,50 &euro;</span>
+        </div>
+        <div class="ligne">
+          <span class="nom">Schweppes Agrumes<span class="vol">33 cl</span></span>
+          <span class="prix">2,50 &euro;</span>
+        </div>
+        <div class="ligne">
+          <span class="nom">Perrier<span class="vol">33 cl</span></span>
+          <span class="prix">2,50 &euro;</span>
+        </div>
+        <div class="ligne">
+          <span class="nom">Bouteille d'eau<span class="vol">50 cl</span></span>
+          <span class="prix">2,50 &euro;</span>
+        </div>
+        <div class="ligne">
+          <span class="nom">Jus de pomme artisanal<span class="vol">verre 20 cl</span></span>
+          <span class="prix">2,50 &euro;</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Bière</div>
+        <div class="ligne">
+          <span class="nom">1664, canette<span class="vol">33 cl</span></span>
+          <span class="prix">3 &euro;</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Café</div>
+        <div class="ligne">
+          <span class="nom">Espresso</span>
+          <span class="prix">1,50 &euro;</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pied">
+      <div class="infos">06 75 78 63 35</div>
+      <div class="legal">L'abus d'alcool est dangereux pour la santé</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

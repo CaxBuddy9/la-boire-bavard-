@@ -40,7 +40,7 @@ const ROOMS = {
     slug: 'jardin',
     emoji: '🌿',
     bg: ROOM_COLORS.jardin.bg,
-    image: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg',
+    image: '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
     theme: makeTheme('jardin') satisfies RoomTheme,
     details: [
       { fr: "La terrasse privée s'ouvre directement depuis la chambre", en: "The private terrace opens directly from your room", es: "La terraza privada se abre directamente desde la habitación", pt: "O terraço privado abre diretamente do seu quarto" },
@@ -55,9 +55,9 @@ const ROOMS = {
     bg: ROOM_COLORS.cedre.bg,
     theme: makeTheme('cedre') satisfies RoomTheme,
     details: [
-      { fr: "Accès direct à la piscine chauffée depuis la chambre", en: "Direct access to the heated pool from your room", es: "Acceso directo a la piscina climatizada desde la habitación", pt: "Acesso direto à piscina aquecida desde o quarto" },
-      { fr: "Baignoire à votre disposition pour vous détendre", en: "Bathtub available for your relaxation", es: "Bañera a su disposición para relajarse", pt: "Banheira à sua disposição para relaxar" },
-      { fr: "Chambre romantique sous le cèdre centenaire", en: "Romantic room beneath the century-old cedar tree", es: "Habitación romántica bajo el cedro centenario", pt: "Quarto romântico sob o cedro centenário" },
+      { fr: "Dépendance indépendante, à quelques pas de la maison", en: "Independent annexe, just steps from the main house", es: "Anexo independiente, a unos pasos de la casa", pt: "Anexo independente, a alguns passos da casa" },
+      { fr: "Belles poutres et pierres apparentes, atmosphère authentique", en: "Beautiful beams and exposed stone, an authentic atmosphere", es: "Vigas y piedra vista, ambiente auténtico", pt: "Belas vigas e pedra à vista, atmosfera autêntica" },
+      { fr: "Chambre romantique pour un séjour en amoureux", en: "Romantic room for a couple's getaway", es: "Habitación romántica para una escapada en pareja", pt: "Quarto romântico para uma escapada a dois" },
     ],
   },
   vallee: {
@@ -67,21 +67,9 @@ const ROOMS = {
     bg: ROOM_COLORS.vallee.bg,
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [
-      { fr: "Vue panoramique sur la Loire et les vignes", en: "Panoramic view over the Loire and the vineyards", es: "Vista panorámica sobre el Loira y los viñedos", pt: "Vista panorâmica sobre o Loire e os vinhedos" },
+      { fr: "Vue panoramique sur les vignes de l'Anjou", en: "Panoramic view over the Anjou vineyards", es: "Vista panorámica sobre los viñedos del Anjou", pt: "Vista panorâmica sobre os vinhedos do Anjou" },
       { fr: "Entrée indépendante via votre escalier privatif", en: "Private entrance via your own staircase", es: "Entrada independiente por su propia escalera privada", pt: "Entrada independente pela sua escadaria privada" },
-      { fr: "Le lever du soleil sur la Loire est splendide d'ici", en: "The sunrise over the Loire is breathtaking from here", es: "El amanecer sobre el Loira es espléndido desde aquí", pt: "O nascer do sol sobre o Loire é esplêndido daqui" },
-    ],
-  },
-  potager: {
-    name: 'Côté Potager',
-    slug: 'potager',
-    emoji: '🌱',
-    bg: ROOM_COLORS.potager.bg,
-    theme: makeTheme('potager') satisfies RoomTheme,
-    details: [
-      { fr: "Salle de bain privée séparée de la chambre", en: "Private bathroom separate from the bedroom", es: "Baño privado separado del dormitorio", pt: "Casa de banho privada separada do quarto" },
-      { fr: "Vue sur le potager et les herbes aromatiques", en: "View over the kitchen garden and aromatic herbs", es: "Vista al huerto y las hierbas aromáticas", pt: "Vista para a horta e ervas aromáticas" },
-      { fr: "Calme absolu, parfait pour se ressourcer", en: "Absolute quiet, perfect for unwinding", es: "Calma absoluta, ideal para desconectar", pt: "Calma absoluta, perfeito para descansar" },
+      { fr: "Belle poutre peinte en blanc, lumière douce", en: "Beautiful white-painted beam, soft light", es: "Hermosa viga pintada de blanco, luz suave", pt: "Bela viga pintada de branco, luz suave" },
     ],
   },
 }

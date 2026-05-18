@@ -6,7 +6,7 @@ import { ROOMS } from '@/lib/rooms'
 
 export const metadata = {
   title: "Chambres — La Boire Bavard",
-  description: "4 chambres d'exception à La Boire Bavard. Cheminée, piscine, vue Loire. 88€/nuit petit-déjeuner inclus.",
+  description: "3 chambres d'exception à La Boire Bavard. Cheminée, piscine, vue sur les vignes. 90€/nuit petit-déjeuner inclus.",
 }
 
 const BG_STYLES = [
@@ -30,8 +30,8 @@ export default function ChambresPage() {
           }}>CHAMBRES</span>
           <p className="label-caps" style={{ marginBottom: 16 }}>Hébergements</p>
           <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(3rem,7vw,6rem)', fontWeight: 400, color: 'white', lineHeight: 1.05, maxWidth: 700 }}>
-            Quatre chambres,<br />
-            <em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.5)' }}>quatre univers</em>
+            Trois chambres,<br />
+            <em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.5)' }}>trois univers</em>
           </h1>
           <p style={{ marginTop: 28, maxWidth: 560, fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-garamond)' }}>
             Chaque chambre a son caractère propre. Toutes bénéficient d'une entrée indépendante
@@ -40,7 +40,7 @@ export default function ChambresPage() {
         </div>
 
         {/* Chambres en alternance */}
-        {ROOMS.filter(r => r.id !== 'potager').map((room, i) => {
+        {ROOMS.map((room, i) => {
           const s = BG_STYLES[i]
           const reverse = i % 2 === 1
           return (
@@ -87,7 +87,7 @@ export default function ChambresPage() {
                   ))}
                 </div>
                 <div style={{ fontFamily: 'var(--font-playfair)', fontSize: '1.4rem', marginBottom: 28 }}>
-                  88 € <span style={{ fontSize: '.7rem', fontFamily: 'var(--font-raleway)', opacity: .55 }}>/ nuit · petit-déjeuner inclus</span>
+                  {room.pricePerNight} € <span style={{ fontSize: '.7rem', fontFamily: 'var(--font-raleway)', opacity: .55 }}>/ nuit · petit-déjeuner inclus</span>
                 </div>
                 <Link href={`/chambres/${room.slug}`} style={{
                   display: 'inline-block', alignSelf: 'flex-start',

@@ -25,7 +25,6 @@ const CHAMBRES_LABELS: Record<string, string> = {
   jardin:  'Côté Jardin',
   cedre:   'Côté Cèdre',
   vallee:  'Côté Vallée',
-  potager: 'Côté Potager',
 }
 
 export async function POST(req: Request) {

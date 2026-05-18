@@ -10,7 +10,7 @@ const S = { slate: '#1a2318', slate2: '#222b20', gold: '#c4a050', cream: 'rgba(2
 
 const ACCESS = [
   { icon: '◇', title: 'En voiture', lines: [<><strong>Depuis Angers</strong> — 25 min via D751</>, <><strong>Depuis Saumur</strong> — 20 min via D952</>, <><strong>GPS :</strong> 4 ch. de la Boire Bavard, 49320</>] },
-  { icon: '❧', title: 'En train', lines: ['Gare d\'Angers-Saint-Laud (TGV)', 'Puis taxi ou location de vélo', 'Navette possible sur demande à Sandrine'] },
+  { icon: '❧', title: 'En train', lines: ['Gare d\'Angers-Saint-Laud (TGV)', 'Puis taxi ou location de vélo', 'Navette possible sur demande'] },
   { icon: '≋', title: 'À vélo', lines: ['Loire à Vélo — itinéraire EV6 à 2 km', 'Anjou à Vélo accessible directement', 'Stationnement vélos sécurisé sur place'] },
 ]
 
@@ -95,10 +95,13 @@ function ContactInner() {
           <div style={{ overflow: 'hidden', position: 'absolute', bottom: -20, left: -10, right: 0, pointerEvents: 'none' }}>
           <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(6rem,18vw,18vw)', lineHeight: .85, color: 'rgba(255,255,255,.025)', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
           </div>
-          <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Réservation</p>
+          <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>On a hâte de vous accueillir</p>
           <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
-            Contact &<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.45)' }}>Disponibilités</em>
+            Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.45)' }}>on vous répond vite</em>
           </h1>
+          <p style={{ fontFamily: 'var(--font-garamond)', fontSize: 'clamp(.95rem,1.2vw,1.05rem)', color: 'rgba(240,235,225,.65)', maxWidth: 580, marginTop: 22, lineHeight: 1.8 }}>
+            Sandrine & Jean-Marc répondent à toutes les demandes sous 24 heures. Une question sur les chambres, les dates ou la planche du soir ? N'hésitez pas — par mail, par téléphone ou par WhatsApp.
+          </p>
         </div>
 
         {/* Formulaire + sidebar */}
@@ -110,9 +113,9 @@ function ContactInner() {
               {sent ? (
                 <div style={{ background: 'rgba(196,160,80,.08)', border: `1px solid ${S.border}`, padding: 48, textAlign: 'center' }}>
                   <span style={{ color: S.gold, fontSize: '2rem', display: 'block', marginBottom: 20 }}>✦</span>
-                  <h2 style={{ fontFamily: 'var(--font-playfair)', color: 'white', fontSize: '1.8rem', fontWeight: 400, marginBottom: 12 }}>Message envoyé</h2>
+                  <h2 style={{ fontFamily: 'var(--font-playfair)', color: 'white', fontSize: '1.8rem', fontWeight: 400, marginBottom: 12 }}>Message envoyé · merci !</h2>
                   <p style={{ color: S.dim, fontFamily: 'var(--font-garamond)', fontSize: '1.05rem', lineHeight: 1.75 }}>
-                    Sandrine vous répondra dans les 24 heures.
+                    Sandrine & Jean-Marc vous répondent dans les 24 heures.
                   </p>
                   <button onClick={() => setSent(false)} style={{ marginTop: 28, fontFamily: 'var(--font-raleway)', fontSize: '.65rem', letterSpacing: '.2em', textTransform: 'uppercase', border: `1px solid ${S.border}`, color: S.gold, padding: '10px 28px', background: 'none', cursor: 'pointer' }}>
                     Nouveau message
@@ -190,10 +193,10 @@ function ContactInner() {
                       onClick={() => formValid && router.push(buildPaiementUrl())}
                       title={!formValid ? 'Remplissez prénom, nom et email d\'abord' : ''}
                       style={{ background: 'transparent', border: `1px solid ${formValid ? 'rgba(196,160,80,.5)' : 'rgba(255,255,255,.12)'}`, color: formValid ? S.gold : 'rgba(255,255,255,.2)', fontFamily: 'var(--font-raleway)', fontSize: '.68rem', letterSpacing: '.24em', textTransform: 'uppercase', padding: '16px 32px', cursor: formValid ? 'pointer' : 'default', transition: 'all .2s' }}>
-                      Payer en ligne →
+                      Confirmer ma résa →
                     </button>
                   </div>
-                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', color: 'rgba(184,192,180,.3)', marginTop: 12 }}>Réponse sous 24h · Données confidentielles · ou réservation directe par paiement en ligne</p>
+                  <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', color: 'rgba(184,192,180,.3)', marginTop: 12 }}>Réponse sous 24h · Aucun paiement en ligne · Règlement sur place</p>
                 </form>
               )}
             </div>
@@ -223,7 +226,7 @@ function ContactInner() {
 
               <div style={{ border: `1px solid ${S.border}`, padding: 32 }}>
                 <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 18 }}>Infos pratiques</p>
-                {['Check-in à partir de 16h','Check-out avant 11h','Petit-déjeuner 8h–10h','Parking privé gratuit','Animaux non acceptés','Table d\'hôtes vendredi (25€)'].map(info => (
+                {['Check-in à partir de 16h','Check-out avant 10h','Petit-déjeuner 8h–10h','Parking privé gratuit','Animaux non acceptés','Planche du soir 18€ (sur résa)'].map(info => (
                   <p key={info} style={{ color: S.dim, fontFamily: 'var(--font-raleway)', fontSize: '.78rem', lineHeight: 1.7, marginBottom: 6 }}>
                     <span style={{ color: S.gold, marginRight: 8 }}>→</span>{info}
                   </p>
@@ -258,7 +261,7 @@ function ContactInner() {
             {/* GPS box */}
             <div style={{ marginTop: 8, padding: '16px 20px', background: 'rgba(196,160,80,.07)', borderLeft: `2px solid rgba(196,160,80,.4)` }}>
               <p style={{ fontSize: '.5rem', letterSpacing: '.32em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 6 }}>Coordonnées GPS</p>
-              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.3933° N, 0.3710° O</p>
+              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.368° N, 0.511° O</p>
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(184,192,180,.4)', marginTop: 4 }}>4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice</p>
             </div>
           </div>
@@ -278,7 +281,7 @@ function ContactInner() {
             ))}
             <div style={{ padding: 10 }}>
               <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.386%2C47.383%2C-0.356%2C47.403&layer=mapnik&marker=47.3933%2C-0.3710"
+                src="https://maps.google.com/maps?q=4+chemin+de+la+Boire+Bavard,+49320+Blaison-Saint-Sulpice&t=&z=14&ie=UTF8&iwloc=&output=embed"
                 style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(40%) contrast(0.88) sepia(10%)' }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -303,7 +306,7 @@ function ContactInner() {
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14, textAlign: 'center' }}>Pour tous nos hôtes</p>
             <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(1.8rem,3vw,2.4rem)', fontWeight: 400, color: 'white', marginBottom: 10, lineHeight: 1.2, textAlign: 'center' }}>
-              Accessibilité
+              Accessibilité & confort
             </h2>
             <div style={{ width: 40, height: 1, background: 'rgba(196,160,80,.4)', margin: '0 auto 48px' }} />
 
@@ -315,7 +318,7 @@ function ContactInner() {
                   items: [
                     'Parking accessible directement devant les chambres',
                     'Chambre Côté Jardin en rez-de-chaussée, plain-pied',
-                    'Chambre Côté Cèdre accessible de plain-pied',
+                    'Chambre Côté Cèdre accessible de plain-pied (dépendance)',
                     'Allées extérieures stabilisées (gravier compact)',
                     'Salle de bain adaptable sur demande préalable',
                   ],
@@ -326,7 +329,7 @@ function ContactInner() {
                   items: [
                     'Accès piscine avec marches larges + main courante',
                     'Petit-déjeuner servi en chambre si nécessaire',
-                    'Accompagnement à l\'arrivée par Sandrine',
+                    'Accompagnement à l\'arrivée par Sandrine ou Jean-Marc',
                     'Animaux d\'assistance acceptés',
                     'Téléphone disponible sur demande',
                   ],
@@ -335,7 +338,7 @@ function ContactInner() {
                   icon: '≋',
                   title: 'Informations pratiques',
                   items: [
-                    'Contactez Sandrine avant votre arrivée pour tout besoin spécifique',
+                    'Prévenez-nous avant votre arrivée pour tout besoin spécifique',
                     'Chambres du rez-de-chaussée réservables en priorité',
                     'Dépose & embarquement facilité à l\'entrée',
                     'Stationnement PMR à 10 m des chambres',
@@ -367,13 +370,13 @@ function ContactInner() {
                   Un besoin particulier ?
                 </p>
                 <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.78rem', color: 'rgba(184,192,180,.5)', lineHeight: 1.6 }}>
-                  Sandrine est disponible pour adapter votre séjour à vos besoins. Contactez-la directement.
+                  Sandrine & Jean-Marc adaptent votre séjour à vos besoins. N'hésitez pas à les appeler directement.
                 </p>
               </div>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <a href="tel:0675786335"
                   style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', letterSpacing: '.18em', textTransform: 'uppercase', background: S.gold, color: '#111', padding: '12px 24px', textDecoration: 'none', display: 'inline-block' }}>
-                  📞 Appeler Sandrine
+                  📞 Nous appeler
                 </a>
                 <a href="https://wa.me/33675786335" target="_blank" rel="noopener noreferrer"
                   style={{ fontFamily: 'var(--font-raleway)', fontSize: '.65rem', letterSpacing: '.18em', textTransform: 'uppercase', border: `1px solid rgba(196,160,80,.4)`, color: S.gold, padding: '12px 24px', textDecoration: 'none', display: 'inline-block' }}>

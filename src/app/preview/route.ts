@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const res = NextResponse.redirect(new URL('/', req.url))
   res.cookies.set('lbb_preview', secret, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production', // http://localhost en dev
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 30, // 30 jours
     path: '/',

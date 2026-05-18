@@ -20,10 +20,9 @@ const ROOM_COLOR: Record<string, string> = {
   'Côté Jardin':   '#6db87a',
   'Côté Cèdre':    '#c4a050',
   'Côté Vallée':   '#7ab8c4',
-  'Côté Potager':  '#b87ab8',
 }
 
-const ROOMS = ['Côté Jardin', 'Côté Cèdre', 'Côté Vallée', 'Côté Potager']
+const ROOMS = ['Côté Jardin', 'Côté Cèdre', 'Côté Vallée']
 
 const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
 const DAYS_FR   = ['Lu','Ma','Me','Je','Ve','Sa','Di']
@@ -50,7 +49,7 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const m = now.getMonth()
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
 
-  const PRICE = 88
+  const PRICE = 90
   const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
 
   const active = reservations.filter(r => r.status !== 'cancelled')
@@ -65,7 +64,7 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
     const occupied = active.some(r => iso >= r.check_in && iso < r.check_out)
     if (occupied) nightsOccupied++
   }
-  const occupancy = Math.round((nightsOccupied / (daysInMonth * 4)) * 100) // 4 chambres
+  const occupancy = Math.round((nightsOccupied / (daysInMonth * 3)) * 100) // 3 chambres
 
   // CA ce mois
   const revenueMonth = thisMonth.reduce((s, r) => s + getPrice(r), 0)
@@ -81,7 +80,7 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const topRoom = Object.entries(roomCount).sort((a,b) => b[1]-a[1])[0]
 
   const kpis = [
-    { label: 'Taux occupation', value: `${occupancy} %`, sub: `ce mois (4 chambres)`, color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(255,255,255,.5)' },
+    { label: 'Taux occupation', value: `${occupancy} %`, sub: `ce mois (3 chambres)`, color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(255,255,255,.5)' },
     { label: 'CA ce mois',     value: `${revenueMonth} €`, sub: MONTHS_FR[m], color: '#c4a050' },
     { label: `CA ${y}`,        value: `${revenueYear} €`,  sub: 'année en cours', color: '#c4a050' },
     { label: 'Durée moy.',     value: `${avgNights} nuits`, sub: 'par séjour', color: 'rgba(255,255,255,.7)' },
@@ -113,7 +112,7 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
   const [err, setErr] = useState('')
 
   const n = nights(form.check_in, form.check_out)
-  const price = n * 88
+  const price = n * 90
 
   const F = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
 
@@ -221,7 +220,7 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
           {/* Prix calculé */}
           {n > 0 && (
             <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '10px 14px', fontSize: '0.82rem', color: '#c4a050' }}>
-              {n} nuit{n>1?'s':''} × 88 € = <strong>{price} €</strong>
+              {n} nuit{n>1?'s':''} × 90 € = <strong>{price} €</strong>
             </div>
           )}
 
@@ -340,7 +339,6 @@ const ROOM_SLUGS: { slug: string; name: string; emoji: string; color: string }[]
   { slug: 'jardin',  name: 'Côté Jardin',  emoji: '🌿', color: '#6db87a' },
   { slug: 'cedre',   name: 'Côté Cèdre',   emoji: '🌲', color: '#c4907a' },
   { slug: 'vallee',  name: 'Côté Vallée',  emoji: '🏞️', color: '#7ab8c4' },
-  { slug: 'potager', name: 'Côté Potager', emoji: '🌱', color: '#8ab578' },
 ]
 
 function HotesPanel() {
@@ -857,7 +855,7 @@ function FacturationPanel() {
         <label style={{...lbl, marginBottom: 10}}>
           <span style={cap}>Chambre</span>
           <select style={inp} value={chambre} onChange={e => setChambre(e.target.value)}>
-            {['Côté Jardin','Côté Cèdre','Côté Vallée','Côté Potager'].map(r => <option key={r}>{r}</option>)}
+            {['Côté Jardin','Côté Cèdre','Côté Vallée'].map(r => <option key={r}>{r}</option>)}
           </select>
         </label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>

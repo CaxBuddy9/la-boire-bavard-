@@ -112,7 +112,18 @@
       "Bash(Select-Object FullName)",
       "Bash(git rm *)",
       "Bash(vercel --prod)",
-      "Bash(vercel dns *)"
+      "Bash(vercel dns *)",
+      "Bash(vercel --version)",
+      "Bash(vercel logs *)",
+      "Read(//tmp/**)",
+      "Bash(del generate-favicon.mjs)",
+      "Bash(cd *)",
+      "Bash(ls -la favicon* apple* icon*)",
+      "Bash(ls photos/logo/)",
+      "Bash(ls -la ../src/app/favicon.ico)",
+      "Bash(file public/logo-lbba.png)",
+      "Bash(python -c \"from PIL import Image; im=Image.open\\('public/logo-lbba.png'\\); print\\(im.size, im.mode\\)\")",
+      "Bash(\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf=\"D:\\\\la-boire-bavard\\\\carte-boissons.pdf\" \"file:///D:/la-boire-bavard/carte-boissons.html\")"
     ]
   }
 }

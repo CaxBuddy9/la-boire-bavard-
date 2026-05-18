@@ -5,10 +5,9 @@ import { ROOMS } from '@/lib/rooms'
 import { useT } from '@/context/LangContext'
 
 const ROOM_IMAGES: Record<string, string> = {
-  jardin:  '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg',
-  cedre:   '/photos/chambres/cedre/chambre-cedre-console-terrasse.jpeg',
-  vallee:  '/photos/exterieur/maison-facade-printemps.jpg',
-  potager: '/photos/chambres/potager/chambre-potager-entree.jpeg',
+  jardin:  '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
+  cedre:   '/photos/chambres/cedre/chambre-cedre-01.jpeg',
+  vallee:  '/photos/chambres/vallee/chambre-vallee-02.jpeg',
 }
 
 export default function RoomsTeaser() {
@@ -20,12 +19,12 @@ export default function RoomsTeaser() {
         <h2 className="font-serif font-normal text-forest"
           style={{ fontSize: 'clamp(2.2rem,4vw,3.2rem)' }}
         >
-          {t('Quatre chambres,', 'Four rooms,')}<br />
+          {t('Trois chambres,', 'Three rooms,')}<br />
           <em className="italic">{t('une maison', 'one home')}</em>
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-0.5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-0.5">
         {ROOMS.map((room) => (
           <Link
             key={room.id}
@@ -33,11 +32,11 @@ export default function RoomsTeaser() {
             className="group relative overflow-hidden aspect-[3/4] block"
           >
             <Image
-              src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg'}
+              src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg'}
               alt={room.name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
-              sizes="(max-width:768px) 50vw, 25vw"
+              sizes="(max-width:768px) 100vw, 33vw"
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-forest/85 via-transparent to-transparent" />

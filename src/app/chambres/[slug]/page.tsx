@@ -47,7 +47,7 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
             <p className="label-caps mb-3">
               {room.capacityMin === room.capacityMax
                 ? `${room.capacityMin} personnes`
-                : `${room.capacityMin}–${room.capacityMax} personnes`} · 88 €/nuit
+                : `${room.capacityMin}–${room.capacityMax} personnes`} · {room.pricePerNight} €/nuit
             </p>
             <h1 className="font-serif font-normal text-white leading-none mb-3"
               style={{ fontSize: 'clamp(3rem,6vw,5rem)' }}
@@ -98,7 +98,7 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
 
             {/* Right: booking card — first on mobile, right column on desktop */}
             <aside className="order-first md:order-none md:sticky md:top-[90px] self-start">
-              <BookingCard roomName={room.name} capacityMax={room.capacityMax} />
+              <BookingCard roomName={room.name} capacityMax={room.capacityMax} pricePerNight={room.pricePerNight} />
             </aside>
           </div>
         </div>

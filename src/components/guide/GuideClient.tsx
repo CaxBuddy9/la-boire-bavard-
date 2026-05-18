@@ -401,10 +401,10 @@ export default function GuideClient({ room }: { room: RoomData }) {
         {/* 4 infos clés */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: '0.875rem' }}>
           {[
-            { emoji: '🕐', label: t('checkin'), val: 'Dès 15h00' },
-            { emoji: '🚪', label: t('checkout'), val: 'Avant 11h00' },
-            { emoji: '☕', label: t('breakfastTime'), val: '7h30 – 10h00' },
-            { emoji: '🍽️', label: t('tableLabel'), val: '25 € / pers.' },
+            { emoji: '🕐', label: t('checkin'), val: 'Dès 16h00' },
+            { emoji: '🚪', label: t('checkout'), val: 'Avant 10h00' },
+            { emoji: '☕', label: t('breakfastTime'), val: '8h00 – 10h00' },
+            { emoji: '🍽️', label: t('tableLabel'), val: '18 € planche' },
           ].map(({ emoji, label, val }) => (
             <div key={label} style={{ ...card, overflow: 'visible' as const, marginBottom: 0, textAlign: 'center', padding: '1.1rem 1rem', borderTop: `3px solid ${theme.accent}` }}>
               <div style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>{emoji}</div>
@@ -646,9 +646,15 @@ export default function GuideClient({ room }: { room: RoomData }) {
           <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'white', fontWeight: 400, fontStyle: 'italic', margin: '0 0 1rem', lineHeight: 1.3 }}>
             {t('byeTitle')}
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem', lineHeight: 1.75, margin: '0 0 1rem' }}>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem', lineHeight: 1.75, margin: '0 0 1.5rem' }}>
             {t('byeDesc')}
           </p>
+          <a
+            href={`/chambres/cote-${room.slug}`}
+            style={{ display: 'inline-block', padding: '12px 28px', background: theme.accent, color: theme.pillActiveText, textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '1rem' }}
+          >
+            {lang === 'en' ? 'Book again' : lang === 'es' ? 'Reservar de nuevo' : lang === 'pt' ? 'Reservar novamente' : 'Réserver à nouveau'}
+          </a>
           <p style={{ color: theme.accent, fontSize: '0.88rem', margin: 0, opacity: 0.8 }}>{t('rating')} : ⭐ 9,9 / 10</p>
         </div>
 

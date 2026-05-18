@@ -6,16 +6,16 @@ import PhotoGallery from '@/components/PhotoGallery'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
-  description: "Découvrez la longère angevine de La Boire Bavard : piscine chauffée, jacuzzi, jardin, vignoble et val de Loire.",
+  description: "Découvrez la longère angevine de La Boire Bavard : piscine chauffée, jardin arboré, vignoble et val de Loire.",
 }
 
 const FEATURES = [
-  { icon: '≋', title: 'Piscine chauffée', desc: 'Profitez de la piscine chauffée ouverte de mai à octobre, entourée d\'un jardin préservé.' },
-  { icon: '∿', title: 'Jacuzzi & balnéo', desc: 'Jacuzzi privatisable sur demande — un moment de détente absolue après une journée de découvertes.' },
-  { icon: '❧', title: 'Jardin & potager', desc: 'Un jardin généreux avec potager, verger et herbes aromatiques cueillis le matin pour votre petit-déjeuner.' },
-  { icon: '✦', title: 'Vue Loire & vignoble', desc: 'La propriété est nichée entre la vallée de la Loire et les vignes de l\'Anjou, offrant des panoramas exceptionnels.' },
-  { icon: '◇', title: 'Table d\'hôtes', desc: 'Le vendredi soir, Sandrine propose une table d\'hôtes à 25 €/pers. avec produits du jardin et vins locaux.' },
-  { icon: '◉', title: 'Parkings & calme', desc: 'Parking privé, environnement rural, aucun bruit de circulation. Le calme absolu de la campagne angevine.' },
+  { icon: '≋', title: 'Piscine chauffée', desc: 'Profitez de la piscine chauffée ouverte de mai à octobre, entourée d\'un jardin préservé. Sécurisée, accessible de 9h à 22h.' },
+  { icon: '❧', title: 'Jardin arboré', desc: 'Un parc généreux avec cèdres centenaires, fleurs, herbes aromatiques et coins ombragés. Idéal pour flâner ou lire à l\'ombre.' },
+  { icon: '✦', title: 'Vue sur les vignes', desc: 'La propriété est nichée au cœur du vignoble de l\'Anjou, à deux pas du val de Loire — panoramas exceptionnels au lever du soleil.' },
+  { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — le coin préféré de nos hôtes.' },
+  { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner maison préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
+  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural, aucun bruit de circulation. Le calme absolu de la campagne angevine.' },
 ]
 
 export default function PropriетеPage() {
@@ -118,14 +118,14 @@ export default function PropriетеPage() {
               columns={3}
               photos={[
                 { src: '/photos/exterieur/maison-exterieure-piscine.jpg', alt: 'Jardin et piscine' },
+                { src: '/photos/exterieur/dependance-cedre-piscine.jpeg', alt: 'Dépendance Cèdre côté piscine' },
                 { src: '/photos/exterieur/maison-exterieure-fleurs.jpg', alt: 'La maison au printemps' },
-                { src: '/photos/exterieur/maison-exterieure-ete.jpg', alt: 'Vue extérieure été' },
-                { src: '/photos/exterieur/propriete-jardin-cedre.jpg', alt: 'Le jardin et le cèdre centenaire' },
-                { src: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', alt: 'Chambre Côté Jardin' },
-                { src: '/photos/chambres/jardin/chambre-jardin-lit-terrasse-ouvert.jpeg', alt: 'Lit avec vue sur le jardin' },
-                { src: '/photos/chambres/jardin/chambre-jardin-cheminee-bureau.jpeg', alt: 'Cheminée en tuffeau' },
-                { src: '/photos/chambres/jardin/chambre-jardin-console-miroir.jpeg', alt: 'Console et miroir' },
-                { src: '/photos/chambres/jardin/chambre-jardin-acces-jardin.jpeg', alt: 'Entrée depuis la terrasse' },
+                { src: '/photos/exterieur/terrasse-pierre-01.jpeg', alt: 'Terrasse en pierre et jardin' },
+                { src: '/photos/exterieur/dependance-cedre-01.jpeg', alt: 'Façade de la dépendance Cèdre' },
+                { src: '/photos/exterieur/jardin-iris-01.jpeg', alt: 'Iris en fleurs au jardin' },
+                { src: '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg', alt: 'Chambre Côté Jardin' },
+                { src: '/photos/chambres/vallee/chambre-vallee-02.jpeg', alt: 'Chambre Côté Vallée' },
+                { src: '/photos/chambres/cedre/chambre-cedre-01.jpeg', alt: 'Chambre Côté Cèdre, dépendance' },
               ]}
             />
           </div>

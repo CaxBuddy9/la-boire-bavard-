@@ -9,6 +9,7 @@ type BookedRange = { check_in: string; check_out: string }
 type Props = {
   roomName: string
   capacityMax: number
+  pricePerNight?: number
 }
 
 function fmtDate(iso: string) {
@@ -29,7 +30,7 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
 }
 
-export default function BookingCard({ roomName, capacityMax }: Props) {
+export default function BookingCard({ roomName, capacityMax, pricePerNight = 90 }: Props) {
   const [checkin,      setCheckin]      = useState('')
   const [checkout,     setCheckout]     = useState('')
   const [persons,      setPersons]      = useState(2)
@@ -53,7 +54,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
     const d = (new Date(checkout).getTime() - new Date(checkin).getTime()) / 86400000
     return d > 0 ? d : 0
   })()
-  const total = nights * 88
+  const total = nights * pricePerNight
 
   const datesOk   = nights > 0
   const contactOk = nom.trim().length > 0 && email.trim().includes('@')
@@ -100,7 +101,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
         Réservation
       </p>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 22 }}>
-        <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '2rem', color: '#c4a050' }}>88 €</span>
+        <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '2rem', color: '#c4a050' }}>{pricePerNight} €</span>
         <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.3)' }}>
           / nuit · petit-déjeuner inclus
         </span>
@@ -244,7 +245,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
               <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.35)' }}>
-                88 € × {nights} nuit{nights > 1 ? 's' : ''}
+                {pricePerNight} € × {nights} nuit{nights > 1 ? 's' : ''}
               </span>
               <span style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(255,255,255,.5)' }}>
                 {total} €
@@ -287,7 +288,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
           }}
         >
           {datesOk
-            ? (contactOk ? `Payer · ${total} €` : 'Remplissez vos coordonnées ↑')
+            ? (contactOk ? `Demander cette chambre · ${total} €` : 'Remplissez vos coordonnées ↑')
             : 'Réserver cette chambre'}
         </button>
         <Link
@@ -320,7 +321,7 @@ export default function BookingCard({ roomName, capacityMax }: Props) {
           color: 'rgba(255,255,255,.18)',
           marginBottom: 18,
         }}>
-          Paiement sécurisé · Annulation gratuite 48h avant
+          Sans paiement en ligne · Réponse sous 24h · Annulation gratuite 48h avant
         </p>
       )}
 

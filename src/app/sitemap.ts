@@ -9,11 +9,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/chambres/cote-jardin`,         lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${BASE}/chambres/cote-cedre`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${BASE}/chambres/cote-vallee`,         lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE}/chambres/cote-potager`,        lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${BASE}/bienetre`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/petitdej`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/propriete`,                    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/avis`,                         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
+    { url: `${BASE}/blog`,                         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.6 },
     { url: `${BASE}/contact`,                      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/mentions-legales`,             lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.2 },
   ]

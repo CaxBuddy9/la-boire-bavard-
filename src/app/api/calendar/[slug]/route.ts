@@ -5,7 +5,6 @@ const SLUG_TO_ROOM: Record<string, string> = {
   jardin:  'Cote Jardin',
   cedre:   'Cote Cedre',
   vallee:  'Cote Vallee',
-  potager: 'Cote Potager',
 }
 
 // Mapping slug → nom réel en base Supabase
@@ -13,7 +12,6 @@ const SLUG_TO_ROOM_ID: Record<string, string> = {
   jardin:  'Côté Jardin',
   cedre:   'Côté Cèdre',
   vallee:  'Côté Vallée',
-  potager: 'Côté Potager',
 }
 
 function getSupabase() {

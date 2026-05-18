@@ -30,6 +30,7 @@ export default function Footer() {
     { href: '/bienetre',         label: t('Bien-être', 'Wellness') },
     { href: '/petitdej',         label: t('Petit-déjeuner', 'Breakfast') },
     { href: '/avis',             label: t('Avis', 'Reviews') },
+    { href: '/blog',             label: t('Journal', 'Journal') },
     { href: '/contact',          label: t('Contact & Accès', 'Contact & Directions') },
     { href: '/mentions-legales', label: t('Mentions légales', 'Legal notice') },
   ]

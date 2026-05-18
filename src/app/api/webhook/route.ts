@@ -28,7 +28,6 @@ const CHAMBRES_LABELS: Record<string, string> = {
   jardin:  'Côté Jardin',
   cedre:   'Côté Cèdre',
   vallee:  'Côté Vallée',
-  potager: 'Côté Potager',
 }
 
 async function sendConfirmationEmail(meta: Record<string, string>, checkIn: string, checkOut: string, totalEur: number) {

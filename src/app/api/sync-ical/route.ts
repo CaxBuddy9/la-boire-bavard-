@@ -5,7 +5,6 @@ const SLUG_TO_ROOM: Record<string, string> = {
   jardin:  'Côté Jardin',
   cedre:   'Côté Cèdre',
   vallee:  'Côté Vallée',
-  potager: 'Côté Potager',
 }
 
 const PLATFORMS = ['BOOKING', 'AGODA', 'TRIPADVISOR']
