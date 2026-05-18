@@ -2,13 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
-import {
-  featuredPost,
-  gridPosts,
-  formatDate,
-  facebookEmbedUrl,
-  type BlogPost,
-} from '@/lib/blog'
+import { featuredPost, gridPosts, formatDate, type BlogPost } from '@/lib/blog'
 
 export const metadata = {
   title: 'Journal — La Boire Bavard',
@@ -76,28 +70,23 @@ function VideoCard({ post }: { post: BlogPost }) {
 
 function FeaturedPost({ post }: { post: BlogPost }) {
   return (
-    <article className="grid lg:grid-cols-[320px_1fr] gap-10 items-center">
-      {/* Reel Facebook — format vertical */}
-      <div className="mx-auto w-full max-w-[320px]">
-        {post.facebookReel ? (
-          <div
-            className="relative w-full overflow-hidden bg-[#0a1209]"
-            style={{ aspectRatio: '320 / 569', border: '1px solid rgba(196,160,80,.18)' }}
-          >
-            <iframe
-              src={facebookEmbedUrl(post.facebookReel)}
-              title={post.title}
-              loading="lazy"
-              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-              allowFullScreen
-              scrolling="no"
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
+    <article className="grid lg:grid-cols-[1.5fr_1fr] gap-10 items-center">
+      {/* Vidéo — format 16:9 */}
+      <div
+        className="relative w-full aspect-video overflow-hidden bg-[#0a1209]"
+        style={{ border: '1px solid rgba(196,160,80,.18)' }}
+      >
+        {post.youtubeId ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${post.youtubeId}`}
+            title={post.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full"
+          />
         ) : (
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: '320 / 569' }}>
-            <Image src={post.poster} alt={post.title} fill className="object-cover" sizes="320px" />
-          </div>
+          <Image src={post.poster} alt={post.title} fill className="object-cover" sizes="(max-width:1024px) 100vw, 60vw" />
         )}
       </div>
 

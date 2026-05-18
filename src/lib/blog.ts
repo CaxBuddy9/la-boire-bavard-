@@ -6,9 +6,6 @@
 //      Ex.  https://www.youtube.com/watch?v=dQw4w9WgXcQ  →  youtubeId: 'dQw4w9WgXcQ'
 //   3. Ajouter un objet dans le tableau `blogPosts` ci-dessous.
 //
-// Pour intégrer un reel / une vidéo Facebook : renseigner `facebookReel`
-// avec l'URL complète du reel.
-//
 // `featured: true` → l'article s'affiche en grand « à la une » en haut du Journal.
 // Tant qu'aucune vidéo n'est renseignée, l'article affiche son image d'aperçu
 // avec la mention « Vidéo bientôt disponible ».
@@ -21,7 +18,6 @@ export type BlogPost = {
   excerpt: string
   poster: string        // image d'aperçu (chemin dans /public)
   youtubeId?: string    // identifiant de la vidéo YouTube
-  facebookReel?: string // URL complète d'un reel / vidéo Facebook
   featured?: boolean    // mise en avant « à la une »
   sourceLabel?: string  // crédit de la source (ex. 'France 3 Centre-Val de Loire')
   sourceUrl?: string    // lien vers l'article d'origine
@@ -38,7 +34,7 @@ export const blogPosts: BlogPost[] = [
       "des zones humides d'une valeur exceptionnelle. Une belle reconnaissance pour ce fleuve sauvage " +
       'qui coule à quelques minutes de La Boire Bavard.',
     poster: '/photos/exterieur/maison-facade-printemps.jpg',
-    facebookReel: 'https://www.facebook.com/reel/1585327185851166/',
+    youtubeId: 'UftAoVLCOlw',
     featured: true,
     sourceLabel: 'France 3 Centre-Val de Loire',
     sourceUrl:
@@ -84,15 +80,4 @@ export function formatDate(iso: string): string {
     month: 'long',
     year: 'numeric',
   })
-}
-
-// Construit l'URL d'intégration du lecteur Facebook pour un reel / une vidéo.
-export function facebookEmbedUrl(reelUrl: string): string {
-  const params = new URLSearchParams({
-    href: reelUrl,
-    show_text: 'false',
-    width: '320',
-    height: '569',
-  })
-  return `https://www.facebook.com/plugins/video.php?${params.toString()}`
 }
