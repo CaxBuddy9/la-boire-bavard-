@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 const WMO: Record<number, string> = {
   0:'☀️',1:'🌤',2:'⛅',3:'☁️',
@@ -12,6 +13,7 @@ const WMO: Record<number, string> = {
 }
 
 export default function MeteoWidget() {
+  const pathname = usePathname()
   const [data, setData] = useState<{ temp: number; icon: string } | null>(null)
 
   useEffect(() => {
@@ -26,6 +28,8 @@ export default function MeteoWidget() {
       .catch(() => {})
   }, [])
 
+  // Masqué sur le livret /guide (mobile, barre d'action dédiée)
+  if (pathname?.startsWith('/guide')) return null
   if (!data) return null
 
   return (

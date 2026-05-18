@@ -68,7 +68,7 @@ Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous
 ✅ Note Exceptionnel 9.9/10 sur Booking
 ✅ Petit-déjeuner gourmand inclus — 88€/nuit
 ✅ Piscine chauffée, jacuzzi, jardin
-✅ Table d'hôtes le vendredi soir (25€/pers.)
+✅ Planche du soir gourmande (18€/pers.)
 ✅ À 25 min d'Angers, sur la Loire à Vélo
 
 📞 06 75 78 63 35
@@ -80,15 +80,15 @@ Sandrine vous attend 🌿`,
   {
     platform: 'Facebook',
     format: 'Post événementiel',
-    category: 'Table d\'hôtes',
-    caption: `🍷 Vendredi soir — Table d'Hôtes à La Boire Bavard
+    category: 'Planche du soir',
+    caption: `🍷 La planche du soir à La Boire Bavard
 
-Sandrine vous régale avec les produits du jardin et du terroir anjou. Vins locaux, ambiance maison, convivialité garantie.
+Pour prolonger la soirée en douceur, Sandrine prépare une planche gourmande à partager — charcuterie, fromages et produits du terroir anjou, le tout fait maison.
 
-25€ par personne · Sur réservation uniquement
-Ouvert aux hôtes présents ce soir-là.
+18€ par personne · Sur réservation
+Pour les hôtes qui souhaitent dîner sur place.
 
-Réservez votre séjour et signalez votre intérêt pour la table 👇
+Réservez votre séjour et signalez votre intérêt pour la planche 👇
 
 📞 06 75 78 63 35 | 💬 WhatsApp : wa.me/33675786335`,
   },

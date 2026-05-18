@@ -1,4 +1,12 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+
 export default function WhatsAppFloat() {
+  const pathname = usePathname()
+  // Le livret /guide a sa propre barre d'action en bas — pas de bouton flottant
+  if (pathname?.startsWith('/guide')) return null
+
   return (
     <>
       <a

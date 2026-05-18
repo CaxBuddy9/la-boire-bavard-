@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { LogoSVG } from '@/components/Logo'
 
 type Lang = 'fr' | 'en' | 'es' | 'pt'
@@ -52,7 +53,7 @@ const T = {
   checkin:       { fr: 'Arrivée', en: 'Check-in', es: 'Llegada', pt: 'Check-in' },
   checkout:      { fr: 'Départ', en: 'Check-out', es: 'Salida', pt: 'Saída' },
   breakfastTime: { fr: 'Petit-déjeuner', en: 'Breakfast', es: 'Desayuno', pt: 'Café da manhã' },
-  tableLabel:    { fr: 'Table d\'hôtes', en: 'Dinner', es: 'Cena', pt: 'Jantar' },
+  menuLabel:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
   morningTag:    { fr: 'TRADITIONS DU MATIN', en: 'MORNING TRADITIONS', es: 'TRADICIONES MATUTINAS', pt: 'TRADIÇÕES MATINAIS' },
   morningTitle:  { fr: 'Le Petit-Déjeuner', en: 'Breakfast at the Estate', es: 'El Desayuno de la Casa', pt: 'O Café da Manhã da Casa' },
   morningDesc:   { fr: 'Servi en salle ou en terrasse de 7h30 à 10h00. Sandrine prépare chaque matin un petit-déjeuner maison avec les meilleurs produits de la région.', en: 'Served indoors or on the terrace from 7:30 to 10:00. Sandrine prepares a homemade breakfast each morning with the finest local produce.', es: 'Servido en el salón o en la terraza de 7:30 a 10:00. Sandrine prepara cada mañana un desayuno casero con los mejores productos locales.', pt: 'Servido na sala ou na varanda das 7h30 às 10h00. A Sandrine prepara todos os dias um pequeno-almoço caseiro com os melhores produtos locais.' },
@@ -60,24 +61,11 @@ const T = {
   dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à Sandrine la veille.', en: 'We tailor breakfast to your needs. Let Sandrine know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a Sandrine de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe a Sandrine das suas preferências na noite anterior.' },
   diets:         { fr: ['Végétarien', 'Végétalien', 'Sans gluten', 'Allergie fruits à coque', 'Sans lactose', 'Halal'], en: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy', 'Dairy-Free', 'Halal'], es: ['Vegetariano', 'Vegano', 'Sin gluten', 'Alergia frutos secos', 'Sin lactosa', 'Halal'], pt: ['Vegetariano', 'Vegano', 'Sem glúten', 'Alergia a nozes', 'Sem lactose', 'Halal'] },
   dietSent:      { fr: '✓ Sandrine a été prévenue', en: '✓ Sandrine has been notified', es: '✓ Sandrine ha sido avisada', pt: '✓ Sandrine foi notificada' },
-  dinnerTag:     { fr: 'DÎNER EN COMMUN', en: 'SHARED DINING', es: 'CENA COMPARTIDA', pt: 'JANTAR PARTILHADO' },
-  dinnerTitle:   { fr: 'Table d\'Hôtes', en: 'Host\'s Table', es: 'Mesa de Huéspedes', pt: 'Mesa de Hóspedes' },
-  dinnerDesc:    { fr: 'Sandrine cuisine chaque soir un repas généreux autour de la grande table — légumes du potager, produits du terroir angevin, vins de Loire sélectionnés.', en: 'Sandrine cooks a generous dinner around the long table each evening — garden vegetables, Anjou terroir produce, selected Loire wines.', es: 'Sandrine cocina cada noche una cena generosa alrededor de la gran mesa — verduras del huerto, productos del terruño angevino, vinos del Loira seleccionados.', pt: 'A Sandrine cozinha todas as noites um jantar generoso à volta da mesa grande — legumes da horta, produtos do terroir angevino, vinhos do Loira selecionados.' },
-  dinnerBook:    { fr: 'Réservation obligatoire avant 18h00', en: 'Reservation required before 6:00 PM', es: 'Reserva obligatoria antes de las 18:00', pt: 'Reserva obrigatória antes das 18h00' },
-  dinnerPrice:   { fr: '25 € par personne', en: '25 € per person', es: '25 € por persona', pt: '25 € por pessoa' },
-  dinnerSlots:   { fr: 'Choisissez votre heure', en: 'Select your time', es: 'Elija su hora', pt: 'Escolha a sua hora' },
-  dinnerConfirm: { fr: 'Confirmer par WhatsApp', en: 'Confirm via WhatsApp', es: 'Confirmar por WhatsApp', pt: 'Confirmar via WhatsApp' },
-  dinnerSent:    { fr: '✓ Réservation envoyée à Sandrine', en: '✓ Reservation sent to Sandrine', es: '✓ Reserva enviada a Sandrine', pt: '✓ Reserva enviada à Sandrine' },
-  poolTag:       { fr: 'BIEN-ÊTRE & DÉTENTE', en: 'WELLNESS & RELAXATION', es: 'BIENESTAR & RELAJACIÓN', pt: 'BEM-ESTAR & RELAXAMENTO' },
-  poolTitle:     { fr: 'Piscine & Jacuzzi', en: 'Pool & Jacuzzi', es: 'Piscina & Jacuzzi', pt: 'Piscina & Jacuzzi' },
-  poolHours:     { fr: 'Ouverte de 9h à 21h', en: 'Open from 9 AM to 9 PM', es: 'Abierta de 9:00 a 21:00', pt: 'Aberta das 9h às 21h' },
-  spaNote:       { fr: 'Jacuzzi & Sauna sur réservation', en: 'Jacuzzi & Sauna by reservation', es: 'Jacuzzi & Sauna con reserva', pt: 'Jacuzzi & Sauna mediante reserva' },
-  spaBookTitle:  { fr: 'Réserver le Jacuzzi & Sauna', en: 'Book the Jacuzzi & Sauna', es: 'Reservar el Jacuzzi & Sauna', pt: 'Reservar o Jacuzzi & Sauna' },
-  spaBookDesc:   { fr: 'Choisissez votre créneau (1h à 1h30). Sandrine confirmera votre réservation.', en: 'Choose your slot (1h to 1.5h). Sandrine will confirm your booking.', es: 'Elija su franja horaria (1h a 1h30). Sandrine confirmará su reserva.', pt: 'Escolha o seu horário (1h a 1h30). Sandrine confirmará a sua reserva.' },
-  spaSlots:      { fr: 'Choisissez un créneau', en: 'Select a time slot', es: 'Elija una franja', pt: 'Escolha um horário' },
-  spaConfirm:    { fr: 'Demander ce créneau', en: 'Request this slot', es: 'Solicitar esta franja', pt: 'Solicitar este horário' },
-  spaSent:       { fr: '✓ Demande envoyée à Sandrine', en: '✓ Request sent to Sandrine', es: '✓ Solicitud enviada a Sandrine', pt: '✓ Pedido enviado à Sandrine' },
-  poolRules:     { fr: ['Douche obligatoire avant d\'entrer', 'Serviettes disponibles sur demande', 'Silence demandé après 22h'], en: ['Shower required before entering', 'Towels available on request', 'Quiet hours after 10 PM'], es: ['Ducha obligatoria antes de entrar', 'Toallas disponibles a petición', 'Silencio a partir de las 22:00'], pt: ['Duche obrigatório antes de entrar', 'Toalhas disponíveis a pedido', 'Silêncio após as 22h'] },
+  menuTag:       { fr: 'À TOUTE HEURE', en: 'ANYTIME', es: 'A CUALQUIER HORA', pt: 'A QUALQUER HORA' },
+  menuTitle:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
+  menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec Sandrine — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with Sandrine — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con Sandrine, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com a Sandrine.' },
+  menuFree:      { fr: 'Offert', en: 'Free', es: 'Gratis', pt: 'Grátis' },
+  menuNote:      { fr: 'Une question sur la carte ? Demandez à Sandrine.', en: 'Any question about the menu? Just ask Sandrine.', es: '¿Alguna pregunta sobre la carta? Pregunte a Sandrine.', pt: 'Alguma questão sobre a carta? Pergunte à Sandrine.' },
   tipsTag:       { fr: 'BONS PLANS', en: 'LOCAL TIPS', es: 'CONSEJOS LOCALES', pt: 'DICAS LOCAIS' },
   tipsTitle:     { fr: 'À Découvrir', en: 'Things to Explore', es: 'Qué Descubrir', pt: 'O Que Descobrir' },
   tips: {
@@ -131,15 +119,35 @@ const T = {
 const WIFI_RESEAU   = 'Livebox-D6B0'
 const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 
-const DINNER_SLOTS = ['19:00', '19:30', '20:00', '20:30']
-const SPA_SLOTS    = ['10:00', '11:30', '14:00', '15:30', '17:00', '18:30', '20:00']
+// ─── Carte Boissons & Snacks ────────────────────────────────────────────────
+// Sandrine : pour modifier les articles ou les prix, éditez simplement ce tableau.
+// `free: true` affiche « Offert » au lieu d'un prix.
+type MenuItem = { name: Record<Lang, string>; price: string; free?: boolean }
+type MenuSection = { emoji: string; cat: Record<Lang, string>; items: MenuItem[] }
 
-const BREAKFAST_ITEMS = {
-  fr: ['Confitures maison', 'Viennoiseries du four', 'Oeufs frais du jardin', 'Fromages d\'Anjou', 'Jus de fruits pressés', 'Café · Thé · Chocolat chaud'],
-  en: ['Homemade jams', 'Freshly baked pastries', 'Fresh garden eggs', 'Anjou cheeses', 'Freshly pressed juice', 'Coffee · Tea · Hot chocolate'],
-  es: ['Mermeladas caseras', 'Bollería recién horneada', 'Huevos frescos del huerto', 'Quesos de Anjou', 'Zumo recién exprimido', 'Café · Té · Chocolate caliente'],
-  pt: ['Compotas caseiras', 'Pastelaria recém-feita', 'Ovos frescos do jardim', 'Queijos de Anjou', 'Sumo de fruta fresco', 'Café · Chá · Chocolate quente'],
-}
+const MENU: MenuSection[] = [
+  {
+    emoji: '🥂',
+    cat: { fr: 'Boissons', en: 'Drinks', es: 'Bebidas', pt: 'Bebidas' },
+    items: [
+      { name: { fr: 'Eau plate / pétillante', en: 'Still / sparkling water', es: 'Agua sin gas / con gas', pt: 'Água lisa / com gás' }, price: '', free: true },
+      { name: { fr: 'Café · Thé · Infusion', en: 'Coffee · Tea · Herbal tea', es: 'Café · Té · Infusión', pt: 'Café · Chá · Infusão' }, price: '', free: true },
+      { name: { fr: 'Jus de fruits / soda', en: 'Fruit juice / soda', es: 'Zumo / refresco', pt: 'Sumo / refrigerante' }, price: '2 €' },
+      { name: { fr: 'Bière locale d\'Anjou', en: 'Local Anjou beer', es: 'Cerveza local de Anjou', pt: 'Cerveja local de Anjou' }, price: '4 €' },
+      { name: { fr: 'Verre de vin de Loire', en: 'Glass of Loire wine', es: 'Copa de vino del Loira', pt: 'Copo de vinho do Loire' }, price: '4 €' },
+    ],
+  },
+  {
+    emoji: '🧀',
+    cat: { fr: 'Snacks & Planches', en: 'Snacks & Boards', es: 'Snacks & Tablas', pt: 'Snacks & Tábuas' },
+    items: [
+      { name: { fr: 'Planche apéritive — charcuterie & fromages d\'Anjou', en: 'Aperitif board — Anjou cured meats & cheeses', es: 'Tabla de aperitivo — embutidos y quesos de Anjou', pt: 'Tábua de aperitivo — enchidos e queijos de Anjou' }, price: '18 €' },
+      { name: { fr: 'Planche sucrée', en: 'Sweet board', es: 'Tabla dulce', pt: 'Tábua doce' }, price: '12 €' },
+      { name: { fr: 'Olives & fruits secs', en: 'Olives & nuts', es: 'Aceitunas y frutos secos', pt: 'Azeitonas e frutos secos' }, price: '3 €' },
+      { name: { fr: 'Biscuits maison', en: 'Homemade biscuits', es: 'Galletas caseras', pt: 'Bolachas caseiras' }, price: '', free: true },
+    ],
+  },
+]
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: 'fr', label: 'FR' },
@@ -163,11 +171,7 @@ async function sendToAdmin(room: string, type: string, data: unknown, lang: stri
 export default function GuideClient({ room }: { room: RoomData }) {
   const [lang, setLang] = useState<Lang>('fr')
   const [selectedDiets, setSelectedDiets] = useState<number[]>([])
-  const [selectedSlot, setSelectedSlot] = useState<string | null>(null)
-  const [selectedSpaSlot, setSelectedSpaSlot] = useState<string | null>(null)
   const [dietSent, setDietSent] = useState(false)
-  const [dinnerSent, setDinnerSent] = useState(false)
-  const [spaSent, setSpaSent] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showWifiQR, setShowWifiQR] = useState(false)
   const [wifiStatus, setWifiStatus] = useState<'idle' | 'done'>('idle')
@@ -217,18 +221,6 @@ export default function GuideClient({ room }: { room: RoomData }) {
 
   const toggleDiet = (i: number) =>
     setSelectedDiets(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])
-
-  // ── Confirmer dîner ────────────────────────────────────────────────────────
-  const confirmDinner = async () => {
-    await sendToAdmin(room.slug, 'dinner', { slot: selectedSlot }, lang)
-    setDinnerSent(true)
-  }
-
-  // ── Confirmer spa ──────────────────────────────────────────────────────────
-  const confirmSpa = async () => {
-    await sendToAdmin(room.slug, 'spa', { slot: selectedSpaSlot }, lang)
-    setSpaSent(true)
-  }
 
   // Helpers styles ─────────────────────────────────────────────────────────
   const card: React.CSSProperties = {
@@ -291,11 +283,13 @@ export default function GuideClient({ room }: { room: RoomData }) {
       {room.image && (
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '1.25rem 1.25rem 0' }}>
           <div style={{ position: 'relative', width: '100%', height: 'clamp(200px, 55vw, 320px)', borderRadius: 20, overflow: 'hidden' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={room.image}
               alt={room.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%', display: 'block' }}
+              fill
+              sizes="(max-width: 600px) 100vw, 600px"
+              priority
+              style={{ objectFit: 'cover', objectPosition: 'center 35%' }}
             />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55) 100%)' }} />
             <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.5rem' }}>
@@ -374,11 +368,12 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
               Scannez ce QR code avec l'appareil photo
             </p>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/photos/wifi-qr-lbb.png"
               alt="QR code WiFi La Boire Bavard"
-              style={{ width: 210, height: 210, display: 'block', borderRadius: 16, margin: '0 auto' }}
+              width={210}
+              height={210}
+              style={{ display: 'block', borderRadius: 16, margin: '0 auto' }}
             />
             <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.6rem 0 1rem', lineHeight: 1.5 }}>
               La connexion se fait automatiquement, sans saisir le mot de passe
@@ -398,7 +393,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
             { emoji: '🕐', label: t('checkin'), val: 'Dès 16h00' },
             { emoji: '🚪', label: t('checkout'), val: 'Avant 10h00' },
             { emoji: '☕', label: t('breakfastTime'), val: '8h00 – 10h00' },
-            { emoji: '🍽️', label: t('tableLabel'), val: '18 € planche' },
+            { emoji: '🥂', label: t('menuLabel'), val: 'À la carte' },
           ].map(({ emoji, label, val }) => (
             <div key={label} style={{ ...card, overflow: 'visible' as const, marginBottom: 0, textAlign: 'center', padding: '1.1rem 1rem', borderTop: `3px solid ${theme.accent}` }}>
               <div style={{ fontSize: '1.5rem', marginBottom: '0.35rem' }}>{emoji}</div>
@@ -421,14 +416,6 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', lineHeight: 1.7, margin: '0.875rem 0 0' }}>
               {t('morningDesc')}
             </p>
-          </div>
-          <div style={{ background: theme.cardBg, padding: '1.25rem 1.5rem' }}>
-            {(BREAKFAST_ITEMS[lang] as string[]).map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.7rem 0', ...(i < 5 ? cardDivider : {}) }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: theme.accent, flexShrink: 0 }} />
-                <p style={{ fontSize: '0.98rem', color: theme.text, margin: 0, fontWeight: 500 }}>{item}</p>
-              </div>
-            ))}
           </div>
         </div>
 
@@ -468,132 +455,43 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
         </div>
 
-        {/* Table d'hôtes — avec sauvegarde */}
+        {/* Boissons & Snacks */}
         <div style={card}>
           <div style={{ background: `linear-gradient(145deg, ${room.bg} 0%, #0a1208 100%)`, padding: '2rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.1, lineHeight: 1 }}>🍷</div>
+            <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.1, lineHeight: 1 }}>🥂</div>
             <p style={{ color: 'rgba(196,160,80,0.8)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
-              {t('dinnerTag')}
+              {t('menuTag')}
             </p>
             <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'white', fontWeight: 400, margin: '0 0 0.875rem', lineHeight: 1.3 }}>
-              {t('dinnerTitle')}
+              {t('menuTitle')}
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', lineHeight: 1.7, margin: '0 0 0.75rem' }}>
-              {t('dinnerDesc')}
+            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+              {t('menuDesc')}
             </p>
-            <span style={{ background: '#c4a050', color: '#1a3320', borderRadius: 20, padding: '0.3rem 0.875rem', fontSize: '0.88rem', fontWeight: 700 }}>
-              {t('dinnerPrice')}
-            </span>
-          </div>
-          <div style={{ background: theme.cardBg, padding: '1.5rem' }}>
-            <p style={{ fontSize: '0.72rem', color: theme.textMuted, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 0.875rem' }}>
-              {t('dinnerSlots')}
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.25rem' }}>
-              {DINNER_SLOTS.map(slot => (
-                <button
-                  key={slot}
-                  onClick={() => { setSelectedSlot(slot); setDinnerSent(false) }}
-                  style={{
-                    background: selectedSlot === slot ? theme.pillActiveBg : theme.pillBg,
-                    color: selectedSlot === slot ? theme.pillActiveText : theme.text,
-                    border: `2px solid ${selectedSlot === slot ? theme.accent : theme.divider}`,
-                    borderRadius: 12, padding: '0.6rem 1.25rem',
-                    fontSize: '1rem', fontWeight: 700, fontFamily: 'monospace',
-                    cursor: 'pointer', transition: 'all .18s',
-                  }}
-                >
-                  {slot}
-                </button>
-              ))}
-            </div>
-            <p style={{ fontSize: '0.82rem', color: '#e07050', fontWeight: 600, margin: '0 0 1rem' }}>
-              ⚠ {t('dinnerBook')}
-            </p>
-            {dinnerSent ? (
-              <div style={{ ...sentBadge(''), display: 'block', textAlign: 'center', padding: '12px' }}>
-                {t('dinnerSent')}
-              </div>
-            ) : (
-              <a
-                href={`https://wa.me/33675786335?text=${encodeURIComponent(selectedSlot ? `Bonjour Sandrine, je souhaite réserver la table d'hôtes pour ${selectedSlot}.` : 'Bonjour Sandrine, je souhaite réserver la table d\'hôtes.')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={confirmDinner}
-                style={{ display: 'block', background: '#25D366', color: 'white', borderRadius: 14, padding: '1rem', textAlign: 'center', fontWeight: 700, fontSize: '1rem', textDecoration: 'none' }}
-              >
-                {t('dinnerConfirm')}
-              </a>
-            )}
-          </div>
-        </div>
-
-        {/* Piscine & Spa — avec réservation créneau */}
-        <div style={card}>
-          <div style={{ background: 'linear-gradient(145deg, #0d2e32 0%, #051518 100%)', padding: '2rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', bottom: -20, right: -20, fontSize: '7rem', opacity: 0.1 }}>🏊</div>
-            <p style={{ color: 'rgba(196,160,80,0.8)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
-              {t('poolTag')}
-            </p>
-            <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'white', fontWeight: 400, margin: '0 0 0.5rem' }}>
-              {t('poolTitle')}
-            </h2>
-            <p style={{ color: '#7dd4e0', fontSize: '1rem', fontWeight: 600, margin: '0 0 0.25rem' }}>{t('poolHours')}</p>
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.88rem', margin: 0 }}>{t('spaNote')}</p>
           </div>
           <div style={{ background: theme.cardBg, padding: '1.25rem 1.5rem' }}>
-            {(T.poolRules[lang] as string[]).map((rule, i) => (
-              <div key={i} style={{ display: 'flex', gap: '0.875rem', padding: '0.6rem 0', ...(i < 2 ? cardDivider : {}), alignItems: 'center' }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#7dd4e0', flexShrink: 0 }} />
-                <p style={{ fontSize: '0.98rem', color: theme.text, margin: 0 }}>{rule}</p>
-              </div>
-            ))}
-
-            {/* Réservation spa */}
-            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: `1px solid ${theme.divider}` }}>
-              <p style={{ fontSize: '0.72rem', color: '#7dd4e0', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.5rem' }}>
-                🛁 {t('spaBookTitle')}
-              </p>
-              <p style={{ fontSize: '0.85rem', color: theme.textSub, lineHeight: 1.6, margin: '0 0 1rem' }}>
-                {t('spaBookDesc')}
-              </p>
-              <p style={{ fontSize: '0.65rem', color: theme.textMuted, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
-                {t('spaSlots')}
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
-                {SPA_SLOTS.map(slot => (
-                  <button
-                    key={slot}
-                    onClick={() => { setSelectedSpaSlot(slot); setSpaSent(false) }}
-                    style={{
-                      background: selectedSpaSlot === slot ? '#7dd4e0' : theme.pillBg,
-                      color: selectedSpaSlot === slot ? '#051518' : theme.text,
-                      border: `2px solid ${selectedSpaSlot === slot ? '#7dd4e0' : theme.divider}`,
-                      borderRadius: 10, padding: '0.5rem 1rem',
-                      fontSize: '0.92rem', fontWeight: 700, fontFamily: 'monospace',
-                      cursor: 'pointer', transition: 'all .18s',
-                    }}
-                  >
-                    {slot}
-                  </button>
+            {MENU.map((section, si) => (
+              <div key={si} style={{ marginBottom: si < MENU.length - 1 ? '1.25rem' : 0 }}>
+                <p style={{ fontSize: '0.7rem', color: theme.accent, letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.4rem' }}>
+                  {section.emoji} {section.cat[lang]}
+                </p>
+                {section.items.map((item, ii) => (
+                  <div key={ii} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', padding: '0.6rem 0', ...(ii < section.items.length - 1 ? cardDivider : {}) }}>
+                    <p style={{ fontSize: '0.95rem', color: theme.text, margin: 0, lineHeight: 1.4 }}>{item.name[lang]}</p>
+                    {item.free ? (
+                      <span style={{ flexShrink: 0, fontSize: '0.72rem', fontWeight: 700, color: '#6db87a', background: 'rgba(109,184,122,.15)', borderRadius: 20, padding: '3px 11px' }}>
+                        {t('menuFree')}
+                      </span>
+                    ) : (
+                      <span style={{ flexShrink: 0, fontSize: '0.98rem', fontWeight: 700, color: theme.accent, fontFamily: 'monospace' }}>{item.price}</span>
+                    )}
+                  </div>
                 ))}
               </div>
-              {spaSent ? (
-                <div style={{ ...sentBadge(''), display: 'block', textAlign: 'center', padding: '10px' }}>
-                  {t('spaSent')}
-                </div>
-              ) : (
-                <a
-                  href={`https://wa.me/33675786335?text=${encodeURIComponent(selectedSpaSlot ? `Bonjour Sandrine, je souhaite réserver le spa pour ${selectedSpaSlot}.` : 'Bonjour Sandrine, je souhaite réserver le spa.')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={confirmSpa}
-                  style={{ display: 'block', background: '#0d2e32', border: '1px solid #7dd4e040', color: '#7dd4e0', borderRadius: 14, padding: '0.875rem', textAlign: 'center', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}
-                >
-                  {t('spaConfirm')}
-                </a>
-              )}
-            </div>
+            ))}
+            <p style={{ fontSize: '0.78rem', color: theme.textMuted, fontStyle: 'italic', margin: '1rem 0 0', lineHeight: 1.5 }}>
+              {t('menuNote')}
+            </p>
           </div>
         </div>
 
