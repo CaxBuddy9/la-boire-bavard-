@@ -120,7 +120,7 @@ const T = {
   },
   byeTag:   { fr: 'À BIENTÔT', en: 'SEE YOU SOON', es: 'HASTA PRONTO', pt: 'ATÉ BREVE' },
   byeTitle: { fr: 'Merci pour votre visite', en: 'Thank You for Staying', es: 'Gracias por su visita', pt: 'Obrigado pela sua visita' },
-  byeDesc:  { fr: 'Si votre séjour vous a plu, un avis sur Booking.com ou Google aide beaucoup Sandrine à faire connaître la maison. Merci du fond du cœur.', en: 'If you enjoyed your stay, a review on Booking.com or Google means the world to Sandrine and helps share this place. Thank you so much.', es: 'Si ha disfrutado de su estancia, una reseña en Booking.com o Google ayuda mucho a Sandrine a dar a conocer la casa. Muchas gracias.', pt: 'Se gostou da sua estadia, uma avaliação no Booking.com ou Google ajuda muito a Sandrine a dar a conhecer a casa. Muito obrigado.' },
+  byeDesc:  { fr: 'Si votre séjour vous a plu, un avis Google aide beaucoup Sandrine à faire connaître la maison. Merci du fond du cœur.', en: 'If you enjoyed your stay, a Google review means the world to Sandrine and helps share this place. Thank you so much.', es: 'Si ha disfrutado de su estancia, una reseña en Google ayuda mucho a Sandrine a dar a conocer la casa. Muchas gracias.', pt: 'Se gostou da sua estadia, uma avaliação no Google ajuda muito a Sandrine a dar a conhecer a casa. Muito obrigado.' },
   rating:   { fr: 'Note actuelle', en: 'Current rating', es: 'Puntuación actual', pt: 'Avaliação atual' },
   navHome:  { fr: 'Accueil', en: 'Home', es: 'Inicio', pt: 'Início' },
   navGuide: { fr: 'Carnet', en: 'Guide', es: 'Guía', pt: 'Guia' },
