@@ -10,9 +10,9 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
 
   useEffect(() => {
     const t0 = setTimeout(() => setPhase('show'),    60)
-    const t1 = setTimeout(() => setPhase('opening'), 650)
-    const t2 = setTimeout(() => setPhase('fadeout'), 1450)
-    const t3 = setTimeout(() => setPhase('done'),    1950)
+    const t1 = setTimeout(() => setPhase('opening'), 350)
+    const t2 = setTimeout(() => setPhase('fadeout'), 850)
+    const t3 = setTimeout(() => setPhase('done'),    1200)
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
   }, [])
 
@@ -30,7 +30,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
           position: 'fixed', inset: 0, zIndex: 9999,
           overflow: 'hidden',
           opacity: isFading ? 0 : 1,
-          transition: isFading ? 'opacity 0.45s ease' : undefined,
+          transition: isFading ? 'opacity 0.35s ease' : undefined,
         }}
       >
         <style>{`
@@ -60,7 +60,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
           <div style={{
             position: 'absolute', inset: 0,
             background: 'radial-gradient(ellipse at 50% 50%, rgba(255,220,120,0.22) 0%, transparent 60%)',
-            animation: 'lightPulse 0.9s ease',
+            animation: 'lightPulse 0.5s ease',
           }} />
         )}
 
@@ -76,7 +76,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
             width: '50%', height: '100%',
             transformOrigin: '0% 50%',
             transform: isOpen ? 'rotateY(-105deg)' : 'rotateY(0deg)',
-            transition: isOpen ? 'transform 0.7s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
+            transition: isOpen ? 'transform 0.5s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
             transformStyle: 'preserve-3d',
           }}>
             {/* Face porte gauche */}
@@ -122,7 +122,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
             width: '50%', height: '100%',
             transformOrigin: '100% 50%',
             transform: isOpen ? 'rotateY(105deg)' : 'rotateY(0deg)',
-            transition: isOpen ? 'transform 0.7s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
+            transition: isOpen ? 'transform 0.5s cubic-bezier(0.6, 0.05, 0.15, 1)' : undefined,
             transformStyle: 'preserve-3d',
           }}>
             <div style={{
@@ -165,7 +165,7 @@ export default function GuideIntro({ children, roomName }: { children: React.Rea
           opacity: isOpen ? 0 : 1,
           transition: isOpen ? 'opacity 0.3s ease' : undefined,
           background:'linear-gradient(180deg, transparent 3%, rgba(196,160,80,0.65) 15%, rgba(196,160,80,0.65) 85%, transparent 97%)',
-          animation: !isOpen && phase === 'show' ? 'crackGlow 1s ease forwards' : undefined,
+          animation: !isOpen && phase === 'show' ? 'crackGlow 0.6s ease forwards' : undefined,
         }} />
 
         {/* ── LOGO + BIENVENUE ── */}

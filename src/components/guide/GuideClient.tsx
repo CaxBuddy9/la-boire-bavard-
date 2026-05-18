@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { LogoSVG } from '@/components/Logo'
 
 type Lang = 'fr' | 'en' | 'es' | 'pt'
@@ -172,16 +171,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const [lang, setLang] = useState<Lang>('fr')
   const [selectedDiets, setSelectedDiets] = useState<number[]>([])
   const [dietSent, setDietSent] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [showWifiQR, setShowWifiQR] = useState(false)
   const [wifiStatus, setWifiStatus] = useState<'idle' | 'done'>('idle')
-
-  const copyPassword = () => {
-    navigator.clipboard.writeText(WIFI_PASSWORD).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2500)
-    })
-  }
 
   const connectWifi = async () => {
     // 1. Copie le mot de passe dans le presse-papier
@@ -234,7 +224,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const cardInner: React.CSSProperties = { padding: '1.25rem 1.5rem' }
   const cardDivider: React.CSSProperties = { borderBottom: `1px solid ${theme.divider}` }
 
-  const sentBadge = (label: string): React.CSSProperties => ({
+  const sentBadge = (): React.CSSProperties => ({
     display: 'inline-block',
     background: 'rgba(109,184,122,.15)',
     color: '#6db87a',
@@ -283,13 +273,12 @@ export default function GuideClient({ room }: { room: RoomData }) {
       {room.image && (
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '1.25rem 1.25rem 0' }}>
           <div style={{ position: 'relative', width: '100%', height: 'clamp(200px, 55vw, 320px)', borderRadius: 20, overflow: 'hidden' }}>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={room.image}
               alt={room.name}
-              fill
-              sizes="(max-width: 600px) 100vw, 600px"
-              priority
-              style={{ objectFit: 'cover', objectPosition: 'center 35%' }}
+              decoding="async"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 35%', display: 'block' }}
             />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55) 100%)' }} />
             <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.5rem' }}>
@@ -368,11 +357,14 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
               Scannez ce QR code avec l'appareil photo
             </p>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/photos/wifi-qr-lbb.png"
               alt="QR code WiFi La Boire Bavard"
               width={210}
               height={210}
+              loading="lazy"
+              decoding="async"
               style={{ display: 'block', borderRadius: 16, margin: '0 auto' }}
             />
             <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.6rem 0 1rem', lineHeight: 1.5 }}>
@@ -448,7 +440,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
               ))}
             </div>
             {selectedDiets.length > 0 && (
-              <div style={sentBadge('')}>
+              <div style={sentBadge()}>
                 {dietSent ? t('dietSent') : '⏳ Envoi en cours…'}
               </div>
             )}
