@@ -3,7 +3,11 @@ import type { Metadata } from 'next'
 import GuideIntro from '@/components/GuideIntro'
 import GuideClient from '@/components/guide/GuideClient'
 import type { RoomTheme } from '@/components/guide/GuideClient'
-import { ROOM_COLORS } from '@/lib/rooms'
+import { ROOM_COLORS, ROOMS as SITE_ROOMS } from '@/lib/rooms'
+
+// Récupère la liste de photos d'une chambre depuis les données centrales
+const galleryOf = (id: string): string[] =>
+  SITE_ROOMS.find((r) => r.id === id)?.images ?? []
 
 // Génère un thème complet depuis les couleurs centrales de rooms.ts
 function makeTheme(id: string): RoomTheme {
@@ -41,6 +45,7 @@ const ROOMS = {
     emoji: '🌿',
     bg: ROOM_COLORS.jardin.bg,
     image: '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
+    images: galleryOf('jardin'),
     theme: makeTheme('jardin') satisfies RoomTheme,
     details: [
       { fr: "La terrasse privée s'ouvre directement depuis la chambre", en: "The private terrace opens directly from your room", es: "La terraza privada se abre directamente desde la habitación", pt: "O terraço privado abre diretamente do seu quarto" },
@@ -54,6 +59,7 @@ const ROOMS = {
     emoji: '🌲',
     bg: ROOM_COLORS.cedre.bg,
     image: '/photos/chambres/cedre/chambre-cedre-01.jpeg',
+    images: galleryOf('cedre'),
     theme: makeTheme('cedre') satisfies RoomTheme,
     details: [
       { fr: "Dépendance indépendante, à quelques pas de la maison", en: "Independent annexe, just steps from the main house", es: "Anexo independiente, a unos pasos de la casa", pt: "Anexo independente, a alguns passos da casa" },
@@ -67,6 +73,7 @@ const ROOMS = {
     emoji: '🏞️',
     bg: ROOM_COLORS.vallee.bg,
     image: '/photos/chambres/vallee/chambre-vallee-01.jpeg',
+    images: galleryOf('vallee'),
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [
       { fr: "Vue panoramique sur les vignes de l'Anjou", en: "Panoramic view over the Anjou vineyards", es: "Vista panorámica sobre los viñedos del Anjou", pt: "Vista panorâmica sobre os vinhedos do Anjou" },

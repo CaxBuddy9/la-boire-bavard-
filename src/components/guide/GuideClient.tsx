@@ -36,6 +36,7 @@ export type RoomData = {
   emoji: string
   bg: string
   image?: string
+  images?: string[]
   theme: RoomTheme
   details: { fr: string; en: string; es: string; pt: string }[]
 }
@@ -65,6 +66,9 @@ const T = {
   menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec Sandrine — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with Sandrine — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con Sandrine, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com a Sandrine.' },
   menuFree:      { fr: 'Offert', en: 'Free', es: 'Gratis', pt: 'Grátis' },
   menuNote:      { fr: 'Une question sur la carte ? Demandez à Sandrine.', en: 'Any question about the menu? Just ask Sandrine.', es: '¿Alguna pregunta sobre la carta? Pregunte a Sandrine.', pt: 'Alguma questão sobre a carta? Pergunte à Sandrine.' },
+  galleryTag:    { fr: 'EN IMAGES', en: 'IN PICTURES', es: 'EN IMÁGENES', pt: 'EM IMAGENS' },
+  galleryTitle:  { fr: 'Votre chambre en photos', en: 'Your Room in Photos', es: 'Su Habitación en Fotos', pt: 'O Seu Quarto em Fotos' },
+  galleryHint:   { fr: 'touchez pour agrandir', en: 'tap to enlarge', es: 'toque para ampliar', pt: 'toque para ampliar' },
   tipsTag:       { fr: 'BONS PLANS', en: 'LOCAL TIPS', es: 'CONSEJOS LOCALES', pt: 'DICAS LOCAIS' },
   tipsTitle:     { fr: 'À Découvrir', en: 'Things to Explore', es: 'Qué Descubrir', pt: 'O Que Descobrir' },
   tips: {
@@ -172,6 +176,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const [selectedDiets, setSelectedDiets] = useState<number[]>([])
   const [dietSent, setDietSent] = useState(false)
   const [wifiStatus, setWifiStatus] = useState<'idle' | 'done'>('idle')
+  const [lightbox, setLightbox] = useState<number | null>(null)
 
   const connectWifi = async () => {
     // 1. Copie le mot de passe dans le presse-papier
@@ -319,6 +324,40 @@ export default function GuideClient({ room }: { room: RoomData }) {
             </p>
           ))}
         </div>
+
+        {/* Galerie photos */}
+        {room.images && room.images.length > 0 && (
+          <div style={{ marginBottom: '0.875rem' }}>
+            <p style={{ fontSize: '0.68rem', color: theme.accent, letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.5rem' }}>
+              {t('galleryTag')}
+            </p>
+            <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: theme.heading, fontWeight: 700, margin: '0 0 1rem', lineHeight: 1.2 }}>
+              {t('galleryTitle')}
+            </h2>
+            <div style={{ display: 'flex', gap: '0.625rem', overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '0.4rem', scrollSnapType: 'x mandatory' }}>
+              {room.images.map((src, i) => (
+                <button
+                  key={i}
+                  onClick={() => setLightbox(i)}
+                  aria-label={`Voir la photo ${i + 1}`}
+                  style={{ flex: '0 0 78%', scrollSnapAlign: 'start', border: 'none', padding: 0, background: 'none', cursor: 'pointer', borderRadius: 16, overflow: 'hidden' }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`${room.name} — photo ${i + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ width: '100%', height: 210, objectFit: 'cover', display: 'block', borderRadius: 16 }}
+                  />
+                </button>
+              ))}
+            </div>
+            <p style={{ fontSize: '0.72rem', color: theme.textMuted, margin: '0.45rem 0 0' }}>
+              {room.images.length} photos · {t('galleryHint')}
+            </p>
+          </div>
+        )}
 
         {/* Mot de Sandrine */}
         <div style={{ ...card, overflow: 'visible' as const }}>
@@ -564,6 +603,48 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </a>
         ))}
       </div>
+
+      {/* ── LIGHTBOX GALERIE ── */}
+      {lightbox !== null && room.images && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,.95)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <button
+            onClick={() => setLightbox(null)}
+            aria-label="Fermer"
+            style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top) + 12px)', right: 18, background: 'none', border: 'none', color: 'rgba(255,255,255,.7)', fontSize: '2.4rem', lineHeight: 1, cursor: 'pointer' }}
+          >
+            ×
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={room.images[lightbox]}
+            alt={`${room.name} — photo ${lightbox + 1}`}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '92vw', maxHeight: '74vh', objectFit: 'contain', borderRadius: 10 }}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginTop: '1.25rem' }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightbox(v => v !== null ? (v - 1 + room.images!.length) % room.images!.length : v) }}
+              aria-label="Photo précédente"
+              style={{ background: 'none', border: '1px solid rgba(255,255,255,.25)', borderRadius: '50%', width: 44, height: 44, color: 'white', fontSize: '1.4rem', cursor: 'pointer' }}
+            >
+              ‹
+            </button>
+            <span style={{ color: 'rgba(255,255,255,.6)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
+              {lightbox + 1} / {room.images.length}
+            </span>
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightbox(v => v !== null ? (v + 1) % room.images!.length : v) }}
+              aria-label="Photo suivante"
+              style={{ background: 'none', border: '1px solid rgba(255,255,255,.25)', borderRadius: '50%', width: 44, height: 44, color: 'white', fontSize: '1.4rem', cursor: 'pointer' }}
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   )
