@@ -53,6 +53,7 @@ const ROOMS = {
     slug: 'cedre',
     emoji: '🌲',
     bg: ROOM_COLORS.cedre.bg,
+    image: '/photos/chambres/cedre/chambre-cedre-01.jpeg',
     theme: makeTheme('cedre') satisfies RoomTheme,
     details: [
       { fr: "Dépendance indépendante, à quelques pas de la maison", en: "Independent annexe, just steps from the main house", es: "Anexo independiente, a unos pasos de la casa", pt: "Anexo independente, a alguns passos da casa" },
@@ -65,6 +66,7 @@ const ROOMS = {
     slug: 'vallee',
     emoji: '🏞️',
     bg: ROOM_COLORS.vallee.bg,
+    image: '/photos/chambres/vallee/chambre-vallee-01.jpeg',
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [
       { fr: "Vue panoramique sur les vignes de l'Anjou", en: "Panoramic view over the Anjou vineyards", es: "Vista panorámica sobre los viñedos del Anjou", pt: "Vista panorâmica sobre os vinhedos do Anjou" },
