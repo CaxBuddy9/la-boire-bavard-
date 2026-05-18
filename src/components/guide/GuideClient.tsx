@@ -369,25 +369,19 @@ export default function GuideClient({ room }: { room: RoomData }) {
             <p style={{ color: theme.textSub, fontSize: '0.78rem', margin: '0 0 0.3rem' }}>{t('password')}</p>
             <p style={{ color: theme.heading, fontSize: '1.1rem', fontWeight: 700, fontFamily: 'monospace', margin: 0, letterSpacing: '0.04em', wordBreak: 'break-all' }}>{WIFI_PASSWORD}</p>
           </div>
-          {/* QR code WiFi + bouton copier */}
+          {/* QR code WiFi — à scanner avec l'appareil photo */}
           <div style={{ padding: '1rem 1.5rem 1.5rem', borderTop: `1px solid rgba(${theme.accentRgb},.1)`, textAlign: 'center' }}>
             <p style={{ color: theme.textMuted, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
-              Appuyez sur le QR code pour vous connecter
+              Scannez ce QR code avec l'appareil photo
             </p>
-            <a
-              href={`WIFI:T:WPA;S:${WIFI_RESEAU};P:${WIFI_PASSWORD};;`}
-              title="Touchez pour connecter automatiquement"
-              style={{ display: 'inline-block', borderRadius: 16, overflow: 'hidden', cursor: 'pointer' }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/photos/wifi-qr-lbb.png"
-                alt="QR code WiFi La Boire Bavard — appuyez pour connecter"
-                style={{ width: 210, height: 210, display: 'block', borderRadius: 16 }}
-              />
-            </a>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/photos/wifi-qr-lbb.png"
+              alt="QR code WiFi La Boire Bavard"
+              style={{ width: 210, height: 210, display: 'block', borderRadius: 16, margin: '0 auto' }}
+            />
             <p style={{ color: theme.textMuted, fontSize: '0.72rem', margin: '0.6rem 0 1rem', lineHeight: 1.5 }}>
-              Ou scannez avec l'appareil photo
+              La connexion se fait automatiquement, sans saisir le mot de passe
             </p>
             <button
               onClick={connectWifi}
