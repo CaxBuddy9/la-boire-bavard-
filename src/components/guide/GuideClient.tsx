@@ -148,19 +148,18 @@ export default function GuideClient({ room }: { room: RoomData }) {
   const [lightbox, setLightbox] = useState<number | null>(null)
 
   const connectWifi = async () => {
-    // 1. Copie le mot de passe dans le presse-papier
+    // Copie le mot de passe WiFi dans le presse-papier
     try { await navigator.clipboard.writeText(WIFI_PASSWORD) } catch { /* silencieux */ }
 
-    // 2. Tente d'ouvrir les réglages WiFi selon la plateforme
-    const ua = navigator.userAgent
-    if (/iPhone|iPad|iPod/.test(ua)) {
-      window.location.href = 'App-prefs:root=WIFI'
-    } else if (/Android/.test(ua)) {
+    // Android : ouvre directement les réglages WiFi.
+    // iOS n'autorise pas l'ouverture des réglages depuis une page web —
+    // le mot de passe est copié, prêt à être collé.
+    if (/Android/.test(navigator.userAgent)) {
       window.location.href = 'intent:#Intent;action=android.settings.WIFI_SETTINGS;end'
     }
 
     setWifiStatus('done')
-    setTimeout(() => setWifiStatus('idle'), 5000)
+    setTimeout(() => setWifiStatus('idle'), 6000)
   }
 
   const { theme } = room
@@ -383,7 +382,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
               onClick={connectWifi}
               style={{ width: '100%', background: `rgba(${theme.accentRgb},.15)`, color: theme.accent, border: `1px solid rgba(${theme.accentRgb},.3)`, borderRadius: 14, padding: '0.8rem 1rem', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
             >
-              {wifiStatus === 'done' ? '✓ Mot de passe copié dans le presse-papier' : '📋 Copier le mot de passe & ouvrir le WiFi'}
+              {wifiStatus === 'done' ? '✓ Mot de passe copié — collez-le dans vos réglages WiFi' : '📶 Se connecter au WiFi'}
             </button>
           </div>
         </div>
