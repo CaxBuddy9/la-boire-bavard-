@@ -13,7 +13,9 @@ const WIFI_QR_DATA  = `WIFI:T:WPA;S:${WIFI_RESEAU};P:${WIFI_PASSWORD};;`
 
 // ─── À COMPLÉTER ────────────────────────────────────────────────────────────
 const CODE_JARDIN = 'À COMPLÉTER'
-const TEL         = '06 75 78 63 35'
+const TEL         = '06 75 78 63 35'           // Sandrine — téléphone du site
+const TEL2        = 'À COMPLÉTER'              // 2ᵉ contact
+const ADRESSE     = '4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice'
 
 // Une identité de couleur par chambre
 const ROOMS = [
@@ -50,7 +52,8 @@ export default function CartesPage() {
         {ROOMS.map((room) => {
           const guideQr = buildQRDataUri(`${BASE_URL}/guide/${room.id}`, room.qr)
           const wifiQr  = buildQRDataUri(WIFI_QR_DATA, room.qr)
-          const miniLabel = { fontFamily: 'Arial, sans-serif', fontSize: '1.9mm', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: room.accent }
+          const miniLabel = { fontFamily: 'Arial, sans-serif', fontSize: '1.85mm', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: room.accent }
+          const tag = (s: string) => <strong style={{ color: room.accent, fontFamily: 'Arial, sans-serif', fontSize: '1.7mm', letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>{s}</strong>
 
           return (
             <div key={room.id} className="card-row" style={{ marginBottom: 30 }}>
@@ -58,25 +61,37 @@ export default function CartesPage() {
               {/* ── RECTO ── */}
               <div style={{ ...card, background: '#fffdf8', border: '0.3mm solid rgba(0,0,0,.12)', marginBottom: '4mm' }}>
                 <div style={{ height: '5mm', background: room.accent }} />
-                <div style={{ padding: '4mm 6mm 0' }}>
+                <div style={{ padding: '3.5mm 6mm 0' }}>
                   <p style={{ margin: 0, fontFamily: 'Arial, sans-serif', fontSize: '2mm', letterSpacing: '0.32em', textTransform: 'uppercase', color: room.accent }}>
                     La Boire Bavard
                   </p>
-                  <p style={{ margin: '0.6mm 0 0', fontSize: '5.4mm', color: room.ink, fontStyle: 'italic' }}>{room.label}</p>
+                  <p style={{ margin: '0.5mm 0 0', fontSize: '5.2mm', color: room.ink, fontStyle: 'italic' }}>{room.label}</p>
 
-                  <div style={{ display: 'flex', gap: '4.5mm', marginTop: '3.5mm', alignItems: 'flex-start' }}>
+                  {/* QR codes + WiFi */}
+                  <div style={{ display: 'flex', gap: '4mm', marginTop: '2.8mm', alignItems: 'flex-start' }}>
                     {[{ q: guideQr, l: 'Carnet' }, { q: wifiQr, l: 'WiFi' }].map(({ q, l }) => (
                       <div key={l} style={{ textAlign: 'center' }}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={q} alt={`QR ${l}`} style={{ width: '23mm', height: '23mm', display: 'block' }} />
-                        <p style={{ ...miniLabel, color: room.ink, margin: '1mm 0 0' }}>{l}</p>
+                        <img src={q} alt={`QR ${l}`} style={{ width: '21mm', height: '21mm', display: 'block' }} />
+                        <p style={{ ...miniLabel, color: room.ink, margin: '0.8mm 0 0' }}>{l}</p>
                       </div>
                     ))}
-                    <div style={{ flex: 1, fontSize: '2.5mm', color: room.ink, lineHeight: 1.45 }}>
-                      <p style={{ margin: '0 0 2mm' }}><span style={miniLabel}>Réseau WiFi</span><br />{WIFI_RESEAU}</p>
-                      <p style={{ margin: '0 0 2mm', wordBreak: 'break-all' }}><span style={miniLabel}>Mot de passe</span><br />{WIFI_PASSWORD}</p>
-                      <p style={{ margin: 0 }}><span style={miniLabel}>Code jardin</span><br />{CODE_JARDIN}</p>
+                    <div style={{ flex: 1, fontSize: '2.5mm', color: room.ink, lineHeight: 1.4 }}>
+                      <p style={{ margin: '0 0 1.8mm' }}><span style={miniLabel}>Réseau WiFi</span><br />{WIFI_RESEAU}</p>
+                      <p style={{ margin: 0, wordBreak: 'break-all' }}><span style={miniLabel}>Mot de passe</span><br />{WIFI_PASSWORD}</p>
                     </div>
+                  </div>
+
+                  {/* Infos pratiques */}
+                  <div style={{ marginTop: '2.6mm', paddingTop: '2.2mm', borderTop: `0.3mm solid ${room.accent}40`, fontSize: '2.15mm', color: room.ink, lineHeight: 1.7 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>{tag('Arrivée')} dès 16h</span>
+                      <span>{tag('Départ')} avant 10h</span>
+                      <span>{tag('Petit-déj')} 8h–10h</span>
+                    </div>
+                    <div>{tag('Code jardin')} {CODE_JARDIN}</div>
+                    <div>{tag('Contacts')} Sandrine {TEL} · {TEL2}</div>
+                    <div style={{ color: `${room.ink}99` }}>{ADRESSE}</div>
                   </div>
                 </div>
               </div>
