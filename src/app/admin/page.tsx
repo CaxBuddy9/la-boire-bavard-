@@ -49,7 +49,7 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   const m = now.getMonth()
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
 
-  const PRICE = 90
+  const PRICE = 88 // tarif/nuit compté au CA — y compris réservations Booking.com
   const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
 
   const active = reservations.filter(r => r.status !== 'cancelled')
@@ -91,10 +91,10 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
       {kpis.map(k => (
-        <div key={k.label} style={{ background: '#131a13', border: '1px solid rgba(255,255,255,.07)', borderRadius: 4, padding: '14px 16px' }}>
-          <div style={{ fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)', marginBottom: 6 }}>{k.label}</div>
-          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: k.color, marginBottom: 2 }}>{k.value}</div>
-          <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,.25)' }}>{k.sub}</div>
+        <div key={k.label} style={{ background: '#131a13', border: '1px solid rgba(255,255,255,.1)', borderRadius: 6, padding: '20px 20px' }}>
+          <div style={{ fontSize: '0.74rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,.55)', marginBottom: 8 }}>{k.label}</div>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '2.05rem', color: k.color, marginBottom: 3 }}>{k.value}</div>
+          <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,.45)' }}>{k.sub}</div>
         </div>
       ))}
     </div>
@@ -112,7 +112,7 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
   const [err, setErr] = useState('')
 
   const n = nights(form.check_in, form.check_out)
-  const price = n * 90
+  const price = n * 88
 
   const F = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
 
@@ -220,7 +220,7 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
           {/* Prix calculé */}
           {n > 0 && (
             <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '10px 14px', fontSize: '0.82rem', color: '#c4a050' }}>
-              {n} nuit{n>1?'s':''} × 90 € = <strong>{price} €</strong>
+              {n} nuit{n>1?'s':''} × 88 € = <strong>{price} €</strong>
             </div>
           )}
 
@@ -520,8 +520,8 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
   const totalDays = new Date(year, month + 1, 0).getDate()
   const days = Array.from({ length: totalDays }, (_, i) => i + 1)
   const todayIso = isoDate(now.getFullYear(), now.getMonth(), now.getDate())
-  const CELL = 34
-  const ROW_LABEL = 110
+  const CELL = 48
+  const ROW_LABEL = 150
 
   const active = reservations.filter(r => r.status !== 'cancelled')
 
@@ -542,9 +542,9 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
     <div>
       {/* Nav mois */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <button onClick={prevMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.5)', padding: '6px 14px', cursor: 'pointer', fontFamily: 'system-ui' }}>←</button>
-        <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f5f0e8' }}>{MONTHS_FR[month]} {year}</div>
-        <button onClick={nextMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.5)', padding: '6px 14px', cursor: 'pointer', fontFamily: 'system-ui' }}>→</button>
+        <button onClick={prevMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.25)', color: 'rgba(255,255,255,.75)', padding: '10px 22px', fontSize: '1.2rem', cursor: 'pointer', fontFamily: 'system-ui' }}>←</button>
+        <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.7rem', color: '#f5f0e8' }}>{MONTHS_FR[month]} {year}</div>
+        <button onClick={nextMonth} style={{ background: 'none', border: '1px solid rgba(255,255,255,.25)', color: 'rgba(255,255,255,.75)', padding: '10px 22px', fontSize: '1.2rem', cursor: 'pointer', fontFamily: 'system-ui' }}>→</button>
       </div>
 
       {/* Gantt */}
@@ -558,7 +558,7 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
               const dow = new Date(year, month, d).getDay()
               const isWeekend = dow === 0 || dow === 6
               return (
-                <div key={d} style={{ width: CELL, flexShrink: 0, textAlign: 'center', fontSize: '0.6rem', paddingBottom: 6, color: isToday ? '#c4a050' : isWeekend ? 'rgba(255,255,255,.4)' : 'rgba(255,255,255,.25)', fontWeight: isToday ? 700 : 400, borderLeft: isToday ? '1px solid rgba(196,160,80,.4)' : '1px solid transparent' }}>
+                <div key={d} style={{ width: CELL, flexShrink: 0, textAlign: 'center', fontSize: '0.85rem', paddingBottom: 8, color: isToday ? '#c4a050' : isWeekend ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.4)', fontWeight: isToday ? 700 : 400, borderLeft: isToday ? '1px solid rgba(196,160,80,.4)' : '1px solid transparent' }}>
                   {d}
                 </div>
               )
@@ -569,11 +569,11 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
             const roomResas = active.filter(r => r.room_id === roomName)
             return (
               <div key={roomName} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                <div style={{ width: ROW_LABEL, flexShrink: 0, paddingRight: 10, fontSize: '0.7rem', color: 'rgba(255,255,255,.55)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: ROOM_COLOR[roomName], flexShrink: 0 }} />
+                <div style={{ width: ROW_LABEL, flexShrink: 0, paddingRight: 12, fontSize: '1rem', fontWeight: 600, color: 'rgba(255,255,255,.85)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 12, height: 12, borderRadius: 3, background: ROOM_COLOR[roomName], flexShrink: 0 }} />
                   {roomName.replace('Côté ', '')}
                 </div>
-                <div style={{ position: 'relative', height: 36, flex: 1 }}>
+                <div style={{ position: 'relative', height: 50, flex: 1 }}>
                   <div style={{ display: 'flex', height: '100%' }}>
                     {days.map(d => {
                       const iso = isoDate(year, month, d)
@@ -593,8 +593,8 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
                       <div key={r.id}
                         onMouseEnter={e => setTooltip({ r, x: e.clientX, y: e.clientY })}
                         onMouseLeave={() => setTooltip(null)}
-                        style={{ position: 'absolute', top: 4, height: 28, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: r.guest_email === 'ical-sync@external' ? 'repeating-linear-gradient(45deg,#3a6fd8,#3a6fd8 4px,#2a5bc8 4px,#2a5bc8 8px)' : ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(255,255,255,.4)' : 'none' }}>
-                        <span style={{ fontSize: '0.65rem', fontWeight: 600, color: r.guest_email === 'ical-sync@external' ? '#fff' : '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        style={{ position: 'absolute', top: 6, height: 38, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: r.guest_email === 'ical-sync@external' ? 'repeating-linear-gradient(45deg,#3a6fd8,#3a6fd8 4px,#2a5bc8 4px,#2a5bc8 8px)' : ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(255,255,255,.4)' : 'none' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: r.guest_email === 'ical-sync@external' ? '#fff' : '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {r.guest_email === 'ical-sync@external' ? 'Booking.com' : r.guest_name}{isPending ? ' · en attente' : ''}
                         </span>
                       </div>
@@ -637,7 +637,7 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
             <div key={r.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 1, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.85rem', color: '#f5f0e8', fontWeight: 500 }}>{r.guest_name}</span>
+                <span style={{ fontSize: '1rem', color: '#f5f0e8', fontWeight: 600 }}>{r.guest_name}</span>
               </div>
               <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', paddingLeft: 16 }}>{fmtDate(r.check_in)} · {r.room_id} · {nights(r.check_in, r.check_out)} nuits</div>
               {r.guest_phone && <a href={`tel:${r.guest_phone}`} style={{ display: 'block', paddingLeft: 16, fontSize: '0.68rem', color: '#c4a050', textDecoration: 'none', marginTop: 2 }}>{r.guest_phone}</a>}
@@ -651,7 +651,7 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
             <div key={r.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid rgba(255,255,255,.05)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 1, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.85rem', color: '#f5f0e8', fontWeight: 500 }}>{r.guest_name}</span>
+                <span style={{ fontSize: '1rem', color: '#f5f0e8', fontWeight: 600 }}>{r.guest_name}</span>
               </div>
               <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', paddingLeft: 16 }}>{fmtDate(r.check_out)} · {r.room_id}</div>
             </div>
@@ -1010,7 +1010,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'|'facturation'>('reservations')
+  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'|'facturation'>('planning')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
 
@@ -1087,9 +1087,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const tabBtn = (active: boolean): React.CSSProperties => ({
     background: active ? 'rgba(196,160,80,.12)' : 'none',
     border: active ? '1px solid rgba(196,160,80,.3)' : '1px solid rgba(255,255,255,.08)',
-    color: active ? '#c4a050' : 'rgba(255,255,255,.4)',
-    fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase',
-    padding: '7px 16px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif',
+    color: active ? '#c4a050' : 'rgba(255,255,255,.62)',
+    fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase',
+    padding: '12px 22px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif',
   })
 
   return (
