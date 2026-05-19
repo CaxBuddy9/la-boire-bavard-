@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { LogoSVG } from '@/components/Logo'
+import { MENU } from '@/lib/menu'
 
 type Lang = 'fr' | 'en' | 'es' | 'pt'
 
@@ -64,7 +65,6 @@ const T = {
   menuTag:       { fr: 'À TOUTE HEURE', en: 'ANYTIME', es: 'A CUALQUIER HORA', pt: 'A QUALQUER HORA' },
   menuTitle:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
   menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec Sandrine — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with Sandrine — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con Sandrine, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com a Sandrine.' },
-  menuFree:      { fr: 'Offert', en: 'Free', es: 'Gratis', pt: 'Grátis' },
   menuNote:      { fr: 'Une question sur la carte ? Demandez à Sandrine.', en: 'Any question about the menu? Just ask Sandrine.', es: '¿Alguna pregunta sobre la carta? Pregunte a Sandrine.', pt: 'Alguma questão sobre a carta? Pergunte à Sandrine.' },
   galleryTag:    { fr: 'EN IMAGES', en: 'IN PICTURES', es: 'EN IMÁGENES', pt: 'EM IMAGENS' },
   galleryTitle:  { fr: 'Votre chambre en photos', en: 'Your Room in Photos', es: 'Su Habitación en Fotos', pt: 'O Seu Quarto em Fotos' },
@@ -121,36 +121,6 @@ const T = {
 
 const WIFI_RESEAU   = 'Livebox-D6B0'
 const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
-
-// ─── Carte Boissons & Snacks ────────────────────────────────────────────────
-// Sandrine : pour modifier les articles ou les prix, éditez simplement ce tableau.
-// `free: true` affiche « Offert » au lieu d'un prix.
-type MenuItem = { name: Record<Lang, string>; price: string; free?: boolean }
-type MenuSection = { emoji: string; cat: Record<Lang, string>; items: MenuItem[] }
-
-const MENU: MenuSection[] = [
-  {
-    emoji: '🥂',
-    cat: { fr: 'Boissons', en: 'Drinks', es: 'Bebidas', pt: 'Bebidas' },
-    items: [
-      { name: { fr: 'Eau plate / pétillante', en: 'Still / sparkling water', es: 'Agua sin gas / con gas', pt: 'Água lisa / com gás' }, price: '', free: true },
-      { name: { fr: 'Café · Thé · Infusion', en: 'Coffee · Tea · Herbal tea', es: 'Café · Té · Infusión', pt: 'Café · Chá · Infusão' }, price: '', free: true },
-      { name: { fr: 'Jus de fruits / soda', en: 'Fruit juice / soda', es: 'Zumo / refresco', pt: 'Sumo / refrigerante' }, price: '2 €' },
-      { name: { fr: 'Bière locale d\'Anjou', en: 'Local Anjou beer', es: 'Cerveza local de Anjou', pt: 'Cerveja local de Anjou' }, price: '4 €' },
-      { name: { fr: 'Verre de vin de Loire', en: 'Glass of Loire wine', es: 'Copa de vino del Loira', pt: 'Copo de vinho do Loire' }, price: '4 €' },
-    ],
-  },
-  {
-    emoji: '🧀',
-    cat: { fr: 'Snacks & Planches', en: 'Snacks & Boards', es: 'Snacks & Tablas', pt: 'Snacks & Tábuas' },
-    items: [
-      { name: { fr: 'Planche apéritive — charcuterie & fromages d\'Anjou', en: 'Aperitif board — Anjou cured meats & cheeses', es: 'Tabla de aperitivo — embutidos y quesos de Anjou', pt: 'Tábua de aperitivo — enchidos e queijos de Anjou' }, price: '18 €' },
-      { name: { fr: 'Planche sucrée', en: 'Sweet board', es: 'Tabla dulce', pt: 'Tábua doce' }, price: '12 €' },
-      { name: { fr: 'Olives & fruits secs', en: 'Olives & nuts', es: 'Aceitunas y frutos secos', pt: 'Azeitonas e frutos secos' }, price: '3 €' },
-      { name: { fr: 'Biscuits maison', en: 'Homemade biscuits', es: 'Galletas caseras', pt: 'Bolachas caseiras' }, price: '', free: true },
-    ],
-  },
-]
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: 'fr', label: 'FR' },
@@ -509,13 +479,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
                 {section.items.map((item, ii) => (
                   <div key={ii} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', padding: '0.6rem 0', ...(ii < section.items.length - 1 ? cardDivider : {}) }}>
                     <p style={{ fontSize: '0.95rem', color: theme.text, margin: 0, lineHeight: 1.4 }}>{item.name[lang]}</p>
-                    {item.free ? (
-                      <span style={{ flexShrink: 0, fontSize: '0.72rem', fontWeight: 700, color: '#6db87a', background: 'rgba(109,184,122,.15)', borderRadius: 20, padding: '3px 11px' }}>
-                        {t('menuFree')}
-                      </span>
-                    ) : (
-                      <span style={{ flexShrink: 0, fontSize: '0.98rem', fontWeight: 700, color: theme.accent, fontFamily: 'monospace' }}>{item.price}</span>
-                    )}
+                    <span style={{ flexShrink: 0, fontSize: '0.98rem', fontWeight: 700, color: theme.accent, fontFamily: 'monospace' }}>{item.price}</span>
                   </div>
                 ))}
               </div>
