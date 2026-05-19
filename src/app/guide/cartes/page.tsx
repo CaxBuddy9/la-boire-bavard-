@@ -17,11 +17,11 @@ const TEL         = '06 75 78 63 35'           // Sandrine — téléphone du si
 const TEL2        = 'À COMPLÉTER'              // 2ᵉ contact
 const ADRESSE     = '4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice'
 
-// Une identité de couleur par chambre
+// Une identité de couleur par chambre — tons riches et élégants
 const ROOMS = [
-  { id: 'jardin', label: 'Côté Jardin', accent: '#c4603a', ink: '#3a2012', verso: '#2a1810', qr: '#241308' },
-  { id: 'cedre',  label: 'Côté Cèdre',  accent: '#b08d52', ink: '#36301f', verso: '#2b2418', qr: '#211b12' },
-  { id: 'vallee', label: 'Côté Vallée', accent: '#5a9ab0', ink: '#163341', verso: '#143442', qr: '#0e2533' },
+  { id: 'jardin', label: 'Côté Jardin', accent: '#d98c5f', ink: '#4a2418', verso: '#8a3f28', qr: '#3a1d12' }, // terre cuite chaude
+  { id: 'cedre',  label: 'Côté Cèdre',  accent: '#c8aa66', ink: '#2c3a30', verso: '#2f4536', qr: '#1e2a22' }, // vert cèdre profond + or
+  { id: 'vallee', label: 'Côté Vallée', accent: '#79b4c6', ink: '#1d3a47', verso: '#234a5c', qr: '#13313d' }, // bleu Loire
 ]
 
 const card = {
