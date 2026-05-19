@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { buildQRDataUri } from '@/lib/qr'
+import PrintButton from '@/components/PrintButton'
 
 export const metadata: Metadata = {
   title: "Cartes d'accueil — La Boire Bavard",
@@ -43,10 +44,11 @@ export default function CartesPage() {
       <div style={{ maxWidth: 420, margin: '0 auto' }}>
         <div className="no-print" style={{ textAlign: 'center', marginBottom: 24 }}>
           <h1 style={{ fontSize: '1.55rem', color: '#2a2018', margin: '0 0 8px' }}>Cartes d&apos;accueil</h1>
-          <p style={{ fontSize: '0.85rem', color: '#6a6258', margin: 0, lineHeight: 1.65 }}>
+          <p style={{ fontSize: '0.85rem', color: '#6a6258', margin: '0 0 16px', lineHeight: 1.65 }}>
             Une carte par chambre — recto (infos + QR codes) et verso (couleur de la chambre).<br />
-            Imprimez, découpez, et collez le recto et le verso dos à dos. Ctrl + P pour imprimer.
+            Cliquez ci-dessous, puis choisissez « Enregistrer au format PDF ».
           </p>
+          <PrintButton />
         </div>
 
         {ROOMS.map((room) => {
