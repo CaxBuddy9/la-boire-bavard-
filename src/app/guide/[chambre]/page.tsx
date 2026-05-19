@@ -10,31 +10,39 @@ const galleryOf = (id: string): string[] =>
   SITE_ROOMS.find((r) => r.id === id)?.images ?? []
 
 // Génère un thème complet depuis les couleurs centrales de rooms.ts
+// Teinte claire propre à chaque chambre — le fond du livret rappelle la chambre
+const ROOM_TINT: Record<string, { page: string; surface: string; card: string; ink: string; pillText: string }> = {
+  jardin: { page: '#f8ede2', surface: '#fcf5ec', card: '#fffdf8', ink: '46,29,18', pillText: '#fff9f3' }, // crème terracotta chaude
+  cedre:  { page: '#f1ede4', surface: '#f8f4ec', card: '#fffefa', ink: '42,36,27', pillText: '#2a241b' }, // greige taupe doux
+  vallee: { page: '#eaf0f2', surface: '#f3f7f8', card: '#fbfdfe', ink: '24,37,47', pillText: '#f2f8fa' }, // bleu Loire clair
+}
+
 function makeTheme(id: string): RoomTheme {
   const c = ROOM_COLORS[id]
+  const t = ROOM_TINT[id] ?? ROOM_TINT.jardin
   return {
-    pageBg:        '#f6f1e8',
-    topbarBg:      '#fbf8f1',
-    topbarBorder:  `rgba(${c.accentRgb},.28)`,
+    pageBg:        t.page,
+    topbarBg:      t.surface,
+    topbarBorder:  `rgba(${c.accentRgb},.3)`,
     accent:        c.accent,
     accentRgb:     c.accentRgb,
-    cardBg:        '#fffdf8',
-    cardBorder:    `rgba(${c.accentRgb},.22)`,
-    cardShadow:    '0 6px 22px rgba(45,35,24,.07)',
-    heading:       '#2a2018',
-    text:          'rgba(42,32,24,.86)',
-    textSub:       'rgba(42,32,24,.6)',
-    textMuted:     'rgba(42,32,24,.42)',
-    divider:       'rgba(42,32,24,.1)',
-    wifiBg:        '#fffdf8',
+    cardBg:        t.card,
+    cardBorder:    `rgba(${c.accentRgb},.24)`,
+    cardShadow:    `0 6px 22px rgba(${t.ink},.08)`,
+    heading:       `rgb(${t.ink})`,
+    text:          `rgba(${t.ink},.86)`,
+    textSub:       `rgba(${t.ink},.6)`,
+    textMuted:     `rgba(${t.ink},.42)`,
+    divider:       `rgba(${t.ink},.1)`,
+    wifiBg:        t.card,
     byeBg:         c.bg,
-    pillBg:        `rgba(${c.accentRgb},.12)`,
+    pillBg:        `rgba(${c.accentRgb},.13)`,
     pillActiveBg:  c.accent,
-    pillActiveText: '#fffdf8',
-    navBg:         'rgba(251,248,241,.96)',
-    navBorder:     `rgba(${c.accentRgb},.22)`,
+    pillActiveText: t.pillText,
+    navBg:         t.surface,
+    navBorder:     `rgba(${c.accentRgb},.24)`,
     navActive:     c.accent,
-    navInactive:   'rgba(42,32,24,.4)',
+    navInactive:   `rgba(${t.ink},.4)`,
   }
 }
 
