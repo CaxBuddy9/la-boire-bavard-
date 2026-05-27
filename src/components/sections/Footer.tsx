@@ -27,11 +27,9 @@ export default function Footer() {
     { href: '/',                 label: t('Accueil', 'Home') },
     { href: '/propriete',        label: t('La propriété', 'The Estate') },
     { href: '/chambres',         label: t('Chambres', 'Rooms') },
-    { href: '/bienetre',         label: t('Bien-être', 'Wellness') },
-    { href: '/petitdej',         label: t('Petit-déjeuner', 'Breakfast') },
+    { href: '/sejour',           label: t('Le séjour', 'The Stay') },
     { href: '/avis',             label: t('Avis', 'Reviews') },
-    { href: '/blog',             label: t('Journal', 'Journal') },
-    { href: '/contact',          label: t('Contact & Accès', 'Contact & Directions') },
+    { href: '/contact',          label: t('Contact', 'Contact') },
     { href: '/mentions-legales', label: t('Mentions légales', 'Legal notice') },
   ]
 

@@ -9,6 +9,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.loireavelo.fr' },
     ],
   },
+  async redirects() {
+    return [
+      { source: '/bienetre', destination: '/sejour', permanent: true },
+      { source: '/petitdej', destination: '/sejour', permanent: true },
+    ]
+  },
   async headers() {
     return [
       {

@@ -6,14 +6,12 @@ import { LogoSVG } from '@/components/Logo'
 import { useLang, useT, type Lang } from '@/context/LangContext'
 
 const links = [
-  { href: '/',          fr: 'Accueil',         en: 'Home',                es: 'Inicio',           pt: 'Início' },
-  { href: '/propriete', fr: 'La propriété',     en: 'The Estate',          es: 'La propiedad',     pt: 'A propriedade' },
-  { href: '/chambres',  fr: 'Chambres',         en: 'Rooms',               es: 'Habitaciones',     pt: 'Quartos' },
-  { href: '/bienetre',  fr: 'Bien-être',        en: 'Wellness',            es: 'Bienestar',        pt: 'Bem-estar' },
-  { href: '/petitdej',  fr: 'Petit-déjeuner',   en: 'Breakfast',           es: 'Desayuno',         pt: 'Pequeno-almoço' },
-  { href: '/avis',      fr: 'Avis',             en: 'Reviews',             es: 'Opiniones',        pt: 'Avaliações' },
-  { href: '/blog',      fr: 'Journal',          en: 'Journal',             es: 'Diario',           pt: 'Diário' },
-  { href: '/contact',   fr: 'Contact & Accès',  en: 'Contact & Directions',es: 'Contacto',         pt: 'Contacto' },
+  { href: '/',          fr: 'Accueil',       en: 'Home',                es: 'Inicio',       pt: 'Início' },
+  { href: '/propriete', fr: 'La propriété',  en: 'The Estate',          es: 'La propiedad', pt: 'A propriedade' },
+  { href: '/chambres',  fr: 'Chambres',      en: 'Rooms',               es: 'Habitaciones', pt: 'Quartos' },
+  { href: '/sejour',    fr: 'Le séjour',     en: 'The Stay',            es: 'La estancia',  pt: 'A estadia' },
+  { href: '/avis',      fr: 'Avis',          en: 'Reviews',             es: 'Opiniones',    pt: 'Avaliações' },
+  { href: '/contact',   fr: 'Contact',       en: 'Contact',             es: 'Contacto',     pt: 'Contacto' },
 ]
 
 export default function Nav() {
@@ -76,7 +74,7 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-6">
           {/* Lang toggle FR / EN / ES / PT */}
           <div className="flex items-center gap-2">
-            {(['fr', 'en', 'es', 'pt'] as Lang[]).map((code) => (
+            {(['fr', 'en'] as Lang[]).map((code) => (
               <button
                 key={code}
                 onClick={() => setLang(code)}
@@ -130,7 +128,7 @@ export default function Nav() {
           ))}
           {/* Mobile lang switch */}
           <div className="flex items-center gap-3 pt-1">
-            {(['fr', 'en', 'es', 'pt'] as Lang[]).map((code) => (
+            {(['fr', 'en'] as Lang[]).map((code) => (
               <button
                 key={code}
                 onClick={() => setLang(code)}
