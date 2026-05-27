@@ -6,7 +6,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/favicon-128.png', type: 'image/png', sizes: '128x128' },
+      { url: '/favicon-48.png', type: 'image/png', sizes: '48x48' },
       { url: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
       { url: '/favicon-16.png', type: 'image/png', sizes: '16x16' },
     ],

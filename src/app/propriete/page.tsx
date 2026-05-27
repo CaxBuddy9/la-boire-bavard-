@@ -43,6 +43,28 @@ export default function PropriетеPage() {
           </div>
         </section>
 
+        {/* Définition du nom */}
+        <section style={{ background: '#0d110e', padding: '90px 32px', borderTop: '1px solid rgba(196,160,80,.12)', borderBottom: '1px solid rgba(196,160,80,.12)' }}>
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="label-caps mb-4">D'où vient ce nom ?</p>
+            <h2 className="font-serif font-normal mb-6"
+              style={{ fontSize: 'clamp(1.8rem,3.2vw,2.6rem)', color: 'rgba(253,252,249,.9)' }}
+            >
+              <em className="italic" style={{ color: '#c4a050' }}>« La Boire Bavard »</em>
+            </h2>
+            <div className="gold-line mx-auto mb-8" />
+            <p className="font-body text-[1.05rem] leading-[1.9] mb-5" style={{ color: 'rgba(255,255,255,.7)' }}>
+              En Anjou et plus largement dans le bassin ligérien, une <strong style={{ color: '#c4a050', fontWeight: 500 }}>boire</strong> désigne un bras secondaire ou un ancien lit de la Loire — un cours d'eau tranquille, parfois marécageux, qui se remplit aux crues et offre refuge à toute une faune sauvage : hérons, libellules, brochets.
+            </p>
+            <p className="font-body text-[1.05rem] leading-[1.9] mb-5" style={{ color: 'rgba(255,255,255,.7)' }}>
+              Celle qui borde notre propriété, on l'appelle <em className="italic">« la Bavarde »</em> — parce qu'elle murmure, chuchote, raconte. L'eau y court à voix basse entre les saules et les peupliers, et le soir, on l'entend encore.
+            </p>
+            <p className="font-body text-[0.95rem] leading-[1.9] italic" style={{ color: 'rgba(255,255,255,.5)' }}>
+              C'est de cette boire bavarde, témoin discret du fleuve royal, que la maison tire son nom.
+            </p>
+          </div>
+        </section>
+
         {/* Intro split */}
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">

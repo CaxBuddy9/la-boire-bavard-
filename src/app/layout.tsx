@@ -34,6 +34,7 @@ const garamond = EB_Garamond({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://laboirebavard.com'),
   title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, jardin arboré, petit-déjeuner gourmand. Note 9.9/10 · 90 €/nuit.",
   verification: {
@@ -42,8 +43,8 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/icons/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/favicon-128.png', type: 'image/png', sizes: '128x128' },
       { url: '/favicon-48.png', type: 'image/png', sizes: '48x48' },
       { url: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
       { url: '/favicon-16.png', type: 'image/png', sizes: '16x16' },
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
     title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
     description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine chauffée, jardin arboré, petit-déjeuner gourmand.",
     images: ['/photos/exterieur/maison-facade-printemps.jpg'],
-    siteName: "La Boire Bavard — Chambres d'Hôtes",
+    siteName: 'La Boire Bavard',
     locale: 'fr_FR',
     type: 'website',
     url: 'https://laboirebavard.com',
@@ -68,8 +69,8 @@ export const viewport: Viewport = {
 const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: "La Boire Bavard — Chambres d'Hôtes",
-  alternateName: 'La Boire Bavard',
+  name: 'La Boire Bavard',
+  alternateName: "Chambres d'Hôtes La Boire Bavard",
   url: 'https://laboirebavard.com',
 }
 

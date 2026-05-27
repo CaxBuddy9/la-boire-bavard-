@@ -198,7 +198,7 @@ export default function BlogPage() {
             Réservez votre séjour
           </h2>
           <p className="font-sans text-white/45 mb-10 text-[1rem]">
-            4 chambres de charme au cœur de l'Anjou · Petit-déjeuner inclus
+            3 chambres de charme au cœur de l'Anjou · Petit-déjeuner inclus
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link href="/chambres" className="btn-gold">Voir les chambres</Link>

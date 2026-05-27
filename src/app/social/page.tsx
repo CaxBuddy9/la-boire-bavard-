@@ -10,7 +10,7 @@ const POSTS = [
     category: 'Présentation',
     caption: `✨ Entre Loire et vignoble, une maison d'hôtes pas comme les autres.
 
-La Boire Bavard, c'est 4 chambres de caractère, un petit-déjeuner gourmand, une piscine chauffée et une hôtesse qui pense à tout — Sandrine.
+La Boire Bavard, c'est 3 chambres de caractère, un petit-déjeuner gourmand, une piscine chauffée et une hôtesse qui pense à tout — Sandrine.
 
 Note 9.9/10 sur Booking.com 🌿
 
@@ -27,7 +27,7 @@ Note 9.9/10 sur Booking.com 🌿
 
 La chambre Côté Cèdre, c'est l'accès direct à la piscine depuis la chambre, une baignoire, et une vue sur notre grand cèdre qui veille depuis 200 ans.
 
-Faite pour les amoureux. 88€/nuit petit-déjeuner inclus.
+Faite pour les amoureux. 90€/nuit petit-déjeuner inclus.
 
 📩 Réservation : lien en bio
 
@@ -63,10 +63,10 @@ C'est ça, La Boire Bavard.
     category: 'Présentation complète',
     caption: `🏡 La Boire Bavard — Chambres d'Hôtes en Anjou
 
-Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 4 chambres d'exception, chacune avec sa personnalité : vue Loire, accès jardin, terrasse privée ou romantisme sous le grand cèdre.
+Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 3 chambres d'exception, chacune avec sa personnalité : vue sur les vignes, accès jardin, terrasse privée ou dépendance romantique sous le grand cèdre.
 
 ✅ Note Exceptionnel 9.9/10 sur Booking
-✅ Petit-déjeuner gourmand inclus — 88€/nuit
+✅ Petit-déjeuner gourmand inclus — 90€/nuit
 ✅ Piscine chauffée, jacuzzi, jardin
 ✅ Planche du soir gourmande (18€/pers.)
 ✅ À 25 min d'Angers, sur la Loire à Vélo

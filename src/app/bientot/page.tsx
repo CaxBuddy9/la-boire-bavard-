@@ -272,7 +272,7 @@ export default function BientotPage() {
 
           <p className="desc">
             Maison d'hôtes de charme entre Angers et Saumur.<br />
-            Piscine · Petit-déjeuner gourmand · 4 chambres.
+            Piscine · Petit-déjeuner gourmand · 3 chambres.
           </p>
 
           <div className="contacts">
