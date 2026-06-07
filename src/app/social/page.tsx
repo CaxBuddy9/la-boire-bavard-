@@ -10,7 +10,7 @@ const POSTS = [
     category: 'Présentation',
     caption: `✨ Entre Loire et vignoble, une maison d'hôtes pas comme les autres.
 
-La Boire Bavard, c'est 3 chambres de caractère, un petit-déjeuner gourmand, une piscine chauffée et une hôtesse qui pense à tout — Sandrine.
+La Boire Bavard, c'est 3 chambres de caractère, un petit-déjeuner gourmand, une piscine et un accueil chaleureux — Sandrine et Jean-Marc.
 
 Note 9.9/10 sur Booking.com 🌿
 
@@ -23,9 +23,9 @@ Note 9.9/10 sur Booking.com 🌿
     platform: 'Instagram',
     format: 'Carré 1:1',
     category: 'Chambre — Côté Cèdre',
-    caption: `🌳 Dormir sous un cèdre centenaire.
+    caption: `🌳 Dormir à l'ombre d'un grand cèdre.
 
-La chambre Côté Cèdre, c'est l'accès direct à la piscine depuis la chambre, une baignoire, et une vue sur notre grand cèdre qui veille depuis 200 ans.
+La chambre Côté Cèdre, c'est l'accès direct à la piscine depuis la chambre, une baignoire, et une vue sur notre grand cèdre.
 
 Faite pour les amoureux. 90€/nuit petit-déjeuner inclus.
 
@@ -39,7 +39,7 @@ Faite pour les amoureux. 90€/nuit petit-déjeuner inclus.
     category: 'Petit-déjeuner',
     caption: `☀️ Le petit-déjeuner qui donne envie de ne pas partir.
 
-Confitures maison, viennoiseries du boulanger, fromages locaux, fruits de saison... et la vue sur le jardin.
+Confitures de Flo, viennoiseries du boulanger, fromages locaux, fruits de saison... et la vue sur le jardin.
 
 Inclus dans chaque nuit à La Boire Bavard 🧡
 
@@ -49,7 +49,7 @@ Inclus dans chaque nuit à La Boire Bavard 🧡
     platform: 'Instagram',
     format: 'Reels / Stories',
     category: 'Teaser vidéo',
-    caption: `La Loire à 2 km. La piscine chauffée. Le silence. 🌊
+    caption: `La Loire à 2 km. La piscine. Le silence. 🌊
 
 C'est ça, La Boire Bavard.
 
@@ -63,11 +63,11 @@ C'est ça, La Boire Bavard.
     category: 'Présentation complète',
     caption: `🏡 La Boire Bavard — Chambres d'Hôtes en Anjou
 
-Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 3 chambres d'exception, chacune avec sa personnalité : vue sur les vignes, accès jardin, terrasse privée ou dépendance romantique sous le grand cèdre.
+Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 3 chambres de charme, chacune avec sa personnalité : vue sur la vallée, accès jardin, terrasse privée ou dépendance romantique sous le grand cèdre.
 
 ✅ Note Exceptionnel 9.9/10 sur Booking
 ✅ Petit-déjeuner gourmand inclus — 90€/nuit
-✅ Piscine chauffée, jacuzzi, jardin
+✅ Piscine, jardin
 ✅ Planche du soir gourmande (18€/pers.)
 ✅ À 25 min d'Angers, sur la Loire à Vélo
 
@@ -75,7 +75,7 @@ Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous
 📧 contact@laboirebavard.com
 🌐 Réservation en ligne disponible
 
-Sandrine vous attend 🌿`,
+Sandrine et Jean-Marc vous attendent 🌿`,
   },
   {
     platform: 'Facebook',
@@ -83,7 +83,7 @@ Sandrine vous attend 🌿`,
     category: 'Planche du soir',
     caption: `🍷 La planche du soir à La Boire Bavard
 
-Pour prolonger la soirée en douceur, Sandrine prépare une planche gourmande à partager — charcuterie, fromages et produits du terroir anjou, le tout fait maison.
+Pour prolonger la soirée en douceur, Sandrine prépare une planche gourmande à partager — charcuterie, fromages et produits du terroir angevin, sélectionnés avec soin auprès de fournisseurs de confiance.
 
 18€ par personne · Sur réservation
 Pour les hôtes qui souhaitent dîner sur place.
@@ -96,7 +96,7 @@ Réservez votre séjour et signalez votre intérêt pour la planche 👇
     platform: 'Facebook',
     format: 'Post avis client',
     category: 'Témoignage',
-    caption: `⭐⭐⭐⭐⭐ "Un lieu rare où le temps s'arrête. Sandrine a créé quelque chose d'exceptionnel."
+    caption: `⭐⭐⭐⭐⭐ "Un lieu rare où le temps s'arrête. On s'y sent vite comme à la maison."
 — Claire & Antoine, Lyon
 
 Merci pour ce beau témoignage 🙏
@@ -115,9 +115,9 @@ const HASHTAGS = {
 
 const OG_SPECS = [
   { page: 'Accueil', file: '/photos/exterieur/maison-facade-printemps.jpg', title: "La Boire Bavard — Chambres d'Hôtes en Anjou", desc: "Maison d'hôtes de charme 9.9/10. Piscine, jardin, petit-déjeuner gourmand. 90€/nuit." },
-  { page: 'Chambres', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "3 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée. Vue sur les vignes, piscine, cheminée." },
+  { page: 'Chambres', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "3 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée. Vue sur la vallée, piscine, jardin." },
   { page: 'Avis', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "Avis 9.9/10 — La Boire Bavard", desc: "200+ avis Exceptionnel. Découvrez ce que nos hôtes disent de leur séjour." },
-  { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures maison, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },
+  { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures de Flo, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },
 ]
 
 export default function SocialPage() {

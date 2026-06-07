@@ -12,8 +12,8 @@ export default function QuoteBand() {
           style={{ fontSize: 'clamp(1.5rem,2.8vw,2.2rem)', lineHeight: 1.45 }}
         >
           {t(
-            "Un endroit rare où le temps s'arrête. Sandrine a créé quelque chose d'exceptionnel — entre une maison de famille et un havre de paix digne des plus belles adresses d'Anjou.",
-            "A rare place where time stands still. Sandrine has created something exceptional — halfway between a family home and a haven of peace worthy of Anjou's finest addresses."
+            "Un endroit rare où le temps s'arrête. On y est accueilli simplement et chaleureusement, et on s'y sent vite comme à la maison.",
+            "A rare place where time stands still. The welcome is simple and warm — you quickly feel right at home."
           )}
         </blockquote>
         <div className="gold-line mx-auto mt-8 mb-5" />

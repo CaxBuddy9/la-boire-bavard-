@@ -12,14 +12,14 @@ export const metadata = {
 // volontairement génériques en attendant les vrais textes.
 const AVIS = [
   {
-    text: "Accueil chaleureux, chambre magnifique et petit-déjeuner délicieux. Sandrine et Jean-Marc sont aux petits soins, on a passé un séjour parfait. Un endroit hors du temps qu'on recommande à 100%.",
+    text: "Très bon accueil de Sandrine et Jean-Marc. Chambre agréable et calme, petit-déjeuner copieux et savoureux. Un séjour reposant, à recommander.",
     author: 'Morgane Coupliere',
     city: '',
     date: 'Avr. 2026',
     stars: 5,
   },
   {
-    text: "Un véritable havre de paix au cœur de l'Anjou. La piscine, le jardin, le calme… tout est réuni pour passer un moment inoubliable. Hôtes adorables, on reviendra avec plaisir.",
+    text: "Un endroit paisible au cœur de l'Anjou. La piscine et le jardin sont très agréables et l'accueil est vraiment chaleureux. On reviendra avec plaisir.",
     author: 'Client récent',
     city: '',
     date: 'Avr. 2026',

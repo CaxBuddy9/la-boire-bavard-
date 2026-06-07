@@ -5,16 +5,16 @@ import Footer from '@/components/sections/Footer'
 
 export const metadata = {
   title: "Le séjour — Petit-déjeuner, piscine & bien-être — La Boire Bavard",
-  description: "Une journée à La Boire Bavard : petit-déjeuner gourmand maison, piscine chauffée (mai–sept, 9h–22h), pergola sous le mûrier, planche du soir sur réservation.",
+  description: "Une journée à La Boire Bavard : petit-déjeuner gourmand fait avec des produits locaux, piscine en saison (mai–sept, 9h–22h), pergola sous le mûrier, planche du soir sur réservation.",
 }
 
 const PRODUCTS = [
   { icon: '✦', name: 'Viennoiseries & pains du jour',  desc: 'Cuits chaque matin, croustillants à souhait' },
-  { icon: '✿', name: 'Confitures artisanales',         desc: 'Recettes maison, fruits du jardin et du marché' },
+  { icon: '✿', name: 'Confitures de Flo',              desc: 'Confitures artisanales que nous avons sélectionnées, faites tout près d\'ici' },
   { icon: '◉', name: 'Yaourts maison',                  desc: 'Préparés sur place, doux et onctueux' },
-  { icon: '❧', name: 'Fruits de saison & jus frais',   desc: 'Fruits du potager ou du marché, jus pressé maison' },
+  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac, jus pressé maison et jus locaux' },
   { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud · à votre rythme' },
-  { icon: '◈', name: 'Charcuteries & fromages',         desc: 'Sur demande, pour les amateurs de saveurs salées' },
+  { icon: '◈', name: 'Charcuteries & fromages',         desc: 'Selon l\'organisation — une sélection de qualité, de fournisseurs que nous connaissons et apprécions de longue date' },
 ]
 
 const PLANCHE = [
@@ -35,8 +35,8 @@ const BOISSONS = [
 const SAISONS = [
   { s: 'Printemps', mois: 'Avril – Juin', dispo: 'Jardin & terrasse · Piscine dès mai',          ico: '🌿' },
   { s: 'Été',       mois: 'Juil – Août',  dispo: 'Piscine 9h–22h · Pergola sous le mûrier',       ico: '☀️' },
-  { s: 'Automne',   mois: 'Sept – Oct',   dispo: 'Piscine jusqu\'à fin sept. · Cheminée allumée', ico: '🍂' },
-  { s: 'Hiver',     mois: 'Nov – Mars',   dispo: 'Cheminées · Coin lecture · Jardin endormi',     ico: '❄️' },
+  { s: 'Automne',   mois: 'Sept – Oct',   dispo: 'Piscine jusqu\'à fin sept. · Couleurs d\'automne', ico: '🍂' },
+  { s: 'Hiver',     mois: 'Nov – Mars',   dispo: 'Cocon au chaud · Lecture · Jardin endormi',      ico: '❄️' },
 ]
 
 export default function SejourPage() {
@@ -77,8 +77,8 @@ export default function SejourPage() {
               « Ici, le temps s'arrête. Le matin sent le pain chaud, l'après-midi sent l'eau de la piscine, et le soir on partage une planche sous la pergola. »
             </blockquote>
             <p className="font-sans text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.55)' }}>
-              Tout est inclus : le petit-déjeuner gourmand chaque matin, l'accès libre à la piscine chauffée et au jardin arboré.
-              Et le soir, sur réservation, Sandrine vous prépare une planche pour prolonger la soirée.
+              Tout est inclus : le petit-déjeuner gourmand chaque matin, l'accès libre à la piscine en saison et au jardin.
+              Accueil chaleureux et séjour reposant — et le soir, sur réservation, Sandrine vous prépare une planche pour prolonger la soirée.
             </p>
           </div>
         </section>
@@ -123,7 +123,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-6" />
             <p className="font-body text-white/65 text-[1rem] leading-[1.85]">
-              Une cuisine spacieuse, lumineuse, équipée d'un piano de cuisson — c'est ici que Sandrine prépare chaque matin pains, viennoiseries et confitures maison. Et c'est ici qu'on partage le petit-déjeuner aux beaux jours comme en hiver.
+              Une cuisine chaleureuse et authentique, aux pierres apparentes et tomettes anciennes — c'est ici que Sandrine prépare chaque matin pains et viennoiseries. Et c'est ici qu'on partage le petit-déjeuner, l'hiver, ou sous la pergola aux beaux jours.
             </p>
           </div>
         </div>
@@ -131,18 +131,18 @@ export default function SejourPage() {
         {/* ═══════════════ LE JOUR ═══════════════ */}
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-            <Image src="/photos/exterieur/maison-exterieure-piscine.jpg" alt="Piscine chauffée" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/maison-exterieure-piscine.jpg" alt="Piscine et jardin" fill className="object-cover" sizes="50vw" />
           </div>
           <div style={{ background: '#141f15' }} className="flex flex-col justify-center px-8 py-20 md:px-16">
             <p className="label-caps mb-5">Le jour · 9h – 22h · Mai – Sept</p>
             <h2 className="font-serif font-normal text-white leading-tight mb-6"
               style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)' }}>
-              La piscine chauffée
+              La piscine
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
-              Chauffée à 28°C, la piscine est accessible en accès libre aux hôtes de 9h à 22h. Elle donne directement
-              sur la terrasse en tuffeau et le jardin arboré — un cadre de carte postale.
+              La piscine est accessible en accès libre aux hôtes de 9h à 22h. Elle donne directement
+              sur la terrasse en pierre de Solnhofen et le jardin — un cadre de carte postale.
             </p>
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
               Transats et parasols sont mis à disposition. Ouverture selon la météo, de mai à fin septembre.
@@ -153,8 +153,8 @@ export default function SejourPage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <div style={{ background: 'rgba(255,255,255,.07)', padding: '14px 22px', textAlign: 'center' }}>
-                <div className="font-serif text-gold text-2xl">28°C</div>
-                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/40 mt-1">température</div>
+                <div className="font-serif text-gold text-2xl">Plein air</div>
+                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/40 mt-1">jardin & terrasse</div>
               </div>
               <div style={{ background: 'rgba(255,255,255,.07)', padding: '14px 22px', textAlign: 'center' }}>
                 <div className="font-serif text-gold text-2xl">9h–22h</div>
@@ -178,14 +178,14 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
-              À l'ombre du mûrier centenaire, la pergola est notre coin préféré : on y prend le petit-déjeuner aux beaux jours,
-              on y lit, on y refait le monde avec un verre de vin local en fin de journée.
+              À l'ombre du mûrier, la pergola est l'un de nos endroits favoris : on y prend le petit-déjeuner aux beaux jours
+              et on y lit tranquillement à l'abri du soleil.
             </p>
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-8">
               Vue sur le jardin et la piscine, ambiance douce et lumière filtrée — un moment hors du temps.
             </p>
             <div className="flex flex-wrap gap-3">
-              {['Pergola ombragée', 'Mûrier centenaire', 'Petit-déj aux beaux jours', 'Apéro du soir'].map(tag => (
+              {['Pergola ombragée', 'À l\'ombre du mûrier', 'Petit-déj aux beaux jours', 'Lecture au calme'].map(tag => (
                 <span key={tag}
                   style={{ border: '1px solid rgba(196,160,80,.25)', padding: '6px 14px' }}
                   className="font-sans text-[0.6rem] tracking-[0.15em] uppercase text-white/55">
@@ -211,9 +211,9 @@ export default function SejourPage() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { ico: '🌳', titre: 'Parc arboré',       desc: 'Cèdres centenaires, tilleuls et chênes. Un parc à l\'ancienne qui donne son caractère à la propriété.' },
-                { ico: '🦋', titre: 'Nature & silence',  desc: 'Pas de voisins immédiats. Le seul bruit est celui des oiseaux. Un vrai luxe à 25 minutes d\'Angers.' },
-                { ico: '🌾', titre: 'Vignes alentour',   desc: 'La propriété est entourée de vignes — départ idéal pour des balades à vélo ou à pied dans le vignoble.' },
+                { ico: '🌳', titre: 'Jardin arboré',     desc: 'Un jardin arboré et paysager, avec des espaces ombragés naturels à proximité immédiate de la piscine.' },
+                { ico: '🦋', titre: 'Nature & calme',    desc: 'Un cadre calme et verdoyant, à 25 minutes d\'Angers, où l\'on entend surtout les oiseaux.' },
+                { ico: '🚲', titre: 'Balades & vélo',    desc: 'De nombreux sentiers et circuits à vélo au départ de la maison, vers les coteaux viticoles et les bords de Loire.' },
               ].map(item => (
                 <div key={item.titre}
                   style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(196,160,80,.12)', padding: '2rem' }}>
@@ -245,7 +245,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-body text-white/70 text-[1.05rem] leading-[1.9] mb-5">
-              Pour ceux qui souhaitent prolonger la soirée en douceur, nous proposons une planche gourmande à partager — toute faite maison, avec des produits locaux, frais et de saison.
+              Pour ceux qui souhaitent prolonger la soirée en douceur, nous proposons une planche gourmande à partager — préparée avec des produits locaux et de saison, issus de fournisseurs que nous connaissons et apprécions.
             </p>
             <p className="font-body text-white/55 text-[0.95rem] leading-[1.85] mb-6">
               <strong className="text-white/75">Au menu :</strong>

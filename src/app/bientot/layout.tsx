@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'La Boire Bavard',
-  description: "Maison d'hôtes de charme en Anjou · Piscine chauffée · Petit-déjeuner gourmand · Entre Angers et Saumur",
+  description: "Maison d'hôtes de charme en Anjou · Piscine · Petit-déjeuner gourmand · Entre Angers et Saumur",
   robots: { index: false, follow: false },
   icons: {
     icon: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'La Boire Bavard',
-    description: "Maison d'hôtes de charme en Anjou · Piscine chauffée · Petit-déjeuner gourmand",
+    description: "Maison d'hôtes de charme en Anjou · Piscine · Petit-déjeuner gourmand",
     locale: 'fr_FR',
     type: 'website',
   },

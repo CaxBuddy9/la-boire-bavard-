@@ -6,7 +6,7 @@ import { ROOMS } from '@/lib/rooms'
 
 export const metadata = {
   title: "Chambres — La Boire Bavard",
-  description: "3 chambres d'exception à La Boire Bavard. Cheminée, piscine, vue sur les vignes. 90€/nuit petit-déjeuner inclus.",
+  description: "3 chambres de charme à La Boire Bavard. Piscine, jardin, vue sur la vallée. 90€/nuit petit-déjeuner inclus.",
 }
 
 const BG_STYLES = [

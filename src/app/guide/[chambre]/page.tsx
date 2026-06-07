@@ -57,8 +57,8 @@ const ROOMS = {
     theme: makeTheme('jardin') satisfies RoomTheme,
     details: [
       { fr: "La terrasse privée s'ouvre directement depuis la chambre", en: "The private terrace opens directly from your room", es: "La terraza privada se abre directamente desde la habitación", pt: "O terraço privado abre diretamente do seu quarto" },
-      { fr: "La cheminée est disponible sur demande à Sandrine", en: "The fireplace is available on request from Sandrine", es: "La chimenea está disponible a petición de Sandrine", pt: "A lareira está disponível a pedido da Sandrine" },
-      { fr: "Grande chambre familiale jusqu'à 4 personnes", en: "Spacious family room for up to 4 guests", es: "Amplia habitación familiar para hasta 4 personas", pt: "Quarto familiar espaçoso para até 4 hóspedes" },
+      { fr: "Lit double ou deux lits jumeaux selon vos besoins", en: "Double bed or two twin beds to suit your needs", es: "Cama doble o dos camas individuales según sus necesidades", pt: "Cama de casal ou duas camas individuais conforme as suas necessidades" },
+      { fr: "Chambre lumineuse pour 1 à 2 personnes · lit enfant sur demande", en: "Bright room for 1–2 guests · child bed on request", es: "Habitación luminosa para 1–2 personas · cama infantil a petición", pt: "Quarto luminoso para 1–2 hóspedes · cama de criança a pedido" },
     ],
   },
   cedre: {

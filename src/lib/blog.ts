@@ -57,7 +57,7 @@ export const blogPosts: BlogPost[] = [
     date: '2026-05-01',
     category: 'La maison',
     excerpt:
-      "Iris en fleurs, cèdre centenaire et premières baignades : visite guidée du parc de " +
+      "Iris en fleurs, grand cèdre et premières baignades : visite guidée du jardin de " +
       'La Boire Bavard aux beaux jours, là où nos hôtes aiment prendre le temps.',
     poster: '/photos/exterieur/jardin-iris-01.jpeg',
     youtubeId: '',

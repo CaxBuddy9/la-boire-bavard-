@@ -6,16 +6,16 @@ import PhotoGallery from '@/components/PhotoGallery'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
-  description: "Découvrez la longère angevine de La Boire Bavard : piscine chauffée, jardin arboré, vignoble et val de Loire.",
+  description: "Découvrez la longère angevine de La Boire Bavard : piscine en saison, jardin arboré, vallée et val de Loire.",
 }
 
 const FEATURES = [
-  { icon: '≋', title: 'Piscine chauffée', desc: 'Profitez de la piscine chauffée ouverte de mai à octobre, entourée d\'un jardin préservé. Sécurisée, accessible de 9h à 22h.' },
-  { icon: '❧', title: 'Jardin arboré', desc: 'Un parc généreux avec cèdres centenaires, fleurs, herbes aromatiques et coins ombragés. Idéal pour flâner ou lire à l\'ombre.' },
-  { icon: '✦', title: 'Vue sur les vignes', desc: 'La propriété est nichée au cœur du vignoble de l\'Anjou, à deux pas du val de Loire — panoramas exceptionnels au lever du soleil.' },
-  { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — le coin préféré de nos hôtes.' },
-  { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner maison préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
-  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural, aucun bruit de circulation. Le calme absolu de la campagne angevine.' },
+  { icon: '≋', title: 'Piscine en saison', desc: 'Profitez de la piscine ouverte de mai à fin septembre, au cœur du jardin. Sécurisée, accessible de 9h à 22h.' },
+  { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysager, avec fleurs, espaces ombragés naturels et coins de fraîcheur. Idéal pour flâner ou lire à l\'ombre.' },
+  { icon: '✦', title: 'Vue sur la vallée', desc: 'La propriété domine la vallée, à deux pas du val de Loire — un cadre paisible entre nature et patrimoine.' },
+  { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un endroit où l\'on aime se poser.' },
+  { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
+  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural et verdoyant, peu de circulation. Le calme de la campagne angevine.' },
 ]
 
 export default function PropriетеPage() {
@@ -27,7 +27,7 @@ export default function PropriетеPage() {
         <section className="relative h-[65vh] flex items-end pb-16 overflow-hidden">
           <Image
             src="/photos/exterieur/propriete-jardin-cedre.jpg"
-            alt="La propriété La Boire Bavard — jardin et cèdre centenaire"
+            alt="La propriété La Boire Bavard — jardin et cèdre"
             fill priority
             className="object-cover"
             sizes="100vw"
@@ -92,9 +92,9 @@ export default function PropriетеPage() {
               de cette demeure angevine.
             </p>
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85] mb-5">
-              Sandrine a tout pensé pour votre confort : entrées indépendantes, salle d'eau
-              privative, terrasse avec vue sur le jardin et la piscine, parking privé sécurisé.
-              Un environnement calme et verdoyant, un accueil chaleureux, un séjour reposant.
+              Pour votre confort : entrées indépendantes, salle d'eau privative, terrasse
+              avec vue sur le jardin et la piscine, parking privé sécurisé. Un environnement
+              calme et verdoyant, un accueil chaleureux, un séjour reposant.
             </p>
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85]">
               Nichée dans le Val de Loire classé au patrimoine de l'UNESCO, la propriété est
@@ -122,6 +122,12 @@ export default function PropriетеPage() {
             </p>
             <p className="font-body text-[0.95rem] leading-[1.9] italic" style={{ color: 'rgba(255,255,255,.5)' }}>
               Nous tenons aussi à remercier les anciens propriétaires, Maryline et Jean-Paul, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.
+            </p>
+            <p className="font-serif italic mt-8 text-[1.05rem]" style={{ color: '#c4a050' }}>
+              Sandrine &amp; Jean-Marc
+            </p>
+            <p className="font-sans text-[0.55rem] tracking-[0.28em] uppercase mt-1" style={{ color: 'rgba(255,255,255,.35)' }}>
+              Vos hôtes
             </p>
           </div>
         </section>
@@ -185,6 +191,17 @@ export default function PropriетеPage() {
               >
                 Au cœur de l'Anjou
               </h2>
+              <p className="font-body max-w-3xl mx-auto mt-6 text-[1.02rem] leading-[1.9]" style={{ color: 'rgba(255,255,255,.6)' }}>
+                Entre Loire, vignobles et patrimoine. Située dans la charmante Petite Cité de Caractère de
+                Blaison-Saint-Sulpice, La Boire Bavard bénéficie d'un emplacement idéal pour découvrir les
+                richesses de l'Anjou, entre nature, patrimoine et gastronomie. Niché dans le Val de Loire
+                classé au patrimoine de l'UNESCO, le village offre à lui seul un cadre authentique.
+              </p>
+              <p className="font-body max-w-3xl mx-auto mt-4 text-[1.02rem] leading-[1.9]" style={{ color: 'rgba(255,255,255,.6)' }}>
+                Depuis la maison, de nombreux sentiers pédestres et circuits à vélo vous invitent à explorer
+                la campagne environnante, les coteaux viticoles et les bords de Loire. Le GR3 et plusieurs
+                boucles de randonnée sont accessibles depuis le village, à pied comme à vélo.
+              </p>
             </div>
             <div className="grid md:grid-cols-2 gap-12 mb-14">
               <div>

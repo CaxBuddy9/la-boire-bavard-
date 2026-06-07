@@ -4,13 +4,13 @@ import { useT } from '@/context/LangContext'
 // ⚠️ TODO Sandrine — coller ici les textes EXACTS des 2 derniers avis Google
 const AVIS = [
   {
-    fr: "Accueil chaleureux, chambre magnifique et petit-déjeuner délicieux. Sandrine et Jean-Marc sont aux petits soins, séjour parfait.",
-    en: "Warm welcome, beautiful room and delicious breakfast. Sandrine and Jean-Marc are wonderful hosts, a perfect stay.",
+    fr: "Très bon accueil de Sandrine et Jean-Marc. Chambre agréable et calme, petit-déjeuner copieux et savoureux. Un séjour reposant, à recommander.",
+    en: "Very warm welcome from Sandrine and Jean-Marc. Pleasant, quiet room and a generous, tasty breakfast. A restful stay, recommended.",
     author: 'Morgane Coupliere', city: '', date: { fr: 'Avr. 2026', en: 'Apr. 2026' },
   },
   {
-    fr: "Un véritable havre de paix au cœur de l'Anjou. Piscine, jardin, calme — tout est réuni pour un moment inoubliable.",
-    en: "A true haven of peace in the heart of Anjou. Pool, garden, peace — everything is set for an unforgettable moment.",
+    fr: "Un endroit paisible au cœur de l'Anjou. La piscine et le jardin sont très agréables et l'accueil est vraiment chaleureux. On reviendra.",
+    en: "A peaceful spot in the heart of Anjou. The pool and garden are lovely and the welcome is truly warm. We'll be back.",
     author: 'Client récent', city: '', date: { fr: 'Avr. 2026', en: 'Apr. 2026' },
   },
 ]
