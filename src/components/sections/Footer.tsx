@@ -116,6 +116,7 @@ export default function Footer() {
             style={{ height: 18, width: 'auto' }}
           />
           <span className="font-serif text-[0.78rem] tracking-[0.3em] uppercase">Speerla</span>
+          <span className="text-[0.5rem] tracking-[0.22em] uppercase opacity-70">Consulting</span>
         </a>
 
       </div>
