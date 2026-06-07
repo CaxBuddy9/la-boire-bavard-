@@ -49,8 +49,8 @@ export default function IntroStrip() {
         </p>
         <p className="font-body text-white/55 text-[0.95rem] italic leading-[1.85] mb-10">
           {t(
-            "Avec une pensée pour Maryline et Jean-Paul, à qui nous succédons et qui ont donné tant de passion à ce lieu.",
-            "With a thought for Maryline and Jean-Paul, whom we succeed and who poured so much passion into this place."
+            "Nous tenons enfin à remercier Maryline et Jean-Paul, les anciens propriétaires, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.",
+            "Finally, we want to thank Maryline and Jean-Paul, the former owners, for all the work and passion they devoted to this place. It is with joy that we continue this lovely adventure."
           )}
         </p>
         <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
