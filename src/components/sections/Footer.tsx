@@ -98,6 +98,26 @@ export default function Footer() {
           © 2026 La Boire Bavard · 4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice
         </p>
 
+        {/* Crédit studio — Speerla */}
+        <a
+          href="https://speerla.fr"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Site conçu par Speerla"
+          className="group inline-flex items-center gap-2 mt-5 text-white/25 hover:text-white/60 transition-colors"
+        >
+          <span className="text-[0.5rem] tracking-[0.22em] uppercase">Site conçu par</span>
+          <Image
+            src="/logos/speerla-mark.png"
+            alt="Speerla"
+            width={9}
+            height={22}
+            className="object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+            style={{ height: 18, width: 'auto' }}
+          />
+          <span className="font-serif text-[0.78rem] tracking-[0.3em] uppercase">Speerla</span>
+        </a>
+
       </div>
     </footer>
   )
