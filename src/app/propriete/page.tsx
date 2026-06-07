@@ -104,6 +104,28 @@ export default function PropriетеPage() {
           </div>
         </div>
 
+        {/* Les nouveaux propriétaires */}
+        <section style={{ background: '#0d110e', padding: '90px 32px', borderTop: '1px solid rgba(196,160,80,.12)' }}>
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="label-caps mb-4">Un nouveau chapitre</p>
+            <h2 className="font-serif font-normal mb-6"
+              style={{ fontSize: 'clamp(1.8rem,3.2vw,2.6rem)', color: 'rgba(253,252,249,.9)' }}
+            >
+              Les nouveaux propriétaires
+            </h2>
+            <div className="gold-line mx-auto mb-8" />
+            <p className="font-body text-[1.05rem] leading-[1.9] mb-5" style={{ color: 'rgba(255,255,255,.7)' }}>
+              Nous sommes très heureux de vous accueillir aux chambres d'hôtes de La Boire Bavard en tant que nouveaux propriétaires ! Après plus de vingt ans passés à La Rochelle, entre océan et grand air, nous avons choisi d'ouvrir un nouveau chapitre de notre vie en Anjou — une région que nous connaissons bien et que nous aimons pour sa douceur de vivre, ses paysages et son authenticité.
+            </p>
+            <p className="font-body text-[1.05rem] leading-[1.9] mb-5" style={{ color: 'rgba(255,255,255,.7)' }}>
+              Nous avons eu un véritable coup de cœur pour cette longère et son jardin. Notre projet : faire vivre ce lieu à notre manière, dans le respect de son âme, et partager avec vous l'art de vivre angevin.
+            </p>
+            <p className="font-body text-[0.95rem] leading-[1.9] italic" style={{ color: 'rgba(255,255,255,.5)' }}>
+              Nous tenons aussi à remercier les anciens propriétaires, Maryline et Jean-Paul, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.
+            </p>
+          </div>
+        </section>
+
         {/* Features grid */}
         <section style={{ background: '#111009', padding: '96px 52px' }}>
           <div className="max-w-6xl mx-auto">

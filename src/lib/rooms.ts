@@ -7,7 +7,7 @@ export type RoomColor = {
 export const ROOM_COLORS: Record<string, RoomColor> = {
   jardin:  { bg: '#180e08', accent: '#c4603a', accentRgb: '196,96,58'   }, // poutres bois + terracotta (tuiles, chaises rouges)
   cedre:   { bg: '#141210', accent: '#a89070', accentRgb: '168,144,112' }, // taupe doux + beige doré (mansarde gris/crème)
-  vallee:  { bg: '#080e18', accent: '#5a9ab0', accentRgb: '90,154,176'  }, // nuit bleue + Loire (vue panoramique)
+  vallee:  { bg: '#080e18', accent: '#5a9ab0', accentRgb: '90,154,176'  }, // nuit bleue feutrée (cocon sous les toits)
 }
 
 export type Room = {
@@ -35,7 +35,7 @@ export const ROOMS: Room[] = [
     capacityMin: 1,
     capacityMax: 4,
     pricePerNight: 90,
-    features: ['Cheminée', 'Terrasse privée', 'Accès jardin', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Cheminée', 'Terrasse privée', 'Accès jardin', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
       '/photos/chambres/jardin/chambre-jardin-blanc-01.jpeg',
@@ -59,7 +59,7 @@ export const ROOMS: Room[] = [
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
-    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/cedre/chambre-cedre-01.jpeg',
       '/photos/chambres/cedre/chambre-cedre-02.jpeg',
@@ -80,12 +80,12 @@ export const ROOMS: Room[] = [
     id: 'vallee',
     slug: 'cote-vallee',
     name: 'Côté Vallée',
-    tagline: 'Vue sur les vignes',
-    description: 'Chambre spacieuse avec vue panoramique sur les vignes de l\'Anjou. Escalier privé, salle de douche indépendante, belle poutre peinte en blanc — tout invite au calme et à la contemplation. Le matin, le soleil se lève sur le vignoble : un moment suspendu.',
+    tagline: 'Cocon sous les toits',
+    description: 'Nichée sous les toits, cette chambre est un petit cocon plein de charme : tuffeau, poutraison et beaux volumes y créent une ambiance douillette et reposante. On y accède par un escalier extérieur en ardoise, gage d\'intimité. À noter, les plafonds sont en pente — nous la recommandons aux voyageurs de taille moyenne afin de circuler en tout confort (plus de précisions sur demande). Un lit double et deux lits simples : idéale pour un couple comme pour une petite famille.',
     capacityMin: 1,
     capacityMax: 4,
     pricePerNight: 90,
-    features: ['Vue sur les vignes', 'Escalier privé', 'Salle de douche', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Escalier extérieur en ardoise', 'Tuffeau & poutres', 'Plafonds en pente', '1 lit double + 2 lits simples', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/vallee/chambre-vallee-01.jpeg',
       '/photos/chambres/vallee/chambre-vallee-02.jpeg',
@@ -98,7 +98,7 @@ export const ROOMS: Room[] = [
       '/photos/chambres/vallee/chambre-vallee-09.jpeg',
       '/photos/chambres/vallee/chambre-vallee-10.jpeg',
     ],
-    character: 'Vue panoramique',
+    character: 'Cocon sous les toits',
     color: ROOM_COLORS.vallee,
   },
 ]

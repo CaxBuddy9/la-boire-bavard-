@@ -84,9 +84,9 @@ const ROOMS = {
     images: galleryOf('vallee'),
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [
-      { fr: "Vue panoramique sur les vignes de l'Anjou", en: "Panoramic view over the Anjou vineyards", es: "Vista panorámica sobre los viñedos del Anjou", pt: "Vista panorâmica sobre os vinhedos do Anjou" },
-      { fr: "Entrée indépendante via votre escalier privatif", en: "Private entrance via your own staircase", es: "Entrada independiente por su propia escalera privada", pt: "Entrada independente pela sua escadaria privada" },
-      { fr: "Belle poutre peinte en blanc, lumière douce", en: "Beautiful white-painted beam, soft light", es: "Hermosa viga pintada de blanco, luz suave", pt: "Bela viga pintada de branco, luz suave" },
+      { fr: "Cocon sous les toits : tuffeau, poutraison et plafonds en pente", en: "A cocoon under the eaves: tuffeau stone, beams and sloping ceilings", es: "Un refugio bajo el tejado: piedra tuffeau, vigas y techos inclinados", pt: "Um refúgio sob o telhado: pedra tuffeau, vigas e tetos inclinados" },
+      { fr: "Accès par un escalier extérieur en ardoise — entrée indépendante", en: "Access via an outdoor slate staircase — private entrance", es: "Acceso por una escalera exterior de pizarra — entrada independiente", pt: "Acesso por uma escada exterior em ardósia — entrada independente" },
+      { fr: "1 lit double et 2 lits simples · recommandée aux voyageurs de taille moyenne", en: "1 double bed and 2 single beds · best suited to average-height guests", es: "1 cama doble y 2 camas individuales · recomendada para huéspedes de estatura media", pt: "1 cama de casal e 2 camas de solteiro · recomendada a hóspedes de estatura média" },
     ],
   },
 }
