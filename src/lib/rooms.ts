@@ -31,7 +31,7 @@ export const ROOMS: Room[] = [
     slug: 'cote-jardin',
     name: 'Côté Jardin',
     tagline: 'Terrasse privée & jardin',
-    description: 'Grande chambre lumineuse avec accès direct sur la terrasse et le jardin. Lit double ou deux lits jumeaux selon vos besoins. Une ancienne cheminée, aujourd\'hui condamnée, lui donne son cachet.',
+    description: 'Grande chambre lumineuse avec accès direct sur la terrasse et le jardin. Lit double ou deux lits jumeaux selon vos besoins. Une ancienne cheminée en pierre lui donne tout son cachet.',
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
