@@ -77,8 +77,8 @@ export default function SejourPage() {
               « Ici, le temps s'arrête. Le matin sent le pain chaud, l'après-midi sent l'eau de la piscine, et le soir on partage une planche sous la pergola. »
             </blockquote>
             <p className="font-sans text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.55)' }}>
-              Tout est inclus : le petit-déjeuner gourmand chaque matin, l'accès libre à la piscine en saison et au jardin.
-              Accueil chaleureux et séjour reposant — et le soir, sur réservation, Sandrine vous prépare une planche pour prolonger la soirée.
+              Inclus dans chaque nuit : le petit-déjeuner gourmand chaque matin et l'accès libre à la piscine en saison et au jardin.
+              Accueil chaleureux et séjour reposant. Et le soir, en option sur réservation, Sandrine vous prépare une planche pour prolonger la soirée.
             </p>
           </div>
         </section>
@@ -330,7 +330,7 @@ export default function SejourPage() {
 
         {/* CTA */}
         <section style={{ background: '#0f1a10', padding: '90px 32px', textAlign: 'center' }}>
-          <p className="label-caps mb-4">Tout inclus dans votre séjour</p>
+          <p className="label-caps mb-4">Inclus dans votre séjour</p>
           <h2 className="font-serif font-normal mb-4"
             style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'rgba(253,252,249,.9)' }}>
             90 €/nuit · Petit-déjeuner inclus
