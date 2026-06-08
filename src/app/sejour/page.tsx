@@ -10,7 +10,7 @@ export const metadata = {
 
 const PRODUCTS = [
   { icon: '✦', name: 'Viennoiseries & pains du jour',  desc: 'Cuits chaque matin, croustillants à souhait' },
-  { icon: '✿', name: 'Les Délices de Flo',             desc: 'Confitures artisanales cuites au chaudron au Puy-Notre-Dame, à base de fruits du Val de Loire' },
+  { icon: '✿', name: 'Les Délices de Flo',             desc: 'Confitures artisanales cuites au chaudron à Montreuil-Bellay, à base de fruits du Val de Loire' },
   { icon: '◉', name: 'Yaourts maison',                  desc: 'Préparés sur place, doux et onctueux' },
   { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac · orange pressée maison, pomme artisanale' },
   { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud' },
