@@ -290,7 +290,7 @@ export default function SejourPage() {
                 Carte des boissons
               </h2>
               <p className="font-body mt-4 text-[0.95rem]" style={{ color: 'rgba(255,255,255,.4)' }}>
-                Disponibles le soir, à régler sur place
+                Disponibles à tout moment, à régler sur place
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
