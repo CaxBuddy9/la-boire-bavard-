@@ -15,7 +15,7 @@ const FEATURES = [
   { icon: '✦', title: 'Vue sur la vallée', desc: 'La propriété domine la vallée, à deux pas du val de Loire — un cadre paisible entre nature et patrimoine.' },
   { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un endroit où l\'on aime se poser.' },
   { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
-  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural et verdoyant, peu de circulation. Le calme de la campagne angevine.' },
+  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural et verdoyant. Le calme de la campagne angevine.' },
 ]
 
 export default function PropriетеPage() {

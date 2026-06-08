@@ -29,7 +29,7 @@ export default function IntroStrip() {
       <div className="bg-forest flex flex-col justify-center px-4 sm:px-8 md:px-16 py-10 md:py-20 lg:px-20">
         <p className="label-caps-dark mb-5">{t('Le mot des hôtes', 'A word from your hosts')}</p>
         <h2 className="font-serif font-normal text-cream leading-tight mb-6"
-          style={{ fontSize: 'clamp(2rem,3.5vw,3rem)' }}
+          style={{ fontSize: 'clamp(1.6rem,2.6vw,2.3rem)' }}
         >
           {t('Sandrine & Jean-Marc,', 'Sandrine & Jean-Marc,')}<br />
           <em className="italic text-white/65">{t('un nouveau chapitre', 'a new chapter')}</em>
@@ -47,12 +47,16 @@ export default function IntroStrip() {
             "We fell in love with La Boire Bavard, and we are delighted to welcome you here as the new owners."
           )}
         </p>
-        <p className="font-body text-white/55 text-[0.95rem] italic leading-[1.85] mb-10">
-          {t(
-            "Nous tenons enfin à remercier Maryline et Jean-Paul, les anciens propriétaires, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.",
-            "Finally, we want to thank Maryline and Jean-Paul, the former owners, for all the work and passion they devoted to this place. It is with joy that we continue this lovely adventure."
-          )}
-        </p>
+        <div className="border-l-2 pl-5 mb-10" style={{ borderColor: 'rgba(196,160,80,.55)' }}>
+          <p className="font-serif italic text-white/75 leading-[1.7]"
+            style={{ fontSize: 'clamp(1.1rem,1.7vw,1.35rem)' }}
+          >
+            {t(
+              "Nous tenons enfin à remercier Maryline et Jean-Paul, les anciens propriétaires, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.",
+              "Finally, we want to thank Maryline and Jean-Paul, the former owners, for all the work and passion they devoted to this place. It is with joy that we continue this lovely adventure."
+            )}
+          </p>
+        </div>
         <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
           {stats.map((s) => (
             <div key={s.l}>
