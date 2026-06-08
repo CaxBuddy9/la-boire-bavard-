@@ -11,7 +11,7 @@ export const metadata = {
 
 const FEATURES = [
   { icon: '≋', title: 'Piscine en saison', desc: 'Profitez de la piscine ouverte de mai à fin septembre, au cœur du jardin. Sécurisée, accessible de 9h à 22h.' },
-  { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysagé, avec fleurs, espaces ombragés naturels et coins de fraîcheur. Idéal pour flâner ou lire à l\'ombre.' },
+  { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels et des coins de fraîcheur. Idéal pour flâner ou lire à l\'ombre.' },
   { icon: '✦', title: 'Vue sur la vallée', desc: 'La propriété domine la vallée, à deux pas du val de Loire — un cadre paisible entre nature et patrimoine.' },
   { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un endroit où l\'on aime se poser.' },
   { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
