@@ -211,7 +211,7 @@ export default function SejourPage() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { ico: '🌳', titre: 'Jardin arboré',     desc: 'Un jardin arboré et paysager, avec des espaces ombragés naturels à proximité immédiate de la piscine.' },
+                { ico: '🌳', titre: 'Jardin arboré',     desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels à proximité immédiate de la piscine.' },
                 { ico: '🦋', titre: 'Nature & calme',    desc: 'Un cadre calme et verdoyant, à 25 minutes d\'Angers, où l\'on entend surtout les oiseaux.' },
                 { ico: '🚲', titre: 'Balades & vélo',    desc: 'De nombreux sentiers et circuits à vélo au départ de la maison, vers les coteaux viticoles et les bords de Loire.' },
               ].map(item => (
