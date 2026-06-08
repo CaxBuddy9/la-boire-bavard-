@@ -39,7 +39,7 @@ Faite pour les amoureux. 90€/nuit petit-déjeuner inclus.
     category: 'Petit-déjeuner',
     caption: `☀️ Le petit-déjeuner qui donne envie de ne pas partir.
 
-Confitures de Flo, viennoiseries du boulanger, fromages locaux, fruits de saison... et la vue sur le jardin.
+Confitures Les Délices de Flo, viennoiseries du boulanger, fromages locaux, fruits de saison... et la vue sur le jardin.
 
 Inclus dans chaque nuit à La Boire Bavard 🧡
 
@@ -68,7 +68,7 @@ Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous
 ✅ Note Exceptionnel 9.9/10 sur Booking
 ✅ Petit-déjeuner gourmand inclus — 90€/nuit
 ✅ Piscine, jardin
-✅ Planche du soir gourmande (18€/pers.)
+✅ Planche du soir gourmande pour 2 (24€, 1 verre de vin chacun)
 ✅ À 25 min d'Angers, sur la Loire à Vélo
 
 📞 06 75 78 63 35
@@ -85,7 +85,7 @@ Sandrine et Jean-Marc vous attendent 🌿`,
 
 Pour prolonger la soirée en douceur, Sandrine prépare une planche gourmande à partager — charcuterie, fromages et produits du terroir angevin, sélectionnés avec soin auprès de fournisseurs de confiance.
 
-18€ par personne · Sur réservation
+24€ pour 2 · 1 verre de vin chacun · Sur réservation
 Pour les hôtes qui souhaitent dîner sur place.
 
 Réservez votre séjour et signalez votre intérêt pour la planche 👇
@@ -117,7 +117,7 @@ const OG_SPECS = [
   { page: 'Accueil', file: '/photos/exterieur/maison-facade-printemps.jpg', title: "La Boire Bavard — Chambres d'Hôtes en Anjou", desc: "Maison d'hôtes de charme 9.9/10. Piscine, jardin, petit-déjeuner gourmand. 90€/nuit." },
   { page: 'Chambres', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "3 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée. Vue sur la vallée, piscine, jardin." },
   { page: 'Avis', file: '/photos/chambres/jardin/chambre-jardin-vue-ensemble-clair.jpeg', title: "Avis 9.9/10 — La Boire Bavard", desc: "200+ avis Exceptionnel. Découvrez ce que nos hôtes disent de leur séjour." },
-  { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures de Flo, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },
+  { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures Les Délices de Flo, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },
 ]
 
 export default function SocialPage() {

@@ -226,7 +226,7 @@ function ContactInner() {
 
               <div style={{ border: `1px solid ${S.border}`, padding: 32 }}>
                 <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 18 }}>Infos pratiques</p>
-                {['Check-in à partir de 16h','Check-out avant 10h','Petit-déjeuner 8h–10h','Parking privé gratuit','Animaux non acceptés','Planche du soir 18€ (sur résa)'].map(info => (
+                {['Check-in à partir de 16h','Check-out avant 10h','Petit-déjeuner 8h–10h','Parking privé gratuit','Animaux non acceptés','Planche du soir 24€ pour 2 (sur résa)'].map(info => (
                   <p key={info} style={{ color: S.dim, fontFamily: 'var(--font-raleway)', fontSize: '.78rem', lineHeight: 1.7, marginBottom: 6 }}>
                     <span style={{ color: S.gold, marginRight: 8 }}>→</span>{info}
                   </p>

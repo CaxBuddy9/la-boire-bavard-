@@ -10,11 +10,10 @@ export const metadata = {
 
 const PRODUCTS = [
   { icon: '✦', name: 'Viennoiseries & pains du jour',  desc: 'Cuits chaque matin, croustillants à souhait' },
-  { icon: '✿', name: 'Confitures de Flo',              desc: 'Confitures artisanales que nous avons sélectionnées, faites tout près d\'ici' },
+  { icon: '✿', name: 'Les Délices de Flo',             desc: 'Confitures artisanales cuites au chaudron au Puy-Notre-Dame, à base de fruits du Val de Loire' },
   { icon: '◉', name: 'Yaourts maison',                  desc: 'Préparés sur place, doux et onctueux' },
-  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac, jus pressé maison et jus locaux' },
-  { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud · à votre rythme' },
-  { icon: '◈', name: 'Charcuteries & fromages',         desc: 'Selon l\'organisation — une sélection de qualité, de fournisseurs que nous connaissons et apprécions de longue date' },
+  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac · orange pressée maison, pomme artisanale' },
+  { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud' },
 ]
 
 const PLANCHE = [
@@ -93,8 +92,10 @@ export default function SejourPage() {
                 Le petit-déjeuner gourmand
               </h2>
               <p className="font-body mt-5 max-w-2xl mx-auto text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.6)' }}>
-                Préparé chaque matin avec des produits frais, locaux et de saison.
-                Servi dans notre grande cuisine familiale ou, aux beaux jours, sous la pergola à l'ombre du mûrier.
+                Chaque matin, nous vous invitons à partager un moment de douceur et de convivialité autour d'un petit-déjeuner servi dans notre grande cuisine familiale ou, aux beaux jours, sous la pergola à l'ombre du mûrier, avec vue sur le jardin et la piscine.
+              </p>
+              <p className="font-body mt-4 max-w-2xl mx-auto text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.6)' }}>
+                Respectueux des traditions françaises, il est préparé avec des produits frais, locaux et de saison, soigneusement sélectionnés auprès de producteurs de la région.
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -106,6 +107,12 @@ export default function SejourPage() {
                 </div>
               ))}
             </div>
+            <p className="font-body text-center max-w-2xl mx-auto mt-12 text-[0.98rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.5)' }}>
+              Pour les amateurs de saveurs salées, une sélection de charcuteries et de fromages est proposée sur demande.
+            </p>
+            <p className="font-serif italic text-center mt-4 text-gold/70 text-[1.1rem]">
+              Un réveil tout en gourmandise et simplicité.
+            </p>
           </div>
         </section>
 
@@ -123,7 +130,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-6" />
             <p className="font-body text-white/65 text-[1rem] leading-[1.85]">
-              Une cuisine chaleureuse et authentique, aux pierres apparentes et tomettes anciennes — c'est ici que Sandrine prépare chaque matin pains et viennoiseries. Et c'est ici qu'on partage le petit-déjeuner, l'hiver, ou sous la pergola aux beaux jours.
+              Notre cuisine, chaleureuse et authentique, allie le charme des pierres apparentes, des tomettes anciennes et des matériaux traditionnels. Lumineuse et accueillante, elle offre un cadre paisible où l'on se sent immédiatement comme à la maison — c'est ici que Sandrine prépare chaque matin pains et viennoiseries.
             </p>
           </div>
         </div>
@@ -260,8 +267,8 @@ export default function SejourPage() {
             </ul>
             <div className="flex flex-wrap gap-4 mb-8">
               <div className="bg-white/10 px-6 py-4 text-center">
-                <div className="font-serif text-gold text-2xl">18 €</div>
-                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/45 mt-1">avec un verre</div>
+                <div className="font-serif text-gold text-2xl">24 €</div>
+                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/45 mt-1">pour 2 · 1 verre chacun</div>
               </div>
               <div className="bg-white/10 px-6 py-4 text-center">
                 <div className="font-serif text-gold text-2xl">Sur résa</div>

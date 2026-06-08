@@ -24,7 +24,7 @@ export const MENU: MenuSection[] = [
     emoji: '🧀',
     cat: { fr: 'Planches', en: 'Boards', es: 'Tablas', pt: 'Tábuas' },
     items: [
-      { name: { fr: 'Planche apéritive — charcuterie & fromages d\'Anjou', en: 'Aperitif board — Anjou cured meats & cheeses', es: 'Tabla de aperitivo — embutidos y quesos de Anjou', pt: 'Tábua de aperitivo — enchidos e queijos de Anjou' }, price: '18 €' },
+      { name: { fr: 'Planche apéritive pour 2 — charcuterie & fromages d\'Anjou, 1 verre de vin chacun', en: 'Aperitif board for 2 — Anjou cured meats & cheeses, a glass of wine each', es: 'Tabla de aperitivo para 2 — embutidos y quesos de Anjou, una copa de vino cada uno', pt: 'Tábua de aperitivo para 2 — enchidos e queijos de Anjou, um copo de vinho cada' }, price: '24 €' },
     ],
   },
 ]
