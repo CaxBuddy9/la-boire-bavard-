@@ -27,7 +27,7 @@ const PLANCHE = [
 const BOISSONS = [
   { cat: 'Sans alcool',   items: ['Coca-Cola', 'Coca Zero', 'Sprite', 'Perrier', 'Jus de fruits', 'Sirops à l\'eau'] },
   { cat: 'Bières',        items: ['La Piautre — bière locale de l\'Anjou (blonde / ambrée)'] },
-  { cat: 'Vins de Loire', items: ['Vin blanc de Savennières', 'Rosé d\'Anjou', 'Rouge du Layon', 'Verre · pichet · bouteille'] },
+  { cat: 'Vins de Loire', items: ['Blanc, rosé et rouge de Loire', 'Selon disponibilité'] },
 ]
 
 const SAISONS = [
