@@ -19,7 +19,6 @@ const PRODUCTS = [
 const PLANCHE = [
   'Saucisson sec',
   'Chiffonade de chorizo',
-  'Rillette de thon maison',
   'Fromages affinés du Maine-et-Loire',
   'Spécialité du jour de Sandrine',
   'Pain frais & condiments',
