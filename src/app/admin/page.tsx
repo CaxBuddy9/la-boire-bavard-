@@ -996,13 +996,108 @@ function FacturationPanel() {
   )
 }
 
+// ── Statistiques ────────────────────────────────────────────────────────────
+// Compteurs remis à zéro au 1er juin 2026 (reprise par Sandrine & Jean-Marc).
+const STATS_START = '2026-06-01'
+
+function StatsPanel({ reservations }: { reservations: Reservation[] }) {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = now.getMonth()
+  const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
+  const todayIso = isoDate(y, m, now.getDate())
+
+  const PRICE = 88 // tarif/nuit compté au CA pour les résas Booking.com (prix inconnu via iCal)
+  const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
+
+  const active = reservations.filter(r => r.status !== 'cancelled' && r.room_id !== NOTE_ROOM && r.check_in >= STATS_START)
+  const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
+
+  // Nuits occupées ce mois
+  const daysInMonth = new Date(y, m+1, 0).getDate()
+  let nightsOccupied = 0
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = isoDate(y, m, d)
+    if (active.some(r => iso >= r.check_in && iso < r.check_out)) nightsOccupied++
+  }
+  const occupancy = Math.round((nightsOccupied / (daysInMonth * 3)) * 100) // 3 chambres
+
+  const revenueMonth = thisMonth.reduce((s, r) => s + getPrice(r), 0)
+  const revenueTotal = active.reduce((s, r) => s + getPrice(r), 0)
+  const upcoming = active.filter(r => r.check_in >= todayIso).length
+  const avgNights = active.length
+    ? Math.round(active.reduce((s, r) => s + nights(r.check_in, r.check_out), 0) / active.length * 10) / 10
+    : 0
+
+  // Chambre la plus réservée
+  const roomCount: Record<string, number> = {}
+  active.forEach(r => { roomCount[r.room_id] = (roomCount[r.room_id] || 0) + 1 })
+  const topRoom = Object.entries(roomCount).sort((a, b) => b[1] - a[1])[0]
+
+  // CA mois par mois depuis le 1er juin
+  const byMonth: Record<string, number> = {}
+  active.forEach(r => {
+    const key = r.check_in.slice(0, 7)
+    byMonth[key] = (byMonth[key] || 0) + getPrice(r)
+  })
+  const months = Object.entries(byMonth).sort((a, b) => a[0].localeCompare(b[0]))
+  const maxMonth = Math.max(1, ...months.map(([, v]) => v))
+
+  const kpis = [
+    { label: 'Occupation',       value: `${occupancy} %`,    sub: MONTHS_FR[m], color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(60,48,34,.5)' },
+    { label: 'CA ce mois',       value: `${revenueMonth} €`, sub: MONTHS_FR[m], color: '#c4a050' },
+    { label: 'CA total',         value: `${revenueTotal} €`, sub: 'depuis le 1er juin 2026', color: '#c4a050' },
+    { label: 'Séjours à venir',  value: String(upcoming),    sub: 'réservations', color: 'rgba(60,48,34,.7)' },
+    { label: 'Durée moyenne',    value: `${avgNights} nuits`, sub: 'par séjour', color: 'rgba(60,48,34,.7)' },
+    { label: 'Chambre ★',        value: topRoom ? topRoom[0].replace('Côté ', '') : '—', sub: topRoom ? `${topRoom[1]} résa${topRoom[1] > 1 ? 's' : ''}` : '', color: topRoom ? (ROOM_COLOR[topRoom[0]] || '#c4a050') : 'rgba(60,48,34,.5)' },
+  ]
+
+  return (
+    <div>
+      <div style={{ fontSize: '0.78rem', color: 'rgba(60,48,34,.45)', marginBottom: 16 }}>
+        Statistiques depuis le 1ᵉʳ juin 2026 · les résas Booking.com sont comptées à 88 €/nuit · les annulations et notes sont exclues
+      </div>
+
+      {/* KPIs */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px,1fr))', gap: 10, marginBottom: 28 }}>
+        {kpis.map(k => (
+          <div key={k.label} style={{ background: '#ffffff', border: '1px solid rgba(60,48,34,.1)', borderRadius: 6, padding: '20px 20px' }}>
+            <div style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(60,48,34,.55)', marginBottom: 8 }}>{k.label}</div>
+            <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.9rem', color: k.color, marginBottom: 3 }}>{k.value}</div>
+            <div style={{ fontSize: '0.78rem', color: 'rgba(60,48,34,.45)' }}>{k.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CA mois par mois */}
+      {months.length > 0 && (
+        <div style={{ background: '#ffffff', border: '1px solid rgba(60,48,34,.1)', borderRadius: 6, padding: '20px 22px' }}>
+          <div style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(60,48,34,.55)', marginBottom: 16 }}>Chiffre d'affaires mois par mois</div>
+          {months.map(([key, val]) => {
+            const [yy, mm] = key.split('-')
+            return (
+              <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                <div style={{ width: 110, fontSize: '0.8rem', color: 'rgba(60,48,34,.6)', flexShrink: 0 }}>{MONTHS_FR[Number(mm) - 1]} {yy}</div>
+                <div style={{ flex: 1, background: 'rgba(60,48,34,.05)', borderRadius: 3, height: 18 }}>
+                  <div style={{ width: `${Math.round((val / maxMonth) * 100)}%`, minWidth: 4, height: '100%', background: '#c4a050', borderRadius: 3 }} />
+                </div>
+                <div style={{ width: 70, textAlign: 'right', fontSize: '0.82rem', color: '#9a7a2e', fontWeight: 600, flexShrink: 0 }}>{val} €</div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Dashboard ──────────────────────────────────────────────────────────────
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [view, setView] = useState<'calendrier'|'facturation'>('calendrier')
+  const [view, setView] = useState<'calendrier'|'stats'|'facturation'>('calendrier')
 
   const load = async () => {
     setDbError('')
@@ -1053,9 +1148,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <button onClick={() => setShowAdd(true)} style={{ background: '#c4a050', color: '#0a0f0a', border: 'none', fontSize: '0.78rem', letterSpacing: '0.08em', padding: '10px 18px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif', fontWeight: 700, borderRadius: 4 }}>
             + Ajouter une réservation
           </button>
-          <button onClick={() => setView(view === 'calendrier' ? 'facturation' : 'calendrier')} style={btn}>
-            {view === 'calendrier' ? '🧾 Faire une facture' : '📅 Retour au calendrier'}
-          </button>
+          {([['calendrier', '📅 Calendrier'], ['stats', '📊 Stats'], ['facturation', '🧾 Factures']] as const).map(([v, label]) => (
+            <button key={v} onClick={() => setView(v)}
+              style={{ ...btn, ...(view === v ? { background: 'rgba(196,160,80,.14)', borderColor: 'rgba(196,160,80,.45)', color: '#9a7a2e', fontWeight: 700 } : {}) }}>
+              {label}
+            </button>
+          ))}
           <button onClick={load} title="Rafraîchir" style={btn}>↻</button>
           <button onClick={onLogout} style={btn}>Sortir</button>
         </div>
@@ -1077,7 +1175,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         {view === 'facturation' ? (
           <FacturationPanel />
         ) : loading ? (
-          <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 60 }}>Chargement du calendrier…</div>
+          <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 60 }}>Chargement…</div>
+        ) : view === 'stats' ? (
+          <StatsPanel reservations={reservations} />
         ) : (
           <Calendrier reservations={reservations} onChanged={load} />
         )}
