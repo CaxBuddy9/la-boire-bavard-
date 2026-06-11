@@ -102,18 +102,41 @@ export async function PATCH(req: NextRequest) {
   if (auth) return auth
 
   try {
-    const { id, status } = await req.json()
+    const body = await req.json()
+    const { id } = body
 
     if (!id || typeof id !== 'string') {
       return NextResponse.json({ error: 'ID requis' }, { status: 400 })
     }
-    if (!VALID_STATUSES.includes(status)) {
-      return NextResponse.json({ error: 'Statut invalide' }, { status: 400 })
+
+    // Champs modifiables depuis le calendrier admin
+    const update: Record<string, unknown> = {}
+    if (body.status !== undefined) {
+      if (!VALID_STATUSES.includes(body.status)) {
+        return NextResponse.json({ error: 'Statut invalide' }, { status: 400 })
+      }
+      update.status = body.status
+    }
+    if (body.room_id     !== undefined) update.room_id     = String(body.room_id)
+    if (body.guest_name  !== undefined) update.guest_name  = String(body.guest_name)
+    if (body.guest_email !== undefined) update.guest_email = String(body.guest_email)
+    if (body.guest_phone !== undefined) update.guest_phone = String(body.guest_phone)
+    if (body.check_in    !== undefined) update.check_in    = String(body.check_in)
+    if (body.check_out   !== undefined) update.check_out   = String(body.check_out)
+    if (body.guests      !== undefined) update.guests      = Math.max(1, Math.min(10, Number(body.guests) || 2))
+    if (body.total_price !== undefined) update.total_price = Math.max(0, Number(body.total_price) || 0)
+    if (body.table_hotes !== undefined) update.table_hotes = body.table_hotes === true
+
+    if (update.check_in && update.check_out && String(update.check_out) <= String(update.check_in)) {
+      return NextResponse.json({ error: 'Date de départ doit être après l\'arrivée' }, { status: 400 })
+    }
+    if (Object.keys(update).length === 0) {
+      return NextResponse.json({ error: 'Rien à mettre à jour' }, { status: 400 })
     }
 
     const { error } = await getSupabaseAdmin()
       .from('reservations')
-      .update({ status })
+      .update(update)
       .eq('id', id)
 
     if (error) return NextResponse.json({ error: `Mise à jour : ${error.message}` }, { status: 500 })

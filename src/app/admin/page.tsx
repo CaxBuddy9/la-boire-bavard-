@@ -42,72 +42,32 @@ function isoDate(y: number, m: number, d: number) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
 }
 
-// Le dashboard repart de zéro au 1er juin 2026 (reprise par Sandrine & Jean-Marc) :
-// tout ce qui est antérieur est ignoré dans les compteurs.
-const DASHBOARD_START = '2026-06-01'
-
-// ── KPIs ───────────────────────────────────────────────────────────────────
-function KPIs({ reservations }: { reservations: Reservation[] }) {
-  const now = new Date()
-  const y = now.getFullYear()
-  const m = now.getMonth()
-  const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
-  const todayIso = isoDate(y, m, now.getDate())
-
-  const PRICE = 88 // tarif/nuit compté au CA — y compris réservations Booking.com
-  const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
-
-  const active = reservations.filter(r => r.status !== 'cancelled' && r.check_in >= DASHBOARD_START)
-  const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
-
-  // Nuits occupées ce mois
-  const daysInMonth = new Date(y, m+1, 0).getDate()
-  let nightsOccupied = 0
-  for (let d = 1; d <= daysInMonth; d++) {
-    const iso = isoDate(y, m, d)
-    const occupied = active.some(r => iso >= r.check_in && iso < r.check_out)
-    if (occupied) nightsOccupied++
-  }
-  const occupancy = Math.round((nightsOccupied / (daysInMonth * 3)) * 100) // 3 chambres
-
-  const revenueMonth = thisMonth.reduce((s, r) => s + getPrice(r), 0)
-  const revenueTotal = active.reduce((s, r) => s + getPrice(r), 0)
-  const upcoming = active.filter(r => r.check_in >= todayIso).length
-
-  const kpis = [
-    { label: 'Occupation',     value: `${occupancy} %`,      sub: MONTHS_FR[m], color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(60,48,34,.5)' },
-    { label: 'CA ce mois',     value: `${revenueMonth} €`,   sub: MONTHS_FR[m], color: '#c4a050' },
-    { label: 'CA total',       value: `${revenueTotal} €`,   sub: 'depuis le 1er juin 2026', color: '#c4a050' },
-    { label: 'Séjours à venir', value: String(upcoming),     sub: 'réservations', color: 'rgba(60,48,34,.7)' },
-  ]
-
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 10, marginBottom: 24 }}>
-      {kpis.map(k => (
-        <div key={k.label} style={{ background: '#ffffff', border: '1px solid rgba(60,48,34,.1)', borderRadius: 6, padding: '20px 20px' }}>
-          <div style={{ fontSize: '0.74rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(60,48,34,.55)', marginBottom: 8 }}>{k.label}</div>
-          <div style={{ fontFamily: 'Georgia, serif', fontSize: '2.05rem', color: k.color, marginBottom: 3 }}>{k.value}</div>
-          <div style={{ fontSize: '0.8rem', color: 'rgba(60,48,34,.45)' }}>{k.sub}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// ── Modal ajout réservation manuelle ───────────────────────────────────────
-function AddReservationModal({ onClose, onSaved, initialDate }: { onClose: () => void, onSaved: () => void, initialDate?: string }) {
+// ── Modal ajout / modification de réservation ──────────────────────────────
+function ReservationModal({ onClose, onSaved, initialDate, existing }: { onClose: () => void, onSaved: () => void, initialDate?: string, existing?: Reservation }) {
   const today = new Date().toISOString().split('T')[0]
   const start = initialDate || today
   const nextDay = (() => { const d = new Date(start); d.setDate(d.getDate() + 1); return d.toISOString().split('T')[0] })()
-  const [form, setForm] = useState({
+  const [form, setForm] = useState(existing ? {
+    room_id: existing.room_id, guest_name: existing.guest_name,
+    guest_email: existing.guest_email === 'ical-sync@external' ? '' : (existing.guest_email || ''),
+    guest_phone: existing.guest_phone || '',
+    check_in: existing.check_in, check_out: existing.check_out,
+    guests: existing.guests, status: existing.status, table_hotes: !!existing.table_hotes,
+  } : {
     room_id: 'Côté Jardin', guest_name: '', guest_email: '', guest_phone: '',
     check_in: start, check_out: nextDay, guests: 2, status: 'confirmed', table_hotes: false,
   })
+  const [price, setPrice] = useState<number>(existing ? existing.total_price : nights(start, nextDay) * 88)
+  const [priceTouched, setPriceTouched] = useState(!!existing)
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState('')
 
   const n = nights(form.check_in, form.check_out)
-  const price = n * 88
+
+  // Tant que le prix n'a pas été modifié à la main, il suit les dates (n × 88 €)
+  useEffect(() => {
+    if (!priceTouched) setPrice(n > 0 ? n * 88 : 0)
+  }, [n, priceTouched])
 
   const F = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
 
@@ -117,20 +77,22 @@ function AddReservationModal({ onClose, onSaved, initialDate }: { onClose: () =>
     setSaving(true)
     setErr('')
 
-    // Vérifier les conflits avant d'insérer
-    try {
-      const avail = await fetch(`/api/availability?arrive=${form.check_in}&depart=${form.check_out}`).then(r => r.json())
-      if (avail.taken?.includes(form.room_id)) {
-        setErr(`${form.room_id} est déjà réservée sur ces dates.`)
-        setSaving(false)
-        return
-      }
-    } catch {}
+    // Vérifier les conflits avant d'insérer (sauf modification : la résa se chevauche elle-même)
+    if (!existing) {
+      try {
+        const avail = await fetch(`/api/availability?arrive=${form.check_in}&depart=${form.check_out}`).then(r => r.json())
+        if (avail.taken?.includes(form.room_id)) {
+          setErr(`${form.room_id} est déjà réservée sur ces dates.`)
+          setSaving(false)
+          return
+        }
+      } catch {}
+    }
 
     const res = await fetch('/api/admin/reservations', {
-      method: 'POST',
+      method: existing ? 'PATCH' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, total_price: price }),
+      body: JSON.stringify({ ...(existing ? { id: existing.id } : {}), ...form, total_price: price }),
     })
     const d = await res.json()
     if (d.error) { setErr(d.error); setSaving(false) }
@@ -147,7 +109,7 @@ function AddReservationModal({ onClose, onSaved, initialDate }: { onClose: () =>
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.7)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <div style={{ background: '#ffffff', border: '1px solid rgba(196,160,80,.2)', padding: '32px 28px', width: '100%', maxWidth: 480, maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#2a2018' }}>Ajouter une réservation</div>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#2a2018' }}>{existing ? 'Modifier la réservation' : 'Ajouter une réservation'}</div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'rgba(60,48,34,.4)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
         </div>
 
@@ -212,25 +174,28 @@ function AddReservationModal({ onClose, onSaved, initialDate }: { onClose: () =>
             Table d'hôtes
           </label>
 
-          {/* Prix calculé */}
-          {n > 0 && (
-            <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '10px 14px', fontSize: '0.82rem', color: '#c4a050' }}>
-              {n} nuit{n>1?'s':''} × 88 € = <strong>{price} €</strong>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(60,48,34,.45)', marginTop: 4 }}>
-                + taxe de séjour : {(form.guests * n * 0.83).toFixed(2)} € ({form.guests} pers. × {n} nuit{n>1?'s':''} × 0,83 €) — réglée sur place
+          {/* Prix — modifiable à la main */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9a7a2e', marginBottom: 6 }}>Prix total (€)</label>
+            <input type="number" min={0} step="0.01" value={price}
+              onChange={e => { setPriceTouched(true); setPrice(Number(e.target.value)) }} style={inp} />
+            {n > 0 && (
+              <div style={{ fontSize: '0.72rem', color: 'rgba(60,48,34,.45)', marginTop: 6, lineHeight: 1.6 }}>
+                Suggestion : {n} nuit{n>1?'s':''} × 88 € = {n * 88} €<br />
+                + taxe de séjour {(form.guests * n * 0.83).toFixed(2)} € ({form.guests} pers. × {n} nuit{n>1?'s':''} × 0,83 €) — réglée sur place
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {err && <div style={{ color: '#e07070', fontSize: '0.78rem' }}>{err}</div>}
 
           <button type="submit" disabled={saving} style={{
-            background: '#c4a050', color: '#0a0f0a', border: 'none', padding: '12px',
-            fontFamily: 'system-ui', fontSize: '0.65rem', letterSpacing: '0.15em',
+            background: '#c4a050', color: '#0a0f0a', border: 'none', padding: '14px',
+            fontFamily: 'system-ui', fontSize: '0.72rem', letterSpacing: '0.15em',
             textTransform: 'uppercase', fontWeight: 600, cursor: saving ? 'default' : 'pointer',
             opacity: saving ? 0.6 : 1,
           }}>
-            {saving ? 'Enregistrement…' : 'Enregistrer la réservation'}
+            {saving ? 'Enregistrement…' : (existing ? 'Enregistrer les modifications' : 'Ajouter au calendrier')}
           </button>
         </form>
       </div>
@@ -323,188 +288,6 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   )
 }
 
-// ── Panel "Ce soir" — hôtes du jour ────────────────────────────────────────
-type GuestRequest = {
-  id: string
-  room: string
-  type: 'diet' | 'dinner' | 'spa'
-  data: Record<string, unknown>
-  lang: string
-  created_at: string
-}
-
-const ROOM_SLUGS: { slug: string; name: string; emoji: string; color: string }[] = [
-  { slug: 'jardin',  name: 'Côté Jardin',  emoji: '🌿', color: '#6db87a' },
-  { slug: 'cedre',   name: 'Côté Cèdre',   emoji: '🌲', color: '#c4907a' },
-  { slug: 'vallee',  name: 'Côté Vallée',  emoji: '🏞️', color: '#7ab8c4' },
-]
-
-function HotesPanel() {
-  const [requests, setRequests] = useState<GuestRequest[]>([])
-  const [loading, setLoading] = useState(true)
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
-
-  const load = async () => {
-    try {
-      const res = await fetch('/api/guide/request')
-      const json = await res.json()
-      if (json.data) {
-        setRequests(json.data)
-        setLastUpdate(new Date())
-      }
-    } catch {}
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    load()
-    const interval = setInterval(load, 20000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const getForRoom = (slug: string, type: GuestRequest['type']) => {
-    return requests
-      .filter(r => r.room === slug && r.type === type)
-      .sort((a, b) => b.created_at.localeCompare(a.created_at))[0]
-  }
-
-  const totalDiets   = requests.filter(r => r.type === 'diet').length
-  const totalDinners = requests.filter(r => r.type === 'dinner').length
-  const totalSpas    = requests.filter(r => r.type === 'spa').length
-  const anyData      = totalDiets + totalDinners + totalSpas > 0
-
-  return (
-    <div>
-      {/* En-tête + résumé */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <div>
-          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#2a2018', marginBottom: 4 }}>
-            Ce soir &amp; demain matin
-          </div>
-          <div style={{ fontSize: '0.62rem', color: 'rgba(60,48,34,.3)', letterSpacing: '0.1em' }}>
-            Demandes des hôtes · mise à jour automatique toutes les 20s
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          {lastUpdate && (
-            <span style={{ fontSize: '0.6rem', color: 'rgba(60,48,34,.2)' }}>
-              {lastUpdate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          )}
-          <button onClick={load} style={{ background: 'none', border: '1px solid rgba(60,48,34,.1)', color: 'rgba(60,48,34,.4)', fontSize: '0.7rem', padding: '5px 10px', cursor: 'pointer', fontFamily: 'system-ui' }}>
-            ↻
-          </button>
-        </div>
-      </div>
-
-      {/* Résumé rapide */}
-      {!loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
-          {[
-            { icon: '🥗', label: 'Régimes alimentaires', count: totalDiets, color: '#6db87a' },
-            { icon: '🍽️', label: 'Dîners réservés', count: totalDinners, color: '#c4a050' },
-            { icon: '🛁', label: 'Jacuzzi réservé', count: totalSpas, color: '#7ab8c4' },
-          ].map(k => (
-            <div key={k.label} style={{ background: '#ffffff', border: `1px solid ${k.count > 0 ? k.color + '40' : 'rgba(60,48,34,.16)'}`, borderRadius: 4, padding: '14px 16px', textAlign: 'center' }}>
-              <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>{k.icon}</div>
-              <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', color: k.count > 0 ? k.color : 'rgba(60,48,34,.2)', marginBottom: 3 }}>{k.count}</div>
-              <div style={{ fontSize: '0.58rem', color: 'rgba(60,48,34,.3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{k.label}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {loading ? (
-        <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 40 }}>Chargement…</div>
-      ) : !anyData ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-          <div style={{ fontSize: '2rem', marginBottom: 12 }}>💤</div>
-          <div style={{ color: 'rgba(60,48,34,.3)', fontSize: '0.85rem' }}>Aucune demande pour le moment.</div>
-          <div style={{ color: 'rgba(60,48,34,.2)', fontSize: '0.75rem', marginTop: 6 }}>Les hôtes qui scannent leur QR code apparaîtront ici.</div>
-        </div>
-      ) : (
-        /* Cartes par chambre */
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {ROOM_SLUGS.map(room => {
-            const diet   = getForRoom(room.slug, 'diet')
-            const dinner = getForRoom(room.slug, 'dinner')
-            const spa    = getForRoom(room.slug, 'spa')
-            const hasAny = diet || dinner || spa
-            if (!hasAny) return null
-
-            const diets   = (diet?.data?.diets as string[]) || []
-            const dinnerTime = dinner?.data?.time as string
-            const dinnerGuests = dinner?.data?.guests as number
-            const spaSlot = spa?.data?.slot as string
-
-            return (
-              <div key={room.slug} style={{ background: '#ffffff', border: `1px solid ${room.color}30`, borderRadius: 4, overflow: 'hidden' }}>
-                {/* En-tête chambre */}
-                <div style={{ background: `${room.color}14`, borderBottom: `1px solid ${room.color}25`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: '1.2rem' }}>{room.emoji}</span>
-                  <span style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#2a2018' }}>{room.name}</span>
-                  <span style={{ fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: room.color, marginLeft: 'auto' }}>
-                    {[diet && 'régime', dinner && 'dîner', spa && 'spa'].filter(Boolean).join(' · ')}
-                  </span>
-                </div>
-                {/* Contenu */}
-                <div style={{ padding: '16px 18px', display: 'grid', gridTemplateColumns: diets.length > 0 ? '1fr 1fr 1fr' : dinnerTime || spaSlot ? '1fr 1fr' : '1fr', gap: 16 }}>
-                  {/* Régimes */}
-                  {diets.length > 0 && (
-                    <div>
-                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6db87a', marginBottom: 8 }}>🥗 Petit-déjeuner</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {diets.map((d: string) => (
-                          <span key={d} style={{ fontSize: '0.72rem', background: 'rgba(109,184,122,.12)', border: '1px solid rgba(109,184,122,.25)', color: '#6db87a', padding: '3px 8px', borderRadius: 3 }}>
-                            {d}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {/* Dîner */}
-                  {dinnerTime && (
-                    <div>
-                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c4a050', marginBottom: 8 }}>🍽️ Dîner ce soir</div>
-                      <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: '#c4a050' }}>{dinnerTime}</div>
-                      {dinnerGuests && (
-                        <div style={{ fontSize: '0.72rem', color: 'rgba(60,48,34,.4)', marginTop: 4 }}>{dinnerGuests} pers. · 25 €/pers.</div>
-                      )}
-                    </div>
-                  )}
-                  {/* Spa */}
-                  {spaSlot && (
-                    <div>
-                      <div style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#7ab8c4', marginBottom: 8 }}>🛁 Jacuzzi</div>
-                      <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.4rem', color: '#7ab8c4' }}>{spaSlot}</div>
-                      <div style={{ fontSize: '0.72rem', color: 'rgba(60,48,34,.4)', marginTop: 4 }}>
-                        {(() => {
-                          const lang = spa?.lang
-                          if (lang === 'en') return 'Slot booked'
-                          if (lang === 'es') return 'Reservado'
-                          if (lang === 'pt') return 'Reservado'
-                          return 'Créneau réservé'
-                        })()}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {/* Note info */}
-      <div style={{ marginTop: 24, padding: '12px 16px', background: 'rgba(196,160,80,.04)', border: '1px solid rgba(196,160,80,.1)', borderRadius: 4, fontSize: '0.72rem', color: 'rgba(60,48,34,.3)', lineHeight: 1.6 }}>
-        <strong style={{ color: '#9a7a2e' }}>Comment ça marche ?</strong><br />
-        Vos hôtes scannent le QR code de leur chambre et renseignent leurs préférences alimentaires, réservent le dîner ou choisissent un créneau spa. Leurs demandes apparaissent ici en temps réel.
-        <br />Pour que ça fonctionne, créez la table <code style={{ fontFamily: 'monospace', color: '#9a7a2e' }}>guest_requests</code> dans votre tableau de bord Supabase (voir instructions).
-      </div>
-    </div>
-  )
-}
-
 // ── Calendrier mensuel (façon Google Agenda) ───────────────────────────────
 function Calendrier({ reservations, onChanged }: { reservations: Reservation[], onChanged: () => void }) {
   const now = new Date()
@@ -512,6 +295,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
   const [month, setMonth] = useState(now.getMonth())
   const [addDate,  setAddDate]  = useState<string | null>(null)
   const [selected, setSelected] = useState<Reservation | null>(null)
+  const [editing,  setEditing]  = useState<Reservation | null>(null)
 
   const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y-1) } else setMonth(m => m-1) }
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y+1) } else setMonth(m => m+1) }
@@ -609,17 +393,18 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
                 return (
                   <div key={r.id}
                     onClick={e => { e.stopPropagation(); setSelected(r) }}
-                    title={`${guestLabel(r)} · ${r.room_id}`}
+                    title={`${guestLabel(r)} · ${r.room_id}${isExternal(r) ? ' · via Booking.com' : ''}`}
                     style={{
-                      background: isExternal(r) ? '#3a6fd8' : ROOM_COLOR[r.room_id] || '#c4a050',
+                      background: ROOM_COLOR[r.room_id] || '#c4a050',
                       opacity: isPending ? 0.55 : 0.92,
                       border: isPending ? '1px dashed rgba(60,48,34,.5)' : 'none',
+                      borderLeft: isExternal(r) ? '4px solid #3a6fd8' : undefined,
                       borderRadius: 4, padding: '3px 6px', cursor: 'pointer',
                       fontSize: '0.7rem', fontWeight: 600,
-                      color: isExternal(r) ? '#fff' : '#0a0f0a',
+                      color: '#0a0f0a',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                     }}>
-                    {isStart ? guestLabel(r) : '· · ·'}
+                    {isStart ? (isExternal(r) ? `Booking · ${r.room_id.replace('Côté ', '')}` : guestLabel(r)) : '· · ·'}
                   </div>
                 )
               })}
@@ -636,7 +421,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
           </div>
         ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
-          <div style={{ width: 18, height: 10, borderRadius: 2, background: '#3a6fd8' }} /> Booking.com
+          <div style={{ width: 18, height: 10, borderRadius: 2, background: 'rgba(60,48,34,.15)', borderLeft: '4px solid #3a6fd8' }} /> Liseré bleu = via Booking.com (couleur = chambre)
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
           <div style={{ width: 18, height: 10, borderRadius: 2, background: 'rgba(60,48,34,.2)', border: '1px dashed rgba(60,48,34,.5)' }} /> En attente
@@ -645,7 +430,12 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
 
       {/* Modal ajout depuis un jour du calendrier */}
       {addDate && (
-        <AddReservationModal initialDate={addDate} onClose={() => setAddDate(null)} onSaved={onChanged} />
+        <ReservationModal initialDate={addDate} onClose={() => setAddDate(null)} onSaved={onChanged} />
+      )}
+
+      {/* Modal modification */}
+      {editing && (
+        <ReservationModal existing={editing} onClose={() => setEditing(null)} onSaved={onChanged} />
       )}
 
       {/* Modal détail réservation */}
@@ -654,8 +444,9 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
           <div onClick={e => e.stopPropagation()} style={{ background: '#ffffff', border: '1px solid rgba(196,160,80,.2)', borderRadius: 6, padding: '28px 26px', width: '100%', maxWidth: 420 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 12, height: 12, borderRadius: 3, background: isExternal(selected) ? '#3a6fd8' : ROOM_COLOR[selected.room_id] || '#c4a050' }} />
+                <span style={{ width: 12, height: 12, borderRadius: 3, background: ROOM_COLOR[selected.room_id] || '#c4a050' }} />
                 <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.15rem', color: '#2a2018' }}>{guestLabel(selected)}</span>
+                {isExternal(selected) && <span style={{ fontSize: '0.6rem', background: '#3a6fd8', color: '#fff', borderRadius: 3, padding: '2px 7px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Booking.com</span>}
               </div>
               <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: 'rgba(60,48,34,.4)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
             </div>
@@ -685,6 +476,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
               {selected.status === 'pending' && (
                 <button onClick={() => updateStatus(selected.id, 'confirmed')} style={{ background: '#c4a050', color: '#0a0f0a', border: 'none', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer', fontWeight: 600 }}>✓ Confirmer</button>
               )}
+              <button onClick={() => { setEditing(selected); setSelected(null) }} style={{ background: 'none', border: '1px solid rgba(196,160,80,.5)', color: '#9a7a2e', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer', fontWeight: 600 }}>✎ Modifier</button>
               <button onClick={() => updateStatus(selected.id, 'cancelled')} style={{ background: 'none', border: '1px solid rgba(224,112,112,.35)', color: '#e07070', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer' }}>Annuler la résa</button>
               <button onClick={() => deleteReservation(selected.id)} style={{ background: 'none', border: '1px solid rgba(200,80,80,.25)', color: 'rgba(200,80,80,.75)', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer' }}>🗑 Supprimer</button>
               {selected.guest_phone && (
@@ -1078,12 +870,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [tab, setTab] = useState<'reservations'|'calendrier'|'cesoir'|'facturation'>('calendrier')
-  const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
-  const [selected, setSelected] = useState<Reservation | null>(null)
+  const [view, setView] = useState<'calendrier'|'facturation'>('calendrier')
 
   const load = async () => {
-    setLoading(true)
     setDbError('')
     try {
       const res = await fetch('/api/admin/reservations')
@@ -1096,256 +885,52 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setLoading(false)
   }
 
-  useEffect(() => {
-    load()
-    const interval = setInterval(load, 30000)
-    return () => clearInterval(interval)
-  }, [])
+  // Chargement une seule fois à l'ouverture — pas d'actualisation automatique
+  // (le rechargement périodique faisait sauter la page). Bouton ↻ pour rafraîchir.
+  useEffect(() => { load() }, [])
 
-  const updateStatus = async (id: string, status: string) => {
-    await fetch('/api/admin/reservations', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, status }),
-    })
-    setReservations(r => r.map(x => x.id === id ? { ...x, status: status as any } : x))
-    if (selected?.id === id) setSelected(s => s ? { ...s, status: status as any } : null)
-  }
-
-  const deleteReservation = async (id: string) => {
-    if (!confirm('Supprimer définitivement cette réservation ?')) return
-    await fetch('/api/admin/reservations', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    })
-    setReservations(r => r.filter(x => x.id !== id))
-    if (selected?.id === id) setSelected(null)
-  }
-
-  const filtered = filter === 'all' ? reservations : reservations.filter(r => r.status === filter)
-
-  const counts = {
-    all:       reservations.length,
-    pending:   reservations.filter(r => r.status === 'pending').length,
-    confirmed: reservations.filter(r => r.status === 'confirmed').length,
-    paid:      reservations.filter(r => r.status === 'paid').length,
-    cancelled: reservations.filter(r => r.status === 'cancelled').length,
-  }
-
-  // Prochaines arrivées (dans les 7 jours)
-  const today = new Date()
-  today.setHours(0,0,0,0)
-  const in7 = new Date(today); in7.setDate(in7.getDate() + 7)
-  const arriving = reservations.filter(r => {
-    const d = new Date(r.check_in)
-    return d >= today && d <= in7 && r.status !== 'cancelled'
-  })
-
-  const S: Record<string, React.CSSProperties> = {
-    page:    { minHeight: '100vh', background: '#f4f1ea', fontFamily: 'system-ui, sans-serif', color: '#2a2018' },
-    header:  { background: '#fdfaf2', borderBottom: '1px solid rgba(196,160,80,.15)', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky' as const, top: 0, zIndex: 10 },
-    main:    { padding: '20px', maxWidth: 900, margin: '0 auto' },
-    card:    { background: '#ffffff', border: '1px solid rgba(60,48,34,.16)', borderRadius: 4, padding: '16px 18px', marginBottom: 10, cursor: 'pointer' },
-    stat:    { background: '#ffffff', border: '1px solid rgba(60,48,34,.16)', borderRadius: 4, padding: '14px 16px', flex: 1, textAlign: 'center' as const },
-    badge:   { display: 'inline-block', fontSize: '0.55rem', letterSpacing: '0.18em', textTransform: 'uppercase' as const, padding: '3px 8px', borderRadius: 2 },
-    btn:     { border: '1px solid rgba(60,48,34,.12)', background: 'none', color: 'rgba(60,48,34,.5)', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase' as const, padding: '6px 12px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif' },
-    btnGold: { background: '#c4a050', color: '#0a0f0a', border: 'none', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase' as const, padding: '6px 14px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif', fontWeight: 600 },
-  }
-  const tabBtn = (active: boolean): React.CSSProperties => ({
-    background: active ? 'rgba(196,160,80,.12)' : 'none',
-    border: active ? '1px solid rgba(196,160,80,.3)' : '1px solid rgba(60,48,34,.08)',
-    color: active ? '#c4a050' : 'rgba(60,48,34,.62)',
-    fontSize: '0.85rem', letterSpacing: '0.06em', textTransform: 'uppercase',
-    padding: '12px 22px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif',
-  })
+  const btn: React.CSSProperties = { border: '1px solid rgba(60,48,34,.15)', background: 'none', color: 'rgba(60,48,34,.6)', fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '9px 14px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif', borderRadius: 4 }
 
   return (
-    <div style={S.page}>
+    <div style={{ minHeight: '100vh', background: '#f4f1ea', fontFamily: 'system-ui, sans-serif', color: '#2a2018' }}>
+
       {/* Header */}
-      <div style={S.header}>
+      <div style={{ background: '#fdfaf2', borderBottom: '1px solid rgba(196,160,80,.15)', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', position: 'sticky', top: 0, zIndex: 10 }}>
         <div>
-          <span style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#2a2018' }}>La Boire Bavard</span>
-          <span style={{ fontSize: '0.6rem', color: '#9a7a2e', letterSpacing: '0.2em', textTransform: 'uppercase', marginLeft: 12 }}>Dashboard</span>
+          <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.05rem', color: '#2a2018' }}>La Boire Bavard</span>
+          <span style={{ fontSize: '0.6rem', color: '#9a7a2e', letterSpacing: '0.2em', textTransform: 'uppercase', marginLeft: 12 }}>Calendrier des réservations</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={() => setShowAdd(true)} style={S.btnGold}>+ Ajouter</button>
-          <button onClick={load} style={S.btn}>↻ Actualiser</button>
-          <button onClick={onLogout} style={S.btn}>Déconnexion</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <button onClick={() => setShowAdd(true)} style={{ background: '#c4a050', color: '#0a0f0a', border: 'none', fontSize: '0.78rem', letterSpacing: '0.08em', padding: '10px 18px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif', fontWeight: 700, borderRadius: 4 }}>
+            + Ajouter une réservation
+          </button>
+          <button onClick={() => setView(view === 'calendrier' ? 'facturation' : 'calendrier')} style={btn}>
+            {view === 'calendrier' ? '🧾 Faire une facture' : '📅 Retour au calendrier'}
+          </button>
+          <button onClick={load} title="Rafraîchir" style={btn}>↻</button>
+          <button onClick={onLogout} style={btn}>Sortir</button>
         </div>
       </div>
 
       {showAdd && (
-        <AddReservationModal onClose={() => setShowAdd(false)} onSaved={load} />
+        <ReservationModal onClose={() => setShowAdd(false)} onSaved={load} />
       )}
 
-      <div style={S.main}>
-
-        {/* KPIs */}
-        {!loading && <KPIs reservations={reservations} />}
-
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-          <button style={tabBtn(tab === 'reservations')} onClick={() => setTab('reservations')}>
-            Réservations
-          </button>
-          <button style={tabBtn(tab === 'calendrier')} onClick={() => setTab('calendrier')}>
-            📅 Calendrier
-          </button>
-          <button style={{ ...tabBtn(tab === 'cesoir'), borderColor: tab === 'cesoir' ? 'rgba(122,184,196,.4)' : undefined, color: tab === 'cesoir' ? '#7ab8c4' : undefined, background: tab === 'cesoir' ? 'rgba(122,184,196,.1)' : undefined }} onClick={() => setTab('cesoir')}>
-            🛎 Ce soir
-          </button>
-          <button style={{ ...tabBtn(tab === 'facturation'), borderColor: tab === 'facturation' ? 'rgba(196,160,80,.4)' : undefined }} onClick={() => setTab('facturation')}>
-            🧾 Facturation
-          </button>
-        </div>
+      <div style={{ padding: '24px 20px 60px', maxWidth: 1150, margin: '0 auto' }}>
 
         {/* Erreur Supabase */}
         {dbError && (
           <div style={{ background: 'rgba(224,112,112,.1)', border: '1px solid rgba(224,112,112,.3)', padding: '14px 18px', marginBottom: 20, borderRadius: 4, fontSize: '0.82rem', color: '#e07070' }}>
-            ⚠ Erreur Supabase : {dbError}
+            ⚠ Erreur : {dbError}
           </div>
         )}
 
-        {/* Alerte arrivées imminentes */}
-        {arriving.length > 0 && (
-          <div style={{ background: 'rgba(196,160,80,.08)', border: '1px solid rgba(196,160,80,.3)', padding: '14px 18px', marginBottom: 20, borderRadius: 4 }}>
-            <span style={{ fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c4a050' }}>
-              🔔 {arriving.length} arrivée{arriving.length > 1 ? 's' : ''} dans les 7 prochains jours
-            </span>
-            <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {arriving.map(r => (
-                <div key={r.id} style={{ fontSize: '0.82rem', color: 'rgba(60,48,34,.7)' }}>
-                  {fmtDate(r.check_in)} — <strong style={{ color: '#2a2018' }}>{r.guest_name}</strong> · {r.room_id} · {nights(r.check_in, r.check_out)} nuit{nights(r.check_in, r.check_out) > 1 ? 's' : ''}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Onglet Facturation ── */}
-        {tab === 'facturation' && <FacturationPanel />}
-
-        {/* ── Onglet Ce soir ── */}
-        {tab === 'cesoir' && <HotesPanel />}
-
-        {/* ── Onglet Calendrier ── */}
-        {tab === 'calendrier' && (
-          loading ? (
-            <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 40 }}>Chargement…</div>
-          ) : (
-            <Calendrier reservations={reservations} onChanged={load} />
-          )
-        )}
-
-        {/* ── Onglet Réservations ── */}
-        {tab === 'reservations' && (
-          <>
-            {/* Stats */}
-            <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' as const }}>
-              {([['all','Toutes'], ['pending','En attente'], ['paid','Payées'], ['cancelled','Annulées']] as const).map(([k, label]) => (
-                <div key={k} onClick={() => setFilter(k as any)}
-                  style={{ ...S.stat, cursor: 'pointer', border: filter === k ? '1px solid rgba(196,160,80,.4)' : '1px solid rgba(60,48,34,.16)' }}>
-                  <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', color: '#c4a050' }}>{counts[k]}</div>
-                  <div style={{ fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(60,48,34,.35)', marginTop: 4 }}>{label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Liste */}
-            {loading ? (
-              <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 40, fontSize: '0.8rem' }}>Chargement…</div>
-            ) : filtered.length === 0 ? (
-              <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 40, fontSize: '0.8rem' }}>Aucune réservation</div>
-            ) : (
-              filtered.map(r => (
-                <div key={r.id} style={{ ...S.card, borderColor: selected?.id === r.id ? 'rgba(196,160,80,.35)' : 'rgba(60,48,34,.16)' }}
-                  onClick={() => setSelected(selected?.id === r.id ? null : r)}>
-
-                  {/* Ligne principale */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' as const }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <span style={{ width: 10, height: 10, borderRadius: 2, background: ROOM_COLOR[r.room_id] || '#c4a050', flexShrink: 0 }} />
-                      <span style={{ ...S.badge, background: 'rgba(60,48,34,.05)', color: STATUS_COLOR[r.status] }}>
-                        {STATUS_LABEL[r.status]}
-                      </span>
-                      <span style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#2a2018' }}>{r.guest_name}</span>
-                      <span style={{ fontSize: '0.75rem', color: 'rgba(60,48,34,.35)' }}>{r.room_id}</span>
-                    </div>
-                    <div style={{ textAlign: 'right' as const }}>
-                      <div style={{ fontSize: '0.82rem', color: 'rgba(60,48,34,.6)' }}>
-                        {fmtDate(r.check_in)} → {fmtDate(r.check_out)}
-                      </div>
-                      <div style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', color: '#c4a050' }}>{r.total_price} €</div>
-                    </div>
-                  </div>
-
-                  {/* Détail expandé */}
-                  {selected?.id === r.id && (
-                    <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid rgba(60,48,34,.06)' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px', marginBottom: 16, fontSize: '0.82rem' }}>
-                        {[
-                          ['Email', r.guest_email],
-                          ['Téléphone', r.guest_phone || '—'],
-                          ['Voyageurs', `${r.guests} pers.`],
-                          ['Durée', `${nights(r.check_in, r.check_out)} nuit${nights(r.check_in, r.check_out) > 1 ? 's' : ''}`],
-                          ['Total', `${r.total_price} €`],
-                          ['Réservation', fmtDate(r.created_at?.split('T')[0] || '')],
-                        ].map(([l, v]) => (
-                          <div key={l}>
-                            <span style={{ color: 'rgba(60,48,34,.3)', fontSize: '0.65rem', textTransform: 'uppercase' as const, letterSpacing: '0.15em' }}>{l}</span>
-                            <div style={{ color: '#2a2018', marginTop: 2 }}>{v}</div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Message du client */}
-                      {r.message && (
-                        <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.18)', padding: '12px 14px', marginBottom: 14, borderRadius: 3 }}>
-                          <span style={{ color: '#9a7a2e', fontSize: '0.6rem', textTransform: 'uppercase' as const, letterSpacing: '0.15em', display: 'block', marginBottom: 6 }}>Message</span>
-                          <p style={{ color: 'rgba(60,48,34,.75)', fontSize: '0.82rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' as const }}>{r.message}</p>
-                        </div>
-                      )}
-
-                      {/* Actions */}
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
-                        {r.status === 'pending' && (
-                          <button style={S.btnGold} onClick={e => { e.stopPropagation(); updateStatus(r.id, 'confirmed') }}>
-                            ✓ Confirmer
-                          </button>
-                        )}
-                        {r.status !== 'cancelled' && (
-                          <button style={{ ...S.btn, color: '#e07070', borderColor: 'rgba(224,112,112,.3)' }}
-                            onClick={e => { e.stopPropagation(); updateStatus(r.id, 'cancelled') }}>
-                            Annuler
-                          </button>
-                        )}
-                        <button style={{ ...S.btn, color: 'rgba(200,80,80,.7)', borderColor: 'rgba(200,80,80,.2)' }}
-                          onClick={e => { e.stopPropagation(); deleteReservation(r.id) }}>
-                          🗑 Supprimer
-                        </button>
-                        {r.guest_email && (
-                          <a href={`mailto:${r.guest_email}?subject=Votre séjour à La Boire Bavard`}
-                            onClick={e => e.stopPropagation()}
-                            style={{ ...S.btn, textDecoration: 'none', display: 'inline-block' }}>
-                            ✉ Email
-                          </a>
-                        )}
-                        {r.guest_phone && (
-                          <a href={`https://wa.me/${r.guest_phone.replace(/\D/g,'').replace(/^0/,'33')}`}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={e => e.stopPropagation()}
-                            style={{ ...S.btn, textDecoration: 'none', display: 'inline-block', color: '#6db87a', borderColor: 'rgba(109,184,122,.3)' }}>
-                            💬 WhatsApp
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-          </>
+        {view === 'facturation' ? (
+          <FacturationPanel />
+        ) : loading ? (
+          <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 60 }}>Chargement du calendrier…</div>
+        ) : (
+          <Calendrier reservations={reservations} onChanged={load} />
         )}
       </div>
     </div>
