@@ -42,18 +42,22 @@ function isoDate(y: number, m: number, d: number) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
 }
 
+// Le dashboard repart de zéro au 1er juin 2026 (reprise par Sandrine & Jean-Marc) :
+// tout ce qui est antérieur est ignoré dans les compteurs.
+const DASHBOARD_START = '2026-06-01'
+
 // ── KPIs ───────────────────────────────────────────────────────────────────
 function KPIs({ reservations }: { reservations: Reservation[] }) {
   const now = new Date()
   const y = now.getFullYear()
   const m = now.getMonth()
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
+  const todayIso = isoDate(y, m, now.getDate())
 
   const PRICE = 88 // tarif/nuit compté au CA — y compris réservations Booking.com
   const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
 
-  const active = reservations.filter(r => r.status !== 'cancelled')
-  const realActive = active.filter(r => r.guest_email !== 'ical-sync@external')
+  const active = reservations.filter(r => r.status !== 'cancelled' && r.check_in >= DASHBOARD_START)
   const thisMonth = active.filter(r => r.check_in.startsWith(monthPrefix) || r.check_out.startsWith(monthPrefix))
 
   // Nuits occupées ce mois
@@ -66,30 +70,19 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
   }
   const occupancy = Math.round((nightsOccupied / (daysInMonth * 3)) * 100) // 3 chambres
 
-  // CA ce mois
   const revenueMonth = thisMonth.reduce((s, r) => s + getPrice(r), 0)
-  // CA année
-  const revenueYear  = active.filter(r => r.check_in.startsWith(String(y))).reduce((s, r) => s + getPrice(r), 0)
-  // Durée moy
-  const avgNights = active.length
-    ? Math.round(active.reduce((s, r) => s + nights(r.check_in, r.check_out), 0) / active.length * 10) / 10
-    : 0
-  // Chambre star
-  const roomCount: Record<string,number> = {}
-  active.forEach(r => { roomCount[r.room_id] = (roomCount[r.room_id] || 0) + 1 })
-  const topRoom = Object.entries(roomCount).sort((a,b) => b[1]-a[1])[0]
+  const revenueTotal = active.reduce((s, r) => s + getPrice(r), 0)
+  const upcoming = active.filter(r => r.check_in >= todayIso).length
 
   const kpis = [
-    { label: 'Taux occupation', value: `${occupancy} %`, sub: `ce mois (3 chambres)`, color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(60,48,34,.5)' },
-    { label: 'CA ce mois',     value: `${revenueMonth} €`, sub: MONTHS_FR[m], color: '#c4a050' },
-    { label: `CA ${y}`,        value: `${revenueYear} €`,  sub: 'année en cours', color: '#c4a050' },
-    { label: 'Durée moy.',     value: `${avgNights} nuits`, sub: 'par séjour', color: 'rgba(60,48,34,.7)' },
-    { label: 'Chambre ★',      value: topRoom ? topRoom[0].replace('Côté ','') : '—', sub: topRoom ? `${topRoom[1]} résa` : '', color: topRoom ? ROOM_COLOR[topRoom[0]] : 'rgba(60,48,34,.5)' },
-    { label: 'Résa totales',   value: String(active.length), sub: 'toutes périodes', color: 'rgba(60,48,34,.7)' },
+    { label: 'Occupation',     value: `${occupancy} %`,      sub: MONTHS_FR[m], color: occupancy > 70 ? '#6db87a' : occupancy > 40 ? '#c4a050' : 'rgba(60,48,34,.5)' },
+    { label: 'CA ce mois',     value: `${revenueMonth} €`,   sub: MONTHS_FR[m], color: '#c4a050' },
+    { label: 'CA total',       value: `${revenueTotal} €`,   sub: 'depuis le 1er juin 2026', color: '#c4a050' },
+    { label: 'Séjours à venir', value: String(upcoming),     sub: 'réservations', color: 'rgba(60,48,34,.7)' },
   ]
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 10, marginBottom: 24 }}>
       {kpis.map(k => (
         <div key={k.label} style={{ background: '#ffffff', border: '1px solid rgba(60,48,34,.1)', borderRadius: 6, padding: '20px 20px' }}>
           <div style={{ fontSize: '0.74rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(60,48,34,.55)', marginBottom: 8 }}>{k.label}</div>
@@ -102,11 +95,13 @@ function KPIs({ reservations }: { reservations: Reservation[] }) {
 }
 
 // ── Modal ajout réservation manuelle ───────────────────────────────────────
-function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSaved: () => void }) {
+function AddReservationModal({ onClose, onSaved, initialDate }: { onClose: () => void, onSaved: () => void, initialDate?: string }) {
   const today = new Date().toISOString().split('T')[0]
+  const start = initialDate || today
+  const nextDay = (() => { const d = new Date(start); d.setDate(d.getDate() + 1); return d.toISOString().split('T')[0] })()
   const [form, setForm] = useState({
     room_id: 'Côté Jardin', guest_name: '', guest_email: '', guest_phone: '',
-    check_in: today, check_out: today, guests: 2, status: 'confirmed', table_hotes: false,
+    check_in: start, check_out: nextDay, guests: 2, status: 'confirmed', table_hotes: false,
   })
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState('')
@@ -221,6 +216,9 @@ function AddReservationModal({ onClose, onSaved }: { onClose: () => void, onSave
           {n > 0 && (
             <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.15)', padding: '10px 14px', fontSize: '0.82rem', color: '#c4a050' }}>
               {n} nuit{n>1?'s':''} × 88 € = <strong>{price} €</strong>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(60,48,34,.45)', marginTop: 4 }}>
+                + taxe de séjour : {(form.guests * n * 0.83).toFixed(2)} € ({form.guests} pers. × {n} nuit{n>1?'s':''} × 0,83 €) — réglée sur place
+              </div>
             </div>
           )}
 
@@ -507,31 +505,52 @@ function HotesPanel() {
   )
 }
 
-// ── Planning Gantt ──────────────────────────────────────────────────────────
-function Planning({ reservations }: { reservations: Reservation[] }) {
+// ── Calendrier mensuel (façon Google Agenda) ───────────────────────────────
+function Calendrier({ reservations, onChanged }: { reservations: Reservation[], onChanged: () => void }) {
   const now = new Date()
   const [year,  setYear]  = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
-  const [tooltip, setTooltip] = useState<{ r: Reservation, x: number, y: number } | null>(null)
+  const [addDate,  setAddDate]  = useState<string | null>(null)
+  const [selected, setSelected] = useState<Reservation | null>(null)
 
   const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y-1) } else setMonth(m => m-1) }
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y+1) } else setMonth(m => m+1) }
+  const goToday   = () => { setYear(now.getFullYear()); setMonth(now.getMonth()) }
 
   const totalDays = new Date(year, month + 1, 0).getDate()
-  const days = Array.from({ length: totalDays }, (_, i) => i + 1)
   const todayIso = isoDate(now.getFullYear(), now.getMonth(), now.getDate())
-  const CELL = 48
-  const ROW_LABEL = 150
 
   const active = reservations.filter(r => r.status !== 'cancelled')
 
-  function getBar(r: Reservation) {
-    const monthStart = isoDate(year, month, 1)
-    const monthEnd   = isoDate(year, month, totalDays)
-    if (r.check_out <= monthStart || r.check_in > monthEnd) return null
-    const startDay = r.check_in >= monthStart ? parseInt(r.check_in.split('-')[2]) - 1 : 0
-    const endDay   = r.check_out <= monthEnd  ? parseInt(r.check_out.split('-')[2]) - 1 : totalDays
-    return { startDay, span: Math.max(1, endDay - startDay) }
+  // Grille : semaines qui commencent le lundi
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7 // 0 = lundi
+  const cells: (number | null)[] = [
+    ...Array.from({ length: firstDow }, () => null),
+    ...Array.from({ length: totalDays }, (_, i) => i + 1),
+  ]
+  while (cells.length % 7 !== 0) cells.push(null)
+
+  const isExternal = (r: Reservation) => r.guest_email === 'ical-sync@external'
+  const guestLabel = (r: Reservation) => isExternal(r) ? 'Booking.com' : r.guest_name
+
+  const updateStatus = async (id: string, status: string) => {
+    await fetch('/api/admin/reservations', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    })
+    setSelected(null)
+    onChanged()
+  }
+  const deleteReservation = async (id: string) => {
+    if (!confirm('Supprimer définitivement cette réservation ?')) return
+    await fetch('/api/admin/reservations', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    setSelected(null)
+    onChanged()
   }
 
   const monthPrefix = `${year}-${String(month+1).padStart(2,'0')}`
@@ -541,90 +560,139 @@ function Planning({ reservations }: { reservations: Reservation[] }) {
   return (
     <div>
       {/* Nav mois */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <button onClick={prevMonth} style={{ background: 'none', border: '1px solid rgba(60,48,34,.25)', color: 'rgba(60,48,34,.75)', padding: '10px 22px', fontSize: '1.2rem', cursor: 'pointer', fontFamily: 'system-ui' }}>←</button>
-        <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.7rem', color: '#2a2018' }}>{MONTHS_FR[month]} {year}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.7rem', color: '#2a2018' }}>{MONTHS_FR[month]} {year}</div>
+          <button onClick={goToday} style={{ background: 'none', border: '1px solid rgba(196,160,80,.4)', color: '#9a7a2e', padding: '5px 12px', fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'system-ui' }}>Aujourd'hui</button>
+        </div>
         <button onClick={nextMonth} style={{ background: 'none', border: '1px solid rgba(60,48,34,.25)', color: 'rgba(60,48,34,.75)', padding: '10px 22px', fontSize: '1.2rem', cursor: 'pointer', fontFamily: 'system-ui' }}>→</button>
       </div>
 
-      {/* Gantt */}
-      <div style={{ overflowX: 'auto', marginBottom: 24 }}>
-        <div style={{ minWidth: ROW_LABEL + CELL * totalDays }}>
-          {/* En-tête jours */}
-          <div style={{ display: 'flex', marginLeft: ROW_LABEL }}>
-            {days.map(d => {
-              const iso = isoDate(year, month, d)
-              const isToday = iso === todayIso
-              const dow = new Date(year, month, d).getDay()
-              const isWeekend = dow === 0 || dow === 6
-              return (
-                <div key={d} style={{ width: CELL, flexShrink: 0, textAlign: 'center', fontSize: '0.85rem', paddingBottom: 8, color: isToday ? '#c4a050' : isWeekend ? 'rgba(60,48,34,.55)' : 'rgba(60,48,34,.4)', fontWeight: isToday ? 700 : 400, borderLeft: isToday ? '1px solid rgba(196,160,80,.4)' : '1px solid transparent' }}>
-                  {d}
-                </div>
-              )
-            })}
-          </div>
-          {/* Lignes chambres */}
-          {ROOMS.map(roomName => {
-            const roomResas = active.filter(r => r.room_id === roomName)
-            return (
-              <div key={roomName} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                <div style={{ width: ROW_LABEL, flexShrink: 0, paddingRight: 12, fontSize: '1rem', fontWeight: 600, color: 'rgba(60,48,34,.85)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ width: 12, height: 12, borderRadius: 3, background: ROOM_COLOR[roomName], flexShrink: 0 }} />
-                  {roomName.replace('Côté ', '')}
-                </div>
-                <div style={{ position: 'relative', height: 50, flex: 1 }}>
-                  <div style={{ display: 'flex', height: '100%' }}>
-                    {days.map(d => {
-                      const iso = isoDate(year, month, d)
-                      const isToday = iso === todayIso
-                      const dow = new Date(year, month, d).getDay()
-                      const isWeekend = dow === 0 || dow === 6
-                      return (
-                        <div key={d} style={{ width: CELL, flexShrink: 0, height: '100%', background: isToday ? 'rgba(196,160,80,.06)' : isWeekend ? 'rgba(60,48,34,.015)' : 'transparent', borderLeft: isToday ? '1px solid rgba(196,160,80,.25)' : '1px solid rgba(60,48,34,.04)', borderTop: '1px solid rgba(60,48,34,.04)', borderBottom: '1px solid rgba(60,48,34,.04)' }} />
-                      )
-                    })}
-                  </div>
-                  {roomResas.map(r => {
-                    const bar = getBar(r)
-                    if (!bar) return null
-                    const isPending = r.status === 'pending'
-                    return (
-                      <div key={r.id}
-                        onMouseEnter={e => setTooltip({ r, x: e.clientX, y: e.clientY })}
-                        onMouseLeave={() => setTooltip(null)}
-                        style={{ position: 'absolute', top: 6, height: 38, left: bar.startDay * CELL + 2, width: bar.span * CELL - 4, background: r.guest_email === 'ical-sync@external' ? 'repeating-linear-gradient(45deg,#3a6fd8,#3a6fd8 4px,#2a5bc8 4px,#2a5bc8 8px)' : ROOM_COLOR[roomName] || '#c4a050', opacity: isPending ? 0.5 : 0.88, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', paddingLeft: 8, overflow: 'hidden', border: isPending ? '1px dashed rgba(60,48,34,.4)' : 'none' }}>
-                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: r.guest_email === 'ical-sync@external' ? '#fff' : '#0a0f0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {r.guest_email === 'ical-sync@external' ? 'Booking.com' : r.guest_name}{isPending ? ' · en attente' : ''}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
+      <div style={{ fontSize: '0.78rem', color: 'rgba(60,48,34,.45)', marginBottom: 14, textAlign: 'center' }}>
+        Cliquez sur un jour vide pour ajouter une réservation · cliquez sur un nom pour voir le détail
+      </div>
+
+      {/* En-tête jours de la semaine */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 4, marginBottom: 4 }}>
+        {DAYS_FR.map(d => (
+          <div key={d} style={{ textAlign: 'center', fontSize: '0.72rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(60,48,34,.45)', padding: '6px 0' }}>{d}</div>
+        ))}
+      </div>
+
+      {/* Grille du mois */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 4, marginBottom: 20 }}>
+        {cells.map((d, i) => {
+          if (d === null) return <div key={`e${i}`} style={{ minHeight: 96, background: 'rgba(60,48,34,.025)', borderRadius: 6 }} />
+          const iso = isoDate(year, month, d)
+          const isToday = iso === todayIso
+          const isPast = iso < todayIso
+          const dayResas = active.filter(r => iso >= r.check_in && iso < r.check_out)
+          return (
+            <div key={iso}
+              onClick={() => setAddDate(iso)}
+              style={{
+                minHeight: 96, background: '#ffffff', borderRadius: 6, padding: '6px 6px 8px',
+                border: isToday ? '2px solid #c4a050' : '1px solid rgba(60,48,34,.1)',
+                opacity: isPast ? 0.55 : 1, cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', gap: 3,
+              }}>
+              <div style={{
+                fontSize: '0.82rem', fontWeight: isToday ? 700 : 500, marginBottom: 2,
+                color: isToday ? '#c4a050' : 'rgba(60,48,34,.6)', textAlign: 'right',
+              }}>
+                {d}
               </div>
-            )
-          })}
+              {dayResas.map(r => {
+                const isStart = iso === r.check_in
+                const isPending = r.status === 'pending'
+                return (
+                  <div key={r.id}
+                    onClick={e => { e.stopPropagation(); setSelected(r) }}
+                    title={`${guestLabel(r)} · ${r.room_id}`}
+                    style={{
+                      background: isExternal(r) ? '#3a6fd8' : ROOM_COLOR[r.room_id] || '#c4a050',
+                      opacity: isPending ? 0.55 : 0.92,
+                      border: isPending ? '1px dashed rgba(60,48,34,.5)' : 'none',
+                      borderRadius: 4, padding: '3px 6px', cursor: 'pointer',
+                      fontSize: '0.7rem', fontWeight: 600,
+                      color: isExternal(r) ? '#fff' : '#0a0f0a',
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    }}>
+                    {isStart ? guestLabel(r) : '· · ·'}
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Légende chambres */}
+      <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
+        {ROOMS.map(roomName => (
+          <div key={roomName} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
+            <div style={{ width: 18, height: 10, borderRadius: 2, background: ROOM_COLOR[roomName] }} /> {roomName}
+          </div>
+        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
+          <div style={{ width: 18, height: 10, borderRadius: 2, background: '#3a6fd8' }} /> Booking.com
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
+          <div style={{ width: 18, height: 10, borderRadius: 2, background: 'rgba(60,48,34,.2)', border: '1px dashed rgba(60,48,34,.5)' }} /> En attente
         </div>
       </div>
 
-      {/* Légende */}
-      <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.65rem', color: 'rgba(60,48,34,.4)' }}>
-          <div style={{ width: 24, height: 10, borderRadius: 2, background: 'rgba(109,184,122,.88)' }} /> Confirmée / Payée
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.65rem', color: 'rgba(60,48,34,.4)' }}>
-          <div style={{ width: 24, height: 10, borderRadius: 2, background: 'rgba(60,48,34,.3)', border: '1px dashed rgba(60,48,34,.5)' }} /> En attente
-        </div>
-      </div>
+      {/* Modal ajout depuis un jour du calendrier */}
+      {addDate && (
+        <AddReservationModal initialDate={addDate} onClose={() => setAddDate(null)} onSaved={onChanged} />
+      )}
 
-      {/* Tooltip */}
-      {tooltip && (
-        <div style={{ position: 'fixed', zIndex: 100, top: tooltip.y + 12, left: Math.min(tooltip.x + 8, window.innerWidth - 230), background: '#ffffff', border: '1px solid rgba(196,160,80,.3)', padding: '12px 14px', borderRadius: 4, fontSize: '0.78rem', color: '#2a2018', boxShadow: '0 8px 32px rgba(0,0,0,.6)', pointerEvents: 'none', minWidth: 200 }}>
-          <div style={{ fontWeight: 600, marginBottom: 6 }}>{tooltip.r.guest_email === 'ical-sync@external' ? 'Booking.com' : tooltip.r.guest_name}</div>
-          <div style={{ color: 'rgba(60,48,34,.5)', fontSize: '0.7rem', marginBottom: 3 }}>{tooltip.r.room_id}</div>
-          <div style={{ color: '#c4a050', fontSize: '0.7rem', marginBottom: 3 }}>{fmtDate(tooltip.r.check_in)} → {fmtDate(tooltip.r.check_out)}</div>
-          <div style={{ color: 'rgba(60,48,34,.4)', fontSize: '0.68rem' }}>{nights(tooltip.r.check_in, tooltip.r.check_out)} nuits · {tooltip.r.guest_email === 'ical-sync@external' ? `${nights(tooltip.r.check_in, tooltip.r.check_out) * 88} €` : `${tooltip.r.total_price} €`}</div>
-          {tooltip.r.guest_phone && <div style={{ color: 'rgba(196,160,80,.7)', fontSize: '0.68rem', marginTop: 4 }}>{tooltip.r.guest_phone}</div>}
+      {/* Modal détail réservation */}
+      {selected && (
+        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#ffffff', border: '1px solid rgba(196,160,80,.2)', borderRadius: 6, padding: '28px 26px', width: '100%', maxWidth: 420 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 12, height: 12, borderRadius: 3, background: isExternal(selected) ? '#3a6fd8' : ROOM_COLOR[selected.room_id] || '#c4a050' }} />
+                <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.15rem', color: '#2a2018' }}>{guestLabel(selected)}</span>
+              </div>
+              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', color: 'rgba(60,48,34,.4)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px', marginBottom: 18, fontSize: '0.85rem' }}>
+              {[
+                ['Chambre', selected.room_id],
+                ['Statut', STATUS_LABEL[selected.status]],
+                ['Arrivée', fmtDate(selected.check_in)],
+                ['Départ', fmtDate(selected.check_out)],
+                ['Nuits', String(nights(selected.check_in, selected.check_out))],
+                ['Total', isExternal(selected) ? `${nights(selected.check_in, selected.check_out) * 88} €` : `${selected.total_price} €`],
+                ['Téléphone', selected.guest_phone || '—'],
+                ['Email', isExternal(selected) ? '—' : (selected.guest_email || '—')],
+              ].map(([l, v]) => (
+                <div key={l}>
+                  <div style={{ color: 'rgba(60,48,34,.35)', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.15em' }}>{l}</div>
+                  <div style={{ color: '#2a2018', marginTop: 2, wordBreak: 'break-word' }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            {selected.message && (
+              <div style={{ background: 'rgba(196,160,80,.06)', border: '1px solid rgba(196,160,80,.18)', padding: '10px 12px', marginBottom: 16, borderRadius: 3, fontSize: '0.8rem', color: 'rgba(60,48,34,.75)', whiteSpace: 'pre-wrap' }}>
+                {selected.message}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {selected.status === 'pending' && (
+                <button onClick={() => updateStatus(selected.id, 'confirmed')} style={{ background: '#c4a050', color: '#0a0f0a', border: 'none', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer', fontWeight: 600 }}>✓ Confirmer</button>
+              )}
+              <button onClick={() => updateStatus(selected.id, 'cancelled')} style={{ background: 'none', border: '1px solid rgba(224,112,112,.35)', color: '#e07070', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer' }}>Annuler la résa</button>
+              <button onClick={() => deleteReservation(selected.id)} style={{ background: 'none', border: '1px solid rgba(200,80,80,.25)', color: 'rgba(200,80,80,.75)', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', cursor: 'pointer' }}>🗑 Supprimer</button>
+              {selected.guest_phone && (
+                <a href={`https://wa.me/${selected.guest_phone.replace(/\D/g,'').replace(/^0/,'33')}`} target="_blank" rel="noopener noreferrer"
+                  style={{ border: '1px solid rgba(109,184,122,.35)', color: '#6db87a', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '8px 14px', textDecoration: 'none' }}>💬 WhatsApp</a>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -1010,7 +1078,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true)
   const [dbError, setDbError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
-  const [tab, setTab] = useState<'reservations'|'planning'|'cesoir'|'facturation'>('planning')
+  const [tab, setTab] = useState<'reservations'|'calendrier'|'cesoir'|'facturation'>('calendrier')
   const [filter, setFilter] = useState<'all'|'pending'|'confirmed'|'paid'|'cancelled'>('all')
   const [selected, setSelected] = useState<Reservation | null>(null)
 
@@ -1121,8 +1189,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <button style={tabBtn(tab === 'reservations')} onClick={() => setTab('reservations')}>
             Réservations
           </button>
-          <button style={tabBtn(tab === 'planning')} onClick={() => setTab('planning')}>
-            Planning
+          <button style={tabBtn(tab === 'calendrier')} onClick={() => setTab('calendrier')}>
+            📅 Calendrier
           </button>
           <button style={{ ...tabBtn(tab === 'cesoir'), borderColor: tab === 'cesoir' ? 'rgba(122,184,196,.4)' : undefined, color: tab === 'cesoir' ? '#7ab8c4' : undefined, background: tab === 'cesoir' ? 'rgba(122,184,196,.1)' : undefined }} onClick={() => setTab('cesoir')}>
             🛎 Ce soir
@@ -1161,12 +1229,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         {/* ── Onglet Ce soir ── */}
         {tab === 'cesoir' && <HotesPanel />}
 
-        {/* ── Onglet Planning ── */}
-        {tab === 'planning' && (
+        {/* ── Onglet Calendrier ── */}
+        {tab === 'calendrier' && (
           loading ? (
             <div style={{ textAlign: 'center', color: 'rgba(60,48,34,.3)', padding: 40 }}>Chargement…</div>
           ) : (
-            <Planning reservations={reservations} />
+            <Calendrier reservations={reservations} onChanged={load} />
           )
         )}
 

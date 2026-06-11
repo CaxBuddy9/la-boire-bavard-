@@ -100,8 +100,8 @@ function ReservationInner() {
             Demande envoyée !
           </h1>
           <p style={{ color: 'rgba(255,255,255,.7)', fontSize: '1.05rem', lineHeight: 1.85, marginBottom: 28 }}>
-            Merci {nom.split(' ')[0]}, votre demande de réservation a bien été transmise à Sandrine.<br />
-            Elle vous répondra par email ou téléphone sous 24 heures pour confirmer votre séjour.
+            Merci {nom.split(' ')[0]}, votre demande de réservation a bien été transmise.<br />
+            Nous vous répondrons par email ou téléphone sous 24 heures pour confirmer votre séjour.
           </p>
           <p style={{ color: 'rgba(255,255,255,.45)', fontSize: '0.85rem', marginBottom: 36 }}>
             Le paiement se fera sur place à votre arrivée — par carte bancaire, espèces ou chèque.
@@ -131,7 +131,7 @@ function ReservationInner() {
           Votre demande de réservation
         </h1>
         <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.92rem', color: 'rgba(255,255,255,.5)', lineHeight: 1.75, maxWidth: 640 }}>
-          Vérifiez votre récapitulatif, puis envoyez votre demande. Sandrine confirme la disponibilité sous 24&nbsp;h ; le règlement se fait sur place à l'arrivée (carte, espèces ou chèque).
+          Vérifiez votre récapitulatif, puis envoyez votre demande. Nous confirmons la disponibilité sous 24&nbsp;h ; le règlement se fait sur place à l'arrivée (carte, espèces ou chèque).
         </p>
       </div>
 
@@ -164,7 +164,7 @@ function ReservationInner() {
         <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', marginTop: 14, lineHeight: 1.6 }}>
           Aucun paiement en ligne — vous réglez directement sur place (carte, espèces ou chèque).
         </p>
-        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.25)', marginTop: 8 }}>Annulation gratuite jusqu'à 48h avant l'arrivée.</p>
+        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.25)', marginTop: 8 }}>Annulation gratuite jusqu'à 4 jours avant l'arrivée.</p>
       </div>
 
       {/* Formulaire */}
@@ -174,7 +174,7 @@ function ReservationInner() {
           Vos coordonnées
         </h2>
         <p style={{ color: 'rgba(255,255,255,.5)', fontSize: '0.92rem', lineHeight: 1.75, marginBottom: 28 }}>
-          Validez votre demande et Sandrine vous répondra sous 24h par email pour confirmer la disponibilité.
+          Validez votre demande et nous vous répondrons sous 24h par email pour confirmer la disponibilité.
         </p>
 
         <form onSubmit={submit}>
@@ -238,7 +238,7 @@ function ReservationInner() {
           </button>
 
           <p style={{ textAlign: 'center', fontFamily: 'Raleway, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,.35)', marginTop: 14, lineHeight: 1.6 }}>
-            Pas de paiement en ligne — Sandrine vous confirme la disponibilité et vous réglez sur place.
+            Pas de paiement en ligne — nous vous confirmons la disponibilité et vous réglez sur place.
           </p>
           <p style={{ textAlign: 'center', fontFamily: 'Raleway, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,.22)', marginTop: 6 }}>
             En validant, vous acceptez nos{' '}

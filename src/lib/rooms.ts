@@ -35,7 +35,7 @@ export const ROOMS: Room[] = [
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
-    features: ['Terrasse privée', 'Accès jardin', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Entrée indépendante', 'Terrasse privée', 'Accès jardin', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau privative', 'TV', 'Plateau de courtoisie — thé, tisane, café, eau', 'Articles de toilette', 'Non-fumeur', 'Piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
       '/photos/chambres/jardin/chambre-jardin-blanc-01.jpeg',
@@ -55,11 +55,11 @@ export const ROOMS: Room[] = [
     slug: 'cote-cedre',
     name: 'Côté Cèdre',
     tagline: 'Dépendance & belles poutres',
-    description: 'Côté Cèdre est une dépendance indépendante de la maison principale, nichée à quelques pas du grand cèdre. Pierres apparentes, belles poutres anciennes et matériaux authentiques composent un cocon chaleureux, à la fois rustique et raffiné. Une atmosphère romantique et intime, idéale pour un séjour en amoureux ou une parenthèse au calme.',
+    description: 'Côté Cèdre est une dépendance indépendante de la maison principale, à quelques pas du grand cèdre. Pierres apparentes, belles poutres anciennes et matériaux authentiques composent un cocon chaleureux, à la fois rustique et raffiné. La salle d\'eau avec baignoire est ouverte sur la chambre. Une atmosphère romantique et intime, idéale pour un séjour en amoureux ou une parenthèse au calme.',
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
-    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau avec baignoire, ouverte sur la chambre', 'TV', 'Plateau de courtoisie — thé, tisane, café, eau', 'Articles de toilette', 'Non-fumeur', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/cedre/chambre-cedre-01.jpeg',
       '/photos/chambres/cedre/chambre-cedre-02.jpeg',
@@ -85,7 +85,7 @@ export const ROOMS: Room[] = [
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
-    features: ['Escalier extérieur en ardoise', 'Tuffeau & poutres', 'Plafonds en pente', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau privative', 'TV', 'Bouilloire thé & café', 'Articles de toilette', 'Non-fumeur', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Entrée indépendante', 'Escalier extérieur en ardoise', 'Tuffeau & poutres', 'Plafonds en pente', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau privative', 'TV', 'Plateau de courtoisie — thé, tisane, café, eau', 'Articles de toilette', 'Non-fumeur', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/vallee/chambre-vallee-01.jpeg',
       '/photos/chambres/vallee/chambre-vallee-02.jpeg',

@@ -56,7 +56,7 @@ const T = {
   menuLabel:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
   morningTag:    { fr: 'TRADITIONS DU MATIN', en: 'MORNING TRADITIONS', es: 'TRADICIONES MATUTINAS', pt: 'TRADIÇÕES MATINAIS' },
   morningTitle:  { fr: 'Le Petit-Déjeuner', en: 'Breakfast at the Estate', es: 'El Desayuno de la Casa', pt: 'O Café da Manhã da Casa' },
-  morningDesc:   { fr: 'Servi en salle ou en terrasse de 8h00 à 10h00. Sandrine prépare chaque matin un petit-déjeuner maison avec les meilleurs produits de la région.', en: 'Served indoors or on the terrace from 8:00 to 10:00. Sandrine prepares a homemade breakfast each morning with the finest local produce.', es: 'Servido en el salón o en la terraza de 8:00 a 10:00. Sandrine prepara cada mañana un desayuno casero con los mejores productos locales.', pt: 'Servido na sala ou na varanda das 8h00 às 10h00. A Sandrine prepara todos os dias um pequeno-almoço caseiro com os melhores produtos locais.' },
+  morningDesc:   { fr: 'Servi en salle ou en terrasse de 7h30 à 9h30. Sandrine prépare chaque matin un petit-déjeuner maison avec les meilleurs produits de la région.', en: 'Served indoors or on the terrace from 7:30 to 9:30. Sandrine prepares a homemade breakfast each morning with the finest local produce.', es: 'Servido en el salón o en la terraza de 7:30 a 9:30. Sandrine prepara cada mañana un desayuno casero con los mejores productos locales.', pt: 'Servido na sala ou na varanda das 7h30 às 9h30. A Sandrine prepara todos os dias um pequeno-almoço caseiro com os melhores produtos locais.' },
   dietTag:       { fr: 'PRÉFÉRENCES ALIMENTAIRES', en: 'DIETARY PREFERENCES', es: 'PREFERENCIAS ALIMENTARIAS', pt: 'PREFERÊNCIAS ALIMENTARES' },
   dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à Sandrine la veille.', en: 'We tailor breakfast to your needs. Let Sandrine know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a Sandrine de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe a Sandrine das suas preferências na noite anterior.' },
   diets:         { fr: ['Végétarien', 'Végétalien', 'Sans gluten', 'Allergie fruits à coque', 'Sans lactose'], en: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy', 'Dairy-Free'], es: ['Vegetariano', 'Vegano', 'Sin gluten', 'Alergia frutos secos', 'Sin lactosa'], pt: ['Vegetariano', 'Vegano', 'Sem glúten', 'Alergia a nozes', 'Sem lactose'] },
@@ -392,7 +392,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
           {[
             { emoji: '🕐', label: t('checkin'), val: 'Dès 16h00' },
             { emoji: '🚪', label: t('checkout'), val: 'Avant 10h00' },
-            { emoji: '☕', label: t('breakfastTime'), val: '8h00 – 10h00' },
+            { emoji: '☕', label: t('breakfastTime'), val: '7h30 – 9h30' },
             { emoji: '🥂', label: t('menuLabel'), val: 'À la carte' },
           ].map(({ emoji, label, val }) => (
             <div key={label} style={{ ...card, overflow: 'visible' as const, marginBottom: 0, textAlign: 'center', padding: '1.1rem 1rem', borderTop: `3px solid ${theme.accent}` }}>

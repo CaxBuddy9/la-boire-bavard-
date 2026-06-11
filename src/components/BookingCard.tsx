@@ -260,7 +260,7 @@ export default function BookingCard({ roomName, capacityMax, pricePerNight = 90 
               </span>
             </div>
             <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.55rem', color: 'rgba(255,255,255,.2)', marginTop: 5 }}>
-              Petit-déjeuner inclus · toutes taxes comprises
+              Petit-déjeuner inclus · taxe de séjour en sus (0,83 €/pers./nuit, réglée sur place)
             </p>
           </div>
         </>
@@ -309,7 +309,7 @@ export default function BookingCard({ roomName, capacityMax, pricePerNight = 90 
             display: 'block',
           }}
         >
-          Contacter Sandrine
+          Nous contacter
         </Link>
       </div>
 
@@ -321,7 +321,7 @@ export default function BookingCard({ roomName, capacityMax, pricePerNight = 90 
           color: 'rgba(255,255,255,.18)',
           marginBottom: 18,
         }}>
-          Sans paiement en ligne · Réponse sous 24h · Annulation gratuite 48h avant
+          Sans paiement en ligne · Réponse sous 24h · Annulation gratuite jusqu'à 4 jours avant
         </p>
       )}
 

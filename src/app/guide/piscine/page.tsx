@@ -125,7 +125,8 @@ export default function AffichettePiscinePage() {
                 Départs · Check-out
               </p>
               <p style={{ margin: '0.35rem 0 0', fontSize: '1.85rem', color: '#2a2018', fontWeight: 400, fontStyle: 'italic' }}>
-                8 h – 10 h
+                Avant 10 h
+
               </p>
             </div>
           </div>

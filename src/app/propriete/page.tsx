@@ -13,9 +13,9 @@ const FEATURES = [
   { icon: '≋', title: 'Piscine en saison', desc: 'Profitez de la piscine ouverte de mai à fin septembre, au cœur du jardin. Sécurisée, accessible de 9h à 22h.' },
   { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels et des coins de fraîcheur. Idéal pour flâner ou lire à l\'ombre.' },
   { icon: '✦', title: 'Vue sur la vallée', desc: 'La propriété domine la vallée, à deux pas du val de Loire — un cadre paisible entre nature et patrimoine.' },
-  { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un endroit où l\'on aime se poser.' },
+  { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un lieu où l\'on aime se poser.' },
   { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
-  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé, environnement rural et verdoyant. Le calme de la campagne angevine.' },
+  { icon: '◉', title: 'Parking & calme', desc: 'Parking privé à l\'entrée de la propriété, en retrait des chambres. Le calme de la campagne angevine.' },
 ]
 
 export default function PropriетеPage() {
@@ -82,24 +82,24 @@ export default function PropriетеPage() {
               style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)' }}
             >
               Une authentique longère<br />
-              <em className="italic text-white/55">au cœur du val de Loire</em>
+              <em className="italic text-white/55">au cœur de l'Anjou</em>
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85] mb-5">
-              Nichée à Blaison-Saint-Sulpice, charmante Petite Cité de Caractère du Maine et Loire,
+              À Blaison-Saint-Sulpice, charmante Petite Cité de Caractère du Maine et Loire,
               La Boire Bavard vous accueille dans une belle longère pleine de charme. Pierres
               apparentes, tomettes anciennes, poutres blanches — chaque détail raconte l'histoire
-              de cette demeure angevine.
+              de cette demeure Angevine.
             </p>
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85] mb-5">
-              Pour votre confort : entrées indépendantes, salle d'eau privative, terrasse
-              avec vue sur le jardin et la piscine, parking privé sécurisé. Un environnement
-              calme et verdoyant, un accueil chaleureux, un séjour reposant.
+              Chaque chambre dispose d'une entrée indépendante, d'une salle d'eau privative
+              et d'une terrasse avec vue sur le jardin. Un environnement calme et verdoyant,
+              un accueil chaleureux, votre séjour reposant.
             </p>
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85]">
-              Nichée dans le Val de Loire classé au patrimoine de l'UNESCO, la propriété est
-              le point de départ idéal pour explorer l'Anjou entre vignobles, châteaux et
-              villages de caractère.
+              Située dans le Val de Loire classé au patrimoine mondial de l'UNESCO, la propriété
+              est le point de départ idéal pour vos balades à vélo, vos randonnées et vos
+              découvertes de l'Anjou, entre vignobles, châteaux et villages de caractère.
             </p>
           </div>
         </div>
@@ -166,13 +166,13 @@ export default function PropriетеPage() {
               <p className="font-body max-w-3xl mx-auto mt-6 text-[1.02rem] leading-[1.9]" style={{ color: 'rgba(255,255,255,.6)' }}>
                 Entre Loire, vignobles et patrimoine. Située dans la charmante Petite Cité de Caractère de
                 Blaison-Saint-Sulpice, La Boire Bavard bénéficie d'un emplacement idéal pour découvrir les
-                richesses de l'Anjou, entre nature, patrimoine et gastronomie. Niché dans le Val de Loire
-                classé au patrimoine de l'UNESCO, le village offre à lui seul un cadre authentique.
+                richesses de l'Anjou, entre nature, patrimoine et gastronomie. Le village offre à lui seul
+                un cadre authentique.
               </p>
               <p className="font-body max-w-3xl mx-auto mt-4 text-[1.02rem] leading-[1.9]" style={{ color: 'rgba(255,255,255,.6)' }}>
                 Depuis la maison, de nombreux sentiers pédestres et circuits à vélo vous invitent à explorer
                 la campagne environnante, les coteaux viticoles et les bords de Loire. Le GR3 et plusieurs
-                boucles de randonnée sont accessibles depuis le village, à pied comme à vélo.
+                boucles de randonnée sont accessibles directement depuis le village, à pied ou à vélo.
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-12 mb-14">

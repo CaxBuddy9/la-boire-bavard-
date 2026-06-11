@@ -34,8 +34,8 @@ export default function ChambresPage() {
             <em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.5)' }}>trois univers</em>
           </h1>
           <p style={{ marginTop: 28, maxWidth: 560, fontSize: '1.05rem', lineHeight: 1.8, color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-garamond)' }}>
-            Chaque chambre a son caractère propre. Toutes bénéficient d'une entrée indépendante
-            donnant directement sur le jardin et la piscine.
+            Chaque chambre a son caractère propre. Toutes disposent d'une entrée indépendante,
+            d'une salle d'eau privative et d'une terrasse avec vue sur le jardin.
           </p>
         </div>
 

@@ -95,12 +95,12 @@ function ContactInner() {
           <div style={{ overflow: 'hidden', position: 'absolute', bottom: -20, left: -10, right: 0, pointerEvents: 'none' }}>
           <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(6rem,18vw,18vw)', lineHeight: .85, color: 'rgba(255,255,255,.025)', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
           </div>
-          <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>On a hâte de vous accueillir</p>
+          <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Nous avons hâte de vous accueillir</p>
           <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
             Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.45)' }}>on vous répond vite</em>
           </h1>
           <p style={{ fontFamily: 'var(--font-garamond)', fontSize: 'clamp(.95rem,1.2vw,1.05rem)', color: 'rgba(240,235,225,.65)', maxWidth: 580, marginTop: 22, lineHeight: 1.8 }}>
-            Sandrine & Jean-Marc répondent à toutes les demandes sous 24 heures. Une question sur les chambres, les dates ou la planche du soir ? N'hésitez pas — par mail, par téléphone ou par WhatsApp.
+            Sandrine & Jean-Marc se font un plaisir de répondre à chaque demande dans les plus brefs délais. Une question sur les chambres, les dates ou la planche du soir ? N'hésitez pas — par mail, par téléphone ou par WhatsApp.
           </p>
         </div>
 
@@ -226,7 +226,7 @@ function ContactInner() {
 
               <div style={{ border: `1px solid ${S.border}`, padding: 32 }}>
                 <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 18 }}>Infos pratiques</p>
-                {['Check-in à partir de 16h','Check-out avant 10h','Petit-déjeuner 8h–10h','Parking privé gratuit','Animaux non acceptés','Planche du soir 24€ pour 2 (sur résa)'].map(info => (
+                {['Check-in à partir de 16h','Check-out avant 10h','Petit-déjeuner 7h30–9h30','Parking privé gratuit à l\'entrée de la propriété','Animaux non acceptés','Taxe de séjour : 0,83 €/pers./nuit, réglée sur place','Annulation gratuite jusqu\'à 4 jours avant l\'arrivée','Planche du soir 24€ pour 2 (sur résa)'].map(info => (
                   <p key={info} style={{ color: S.dim, fontFamily: 'var(--font-raleway)', fontSize: '.78rem', lineHeight: 1.7, marginBottom: 6 }}>
                     <span style={{ color: S.gold, marginRight: 8 }}>→</span>{info}
                   </p>
@@ -314,35 +314,14 @@ function ContactInner() {
               {[
                 {
                   icon: '◇',
-                  title: 'Mobilité réduite',
+                  title: 'Bon à savoir',
                   items: [
-                    'Parking accessible directement devant les chambres',
-                    'Chambre Côté Jardin en rez-de-chaussée, plain-pied',
-                    'Chambre Côté Cèdre accessible de plain-pied (dépendance)',
+                    'Chambres Côté Jardin et Côté Cèdre de plain-pied',
+                    'Parking à l\'entrée de la propriété, en retrait des chambres',
                     'Allées extérieures stabilisées (gravier compact)',
-                    'Salle de bain adaptable sur demande préalable',
-                  ],
-                },
-                {
-                  icon: '❧',
-                  title: 'Équipements & services',
-                  items: [
-                    'Accès piscine avec marches larges + main courante',
-                    'Petit-déjeuner servi en chambre si nécessaire',
-                    'Accompagnement à l\'arrivée par Sandrine ou Jean-Marc',
-                    'Animaux d\'assistance acceptés',
-                    'Téléphone disponible sur demande',
-                  ],
-                },
-                {
-                  icon: '≋',
-                  title: 'Informations pratiques',
-                  items: [
-                    'Prévenez-nous avant votre arrivée pour tout besoin spécifique',
-                    'Chambres du rez-de-chaussée réservables en priorité',
-                    'Dépose & embarquement facilité à l\'entrée',
-                    'Stationnement PMR à 10 m des chambres',
                     'Pas de marche à l\'entrée principale',
+                    'Animaux d\'assistance acceptés',
+                    'Prévenez-nous avant votre arrivée pour tout besoin spécifique',
                   ],
                 },
               ].map((bloc) => (

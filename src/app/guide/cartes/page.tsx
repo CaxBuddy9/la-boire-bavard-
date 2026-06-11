@@ -89,7 +89,7 @@ export default function CartesPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span>{tag('Arrivée')} dès 16h</span>
                       <span>{tag('Départ')} avant 10h</span>
-                      <span>{tag('Petit-déj')} 8h–10h</span>
+                      <span>{tag('Petit-déj')} 7h30–9h30</span>
                     </div>
                     <div>{tag('Code jardin')} {CODE_JARDIN}</div>
                     <div>{tag('Contacts')} Sandrine {TEL} · {TEL2}</div>

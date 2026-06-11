@@ -12,7 +12,7 @@ const PRODUCTS = [
   { icon: '✦', name: 'Viennoiseries & pains du jour',  desc: 'Cuits chaque matin, croustillants à souhait' },
   { icon: '✿', name: 'Les Délices de Flo',             desc: 'Confitures artisanales cuites au chaudron à Montreuil-Bellay, à base de fruits du Val de Loire' },
   { icon: '◉', name: 'Yaourts maison',                  desc: 'Préparés sur place, doux et onctueux' },
-  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac · orange pressée maison, pomme artisanale' },
+  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac · orange pressée, jus de pomme artisanal' },
   { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud' },
 ]
 
@@ -20,13 +20,13 @@ const PLANCHE = [
   'Saucisson sec',
   'Chiffonade de chorizo',
   'Fromages affinés du Maine-et-Loire',
-  'Spécialité du jour de Sandrine',
+  'Quiche maison ou spécialité du jour, selon l\'envie',
   'Pain frais & condiments',
 ]
 
 const BOISSONS = [
   { cat: 'Sans alcool',   items: ['Coca-Cola', 'Coca Zero', 'Sprite', 'Perrier', 'Jus de fruits', 'Sirops à l\'eau'] },
-  { cat: 'Bières',        items: ['La Piautre — bière locale de l\'Anjou (blonde / ambrée)'] },
+  { cat: 'Bières',        items: ['La Piautre — bière locale de l\'Anjou (blonde / ambrée)', '1664', 'Heineken'] },
   { cat: 'Vins de Loire', items: ['Blanc, rosé et rouge de Loire', 'Au verre ou à la bouteille'] },
 ]
 
@@ -76,7 +76,7 @@ export default function SejourPage() {
             </blockquote>
             <p className="font-sans text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.55)' }}>
               Inclus dans chaque nuit : le petit-déjeuner gourmand chaque matin et l'accès libre à la piscine en saison et au jardin.
-              Accueil chaleureux et séjour reposant. Et le soir, en option sur réservation, Sandrine vous prépare une planche pour prolonger la soirée.
+              Accueil chaleureux et séjour reposant. Et le soir, en option sur réservation, nous vous préparons une planche pour prolonger la soirée.
             </p>
           </div>
         </section>
@@ -85,7 +85,7 @@ export default function SejourPage() {
         <section style={{ background: '#1a150a', padding: '90px 32px' }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <p className="label-caps mb-3">Le matin · 8h – 10h</p>
+              <p className="label-caps mb-3">Le matin · 7h30 – 9h30</p>
               <h2 className="font-serif font-normal"
                 style={{ fontSize: 'clamp(2rem,3.8vw,3rem)', color: 'rgba(253,252,249,.9)' }}>
                 Le petit-déjeuner gourmand
@@ -129,7 +129,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-6" />
             <p className="font-body text-white/65 text-[1rem] leading-[1.85]">
-              Notre cuisine, chaleureuse et authentique, allie le charme des pierres apparentes, des tomettes anciennes et des matériaux traditionnels. Lumineuse et accueillante, elle offre un cadre paisible où l'on se sent immédiatement comme à la maison — c'est ici que Sandrine prépare chaque matin pains et viennoiseries.
+              Notre cuisine, chaleureuse et authentique, allie le charme des pierres apparentes, des tomettes anciennes et des matériaux traditionnels. Lumineuse et accueillante, elle offre un cadre paisible où l'on se sent immédiatement comme à la maison.
             </p>
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-5">
-              À l'ombre du mûrier, la pergola est l'un de nos endroits favoris : on y prend le petit-déjeuner aux beaux jours
+              À l'ombre du mûrier, la pergola est l'un de nos lieux favoris : on y prend le petit-déjeuner aux beaux jours
               et on y lit tranquillement à l'abri du soleil.
             </p>
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-8">
@@ -209,7 +209,7 @@ export default function SejourPage() {
         <section style={{ background: '#0f1a10', padding: '80px 32px' }}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <p className="label-caps mb-3">1 hectare</p>
+              <p className="label-caps mb-3">Plein air</p>
               <h2 className="font-serif font-normal"
                 style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'rgba(253,252,249,.85)' }}>
                 Le jardin & la nature
@@ -251,7 +251,7 @@ export default function SejourPage() {
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-body text-white/70 text-[1.05rem] leading-[1.9] mb-5">
-              Pour ceux qui souhaitent prolonger la soirée en douceur, nous proposons une planche gourmande à partager — préparée avec des produits locaux et de saison, issus de fournisseurs que nous connaissons et apprécions.
+              Pour ceux qui souhaitent prolonger la soirée en douceur, nous proposons une planche gourmande à partager.
             </p>
             <p className="font-body text-white/55 text-[0.95rem] leading-[1.85] mb-6">
               <strong className="text-white/75">Au menu :</strong>
@@ -271,7 +271,7 @@ export default function SejourPage() {
               </div>
               <div className="bg-white/10 px-6 py-4 text-center">
                 <div className="font-serif text-gold text-2xl">Sur résa</div>
-                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/45 mt-1">prévenir Sandrine</div>
+                <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/45 mt-1">prévenir la veille</div>
               </div>
             </div>
             <Link href="/contact" className="btn-ghost self-start">

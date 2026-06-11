@@ -43,8 +43,8 @@ export default function IntroStrip() {
         </p>
         <p className="font-body text-white/80 text-[1.05rem] leading-[1.85] mb-4">
           {t(
-            "Nous avons eu un véritable coup de cœur pour La Boire Bavard, et c'est avec joie que nous vous y accueillons en tant que nouveaux propriétaires.",
-            "We fell in love with La Boire Bavard, and we are delighted to welcome you here as the new owners."
+            "Nous avons eu un coup de cœur pour La Boire Bavard, où nous avons désormais la joie de vous accueillir.",
+            "We fell in love with La Boire Bavard, where we are now delighted to welcome you."
           )}
         </p>
         <div className="border-l-2 pl-5 mb-10" style={{ borderColor: 'rgba(196,160,80,.55)' }}>
@@ -52,8 +52,8 @@ export default function IntroStrip() {
             style={{ fontSize: 'clamp(1.1rem,1.7vw,1.35rem)' }}
           >
             {t(
-              "Nous tenons enfin à remercier Maryline et Jean-Paul, les anciens propriétaires, pour le travail et la passion qu'ils ont consacrés à ce lieu. C'est avec joie que nous poursuivons cette belle aventure.",
-              "Finally, we want to thank Maryline and Jean-Paul, the former owners, for all the work and passion they devoted to this place. It is with joy that we continue this lovely adventure."
+              "Nous tenons enfin à remercier Maryline et Jean-Paul pour le travail et la passion qu'ils ont consacrés à ce lieu.",
+              "Finally, we want to thank Maryline and Jean-Paul for all the work and passion they devoted to this place."
             )}
           </p>
         </div>
