@@ -315,7 +315,13 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
   while (cells.length % 7 !== 0) cells.push(null)
 
   const isExternal = (r: Reservation) => r.guest_email === 'ical-sync@external'
-  const guestLabel = (r: Reservation) => isExternal(r) ? 'Booking.com' : r.guest_name
+  // Pour les résas Booking : afficher le nom du client si la synchro l'a récupéré,
+  // sinon « Booking · Chambre » (anciennes synchros ou simple blocage de dates)
+  const guestLabel = (r: Reservation) => {
+    if (!isExternal(r)) return r.guest_name
+    const hasName = r.guest_name && !/^(sync ical|booking)/i.test(r.guest_name)
+    return hasName ? r.guest_name : `Booking · ${r.room_id.replace('Côté ', '')}`
+  }
 
   const updateStatus = async (id: string, status: string) => {
     await fetch('/api/admin/reservations', {
@@ -404,7 +410,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
                       color: '#0a0f0a',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                     }}>
-                    {isStart ? (isExternal(r) ? `Booking · ${r.room_id.replace('Côté ', '')}` : guestLabel(r)) : '· · ·'}
+                    {isStart ? guestLabel(r) : '· · ·'}
                   </div>
                 )
               })}
@@ -885,9 +891,26 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setLoading(false)
   }
 
-  // Chargement une seule fois à l'ouverture — pas d'actualisation automatique
-  // (le rechargement périodique faisait sauter la page). Bouton ↻ pour rafraîchir.
-  useEffect(() => { load() }, [])
+  // Auto-refresh silencieux : toutes les 60 s, on recharge en arrière-plan et on ne
+  // met à jour l'écran QUE si les données ont réellement changé. Pas de spinner,
+  // pas de re-rendu inutile → la page ne saute plus.
+  const silentRefresh = async () => {
+    try {
+      const res = await fetch('/api/admin/reservations')
+      const json = await res.json()
+      if (!json.error) {
+        const next = json.data || []
+        setReservations(prev => JSON.stringify(prev) === JSON.stringify(next) ? prev : next)
+      }
+    } catch {}
+  }
+
+  useEffect(() => {
+    load()
+    const t = setInterval(silentRefresh, 60000)
+    return () => clearInterval(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const btn: React.CSSProperties = { border: '1px solid rgba(60,48,34,.15)', background: 'none', color: 'rgba(60,48,34,.6)', fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '9px 14px', cursor: 'pointer', fontFamily: 'system-ui, sans-serif', borderRadius: 4 }
 

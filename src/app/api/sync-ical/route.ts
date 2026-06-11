@@ -16,20 +16,42 @@ function getSupabase() {
   return createClient(url, key) as ReturnType<typeof createClient>
 }
 
+// Décode les échappements iCal (\n \, \;) et déplie les lignes coupées (continuation par espace)
+function unescapeICal(s: string) {
+  return s.replace(/\\n/gi, ' · ').replace(/\\,/g, ',').replace(/\\;/g, ';').trim()
+}
+
+// Extrait le nom du client depuis SUMMARY si ce n'est pas un simple blocage de dates.
+// Booking.com met généralement le nom du voyageur dans SUMMARY ("Dupont Marie" ou
+// "Booking.com - Dupont Marie") ; les fermetures manuelles donnent "CLOSED - Not available".
+function guestNameFromSummary(summary: string | undefined): string | null {
+  if (!summary) return null
+  const s = unescapeICal(summary)
+  if (/closed|not available|unavailable|indisponible|bloqu|blocked|réservé|reserved$/i.test(s)) return null
+  const cleaned = s.replace(/^(booking\.com|booking|agoda|tripadvisor)\s*[-–—:]?\s*/i, '').trim()
+  return cleaned.length > 1 ? cleaned : null
+}
+
 function parseICal(text: string) {
-  const events: { uid: string; start: string; end: string }[] = []
-  const blocks = text.split('BEGIN:VEVENT')
+  // Déplier les lignes iCal repliées (RFC 5545 : retour ligne + espace/tab)
+  const unfolded = text.replace(/\r?\n[ \t]/g, '')
+  const events: { uid: string; start: string; end: string; summary?: string; description?: string }[] = []
+  const blocks = unfolded.split('BEGIN:VEVENT')
   for (let i = 1; i < blocks.length; i++) {
     const block = blocks[i]
-    const uidMatch   = block.match(/UID:([^\r\n]+)/)
-    const startMatch = block.match(/DTSTART(?:;[^:]+)?:(\d{8})/)
-    const endMatch   = block.match(/DTEND(?:;[^:]+)?:(\d{8})/)
+    const uidMatch     = block.match(/UID:([^\r\n]+)/)
+    const startMatch   = block.match(/DTSTART(?:;[^:]+)?:(\d{8})/)
+    const endMatch     = block.match(/DTEND(?:;[^:]+)?:(\d{8})/)
+    const summaryMatch = block.match(/SUMMARY(?:;[^:]+)?:([^\r\n]+)/)
+    const descMatch    = block.match(/DESCRIPTION(?:;[^:]+)?:([^\r\n]+)/)
     if (!uidMatch || !startMatch || !endMatch) continue
     const toISO = (s: string) => `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`
     events.push({
-      uid:   uidMatch[1].trim(),
-      start: toISO(startMatch[1]),
-      end:   toISO(endMatch[1]),
+      uid:         uidMatch[1].trim(),
+      start:       toISO(startMatch[1]),
+      end:         toISO(endMatch[1]),
+      summary:     summaryMatch ? summaryMatch[1] : undefined,
+      description: descMatch ? descMatch[1] : undefined,
     })
   }
   return events
@@ -40,7 +62,7 @@ async function syncRoom(slug: string) {
   if (!roomName) throw new Error(`Slug inconnu : ${slug}`)
 
   const supabase = getSupabase()
-  const allEvents: { uid: string; start: string; end: string; platform: string }[] = []
+  const allEvents: { uid: string; start: string; end: string; summary?: string; description?: string; platform: string }[] = []
 
   // Collecter les événements de toutes les plateformes configurées
   for (const platform of PLATFORMS) {
@@ -81,19 +103,23 @@ async function syncRoom(slug: string) {
     return true
   })
 
-  const rows = unique.map(e => ({
-    room_id:               roomName,
-    guest_name:            `Sync iCal – ${e.platform}`,
-    guest_email:           'ical-sync@external',
-    guest_phone:           '',
-    check_in:              e.start,
-    check_out:             e.end,
-    guests:                1,
-    total_price:           0,
-    status:                'confirmed',
-    stripe_payment_intent: e.uid,
-    message:               `Import automatique iCal (${e.platform})`,
-  }))
+  const rows = unique.map(e => {
+    const name = guestNameFromSummary(e.summary)
+    const desc = e.description ? unescapeICal(e.description) : ''
+    return {
+      room_id:               roomName,
+      guest_name:            name || 'Booking.com',
+      guest_email:           'ical-sync@external',
+      guest_phone:           '',
+      check_in:              e.start,
+      check_out:             e.end,
+      guests:                1,
+      total_price:           0,
+      status:                'confirmed',
+      stripe_payment_intent: e.uid,
+      message:               [`Réservation ${e.platform}`, e.summary ? `Intitulé : ${unescapeICal(e.summary)}` : '', desc ? `Détail : ${desc}` : ''].filter(Boolean).join('\n'),
+    }
+  })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error } = await supabase.from('reservations').insert(rows as any)
