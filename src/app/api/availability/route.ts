@@ -48,6 +48,7 @@ export async function GET(req: NextRequest) {
       const { data, error } = await supabase
         .from('reservations')
         .select('room_id')
+        .in('room_id', VALID_ROOMS) // exclut les notes du calendrier admin (__note__)
         .in('status', ['pending', 'paid', 'confirmed'])
         .lt('check_in', depart)
         .gt('check_out', arrive)

@@ -203,6 +203,79 @@ function ReservationModal({ onClose, onSaved, initialDate, existing }: { onClose
   )
 }
 
+// ── Notes du calendrier ─────────────────────────────────────────────────────
+// Stockées dans la table reservations avec room_id '__note__' (invisible côté site).
+const NOTE_ROOM = '__note__'
+
+function NoteModal({ date, existing, onClose, onSaved }: { date?: string, existing?: Reservation, onClose: () => void, onSaved: () => void }) {
+  const day = existing ? existing.check_in : date!
+  const [text, setText] = useState(existing ? existing.guest_name : '')
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
+
+  const save = async () => {
+    if (!text.trim()) { setErr('Écrivez votre note.'); return }
+    setSaving(true)
+    setErr('')
+    const next = (() => { const d = new Date(day); d.setDate(d.getDate() + 1); return d.toISOString().split('T')[0] })()
+    const res = await fetch('/api/admin/reservations', {
+      method: existing ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(existing
+        ? { id: existing.id, guest_name: text.trim() }
+        : {
+            room_id: NOTE_ROOM, guest_name: text.trim(), guest_email: 'note@interne',
+            guest_phone: '', check_in: day, check_out: next,
+            guests: 1, total_price: 0, status: 'confirmed',
+          }),
+    })
+    const d = await res.json()
+    if (d.error) { setErr(d.error); setSaving(false) }
+    else { onSaved(); onClose() }
+  }
+
+  const remove = async () => {
+    if (!existing || !confirm('Supprimer cette note ?')) return
+    await fetch('/api/admin/reservations', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: existing.id }),
+    })
+    onSaved()
+    onClose()
+  }
+
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fdf8e8', border: '1px solid rgba(196,160,80,.35)', borderRadius: 6, padding: '26px 24px', width: '100%', maxWidth: 400 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.05rem', color: '#2a2018' }}>📝 Note du {fmtDate(day)}</div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'rgba(60,48,34,.4)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+        </div>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          autoFocus
+          rows={4}
+          placeholder="Ex : entretien piscine, courses marché, ménage Côté Cèdre…"
+          style={{ width: '100%', background: '#fff', border: '1px solid rgba(196,160,80,.3)', borderRadius: 4, color: '#2a2018', padding: '10px 12px', fontSize: '0.92rem', fontFamily: 'system-ui', outline: 'none', resize: 'vertical', marginBottom: 12 }}
+        />
+        {err && <div style={{ color: '#e07070', fontSize: '0.78rem', marginBottom: 10 }}>{err}</div>}
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={save} disabled={saving} style={{ flex: 1, background: '#c4a050', color: '#0a0f0a', border: 'none', padding: '11px', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700, cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.6 : 1, borderRadius: 4, fontFamily: 'system-ui' }}>
+            {saving ? 'Enregistrement…' : 'Enregistrer la note'}
+          </button>
+          {existing && (
+            <button onClick={remove} style={{ background: 'none', border: '1px solid rgba(224,112,112,.35)', color: '#e07070', padding: '11px 14px', fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', borderRadius: 4, fontFamily: 'system-ui' }}>
+              🗑
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Login ──────────────────────────────────────────────────────────────────
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [pwd, setPwd] = useState('')
@@ -293,9 +366,12 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
   const now = new Date()
   const [year,  setYear]  = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth())
-  const [addDate,  setAddDate]  = useState<string | null>(null)
-  const [selected, setSelected] = useState<Reservation | null>(null)
-  const [editing,  setEditing]  = useState<Reservation | null>(null)
+  const [addDate,   setAddDate]   = useState<string | null>(null)
+  const [selected,  setSelected]  = useState<Reservation | null>(null)
+  const [editing,   setEditing]   = useState<Reservation | null>(null)
+  const [dayChoice, setDayChoice] = useState<string | null>(null)
+  const [noteDate,  setNoteDate]  = useState<string | null>(null)
+  const [editNote,  setEditNote]  = useState<Reservation | null>(null)
 
   const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y-1) } else setMonth(m => m-1) }
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y+1) } else setMonth(m => m+1) }
@@ -304,7 +380,9 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
   const totalDays = new Date(year, month + 1, 0).getDate()
   const todayIso = isoDate(now.getFullYear(), now.getMonth(), now.getDate())
 
-  const active = reservations.filter(r => r.status !== 'cancelled')
+  const isNote = (r: Reservation) => r.room_id === NOTE_ROOM
+  const notes  = reservations.filter(r => isNote(r) && r.status !== 'cancelled')
+  const active = reservations.filter(r => r.status !== 'cancelled' && !isNote(r))
 
   // Grille : semaines qui commencent le lundi
   const firstDow = (new Date(year, month, 1).getDay() + 6) % 7 // 0 = lundi
@@ -378,9 +456,10 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
           const isToday = iso === todayIso
           const isPast = iso < todayIso
           const dayResas = active.filter(r => iso >= r.check_in && iso < r.check_out)
+          const dayNotes = notes.filter(r => r.check_in === iso)
           return (
             <div key={iso}
-              onClick={() => setAddDate(iso)}
+              onClick={() => setDayChoice(iso)}
               style={{
                 minHeight: 96, background: '#ffffff', borderRadius: 6, padding: '6px 6px 8px',
                 border: isToday ? '2px solid #c4a050' : '1px solid rgba(60,48,34,.1)',
@@ -414,6 +493,19 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
                   </div>
                 )
               })}
+              {dayNotes.map(noteRow => (
+                <div key={noteRow.id}
+                  onClick={e => { e.stopPropagation(); setEditNote(noteRow) }}
+                  title={noteRow.guest_name}
+                  style={{
+                    background: '#fdf3d1', border: '1px dashed rgba(196,160,80,.55)',
+                    borderRadius: 4, padding: '3px 6px', cursor: 'pointer',
+                    fontSize: '0.7rem', fontWeight: 500, color: '#7a5d1e',
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>
+                  📝 {noteRow.guest_name}
+                </div>
+              ))}
             </div>
           )
         })}
@@ -432,11 +524,45 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
           <div style={{ width: 18, height: 10, borderRadius: 2, background: 'rgba(60,48,34,.2)', border: '1px dashed rgba(60,48,34,.5)' }} /> En attente
         </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(60,48,34,.55)' }}>
+          <div style={{ width: 18, height: 10, borderRadius: 2, background: '#fdf3d1', border: '1px dashed rgba(196,160,80,.55)' }} /> 📝 Note
+        </div>
       </div>
+
+      {/* Choix au clic sur un jour : réservation ou note */}
+      {dayChoice && (
+        <div onClick={() => setDayChoice(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#ffffff', border: '1px solid rgba(196,160,80,.25)', borderRadius: 6, padding: '26px 24px', width: '100%', maxWidth: 340, textAlign: 'center' }}>
+            <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#2a2018', marginBottom: 18 }}>{fmtDate(dayChoice)}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button onClick={() => { setAddDate(dayChoice); setDayChoice(null) }}
+                style={{ background: '#c4a050', color: '#0a0f0a', border: 'none', padding: '14px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', borderRadius: 4, fontFamily: 'system-ui' }}>
+                🛏 Ajouter une réservation
+              </button>
+              <button onClick={() => { setNoteDate(dayChoice); setDayChoice(null) }}
+                style={{ background: '#fdf3d1', color: '#7a5d1e', border: '1px dashed rgba(196,160,80,.55)', padding: '14px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', borderRadius: 4, fontFamily: 'system-ui' }}>
+                📝 Ajouter une note
+              </button>
+              <button onClick={() => setDayChoice(null)}
+                style={{ background: 'none', color: 'rgba(60,48,34,.45)', border: 'none', padding: '6px', fontSize: '0.72rem', cursor: 'pointer', fontFamily: 'system-ui' }}>
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal ajout depuis un jour du calendrier */}
       {addDate && (
         <ReservationModal initialDate={addDate} onClose={() => setAddDate(null)} onSaved={onChanged} />
+      )}
+
+      {/* Modals notes */}
+      {noteDate && (
+        <NoteModal date={noteDate} onClose={() => setNoteDate(null)} onSaved={onChanged} />
+      )}
+      {editNote && (
+        <NoteModal existing={editNote} onClose={() => setEditNote(null)} onSaved={onChanged} />
       )}
 
       {/* Modal modification */}
