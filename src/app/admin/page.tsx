@@ -57,16 +57,16 @@ function ReservationModal({ onClose, onSaved, initialDate, existing }: { onClose
     room_id: 'Côté Jardin', guest_name: '', guest_email: '', guest_phone: '',
     check_in: start, check_out: nextDay, guests: 2, status: 'confirmed', table_hotes: false,
   })
-  const [price, setPrice] = useState<number>(existing ? existing.total_price : nights(start, nextDay) * 88)
+  const [price, setPrice] = useState<number>(existing ? existing.total_price : nights(start, nextDay) * 90)
   const [priceTouched, setPriceTouched] = useState(!!existing)
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState('')
 
   const n = nights(form.check_in, form.check_out)
 
-  // Tant que le prix n'a pas été modifié à la main, il suit les dates (n × 88 €)
+  // Tant que le prix n'a pas été modifié à la main, il suit les dates (n × 90 €)
   useEffect(() => {
-    if (!priceTouched) setPrice(n > 0 ? n * 88 : 0)
+    if (!priceTouched) setPrice(n > 0 ? n * 90 : 0)
   }, [n, priceTouched])
 
   const F = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }))
@@ -181,7 +181,7 @@ function ReservationModal({ onClose, onSaved, initialDate, existing }: { onClose
               onChange={e => { setPriceTouched(true); setPrice(Number(e.target.value)) }} style={inp} />
             {n > 0 && (
               <div style={{ fontSize: '0.72rem', color: 'rgba(60,48,34,.45)', marginTop: 6, lineHeight: 1.6 }}>
-                Suggestion : {n} nuit{n>1?'s':''} × 88 € = {n * 88} €<br />
+                Suggestion : {n} nuit{n>1?'s':''} × 90 € = {n * 90} €<br />
                 + taxe de séjour {(form.guests * n * 0.83).toFixed(2)} € ({form.guests} pers. × {n} nuit{n>1?'s':''} × 0,83 €) — réglée sur place
               </div>
             )}
@@ -589,7 +589,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
                 ['Arrivée', fmtDate(selected.check_in)],
                 ['Départ', fmtDate(selected.check_out)],
                 ['Nuits', String(nights(selected.check_in, selected.check_out))],
-                ['Total', isExternal(selected) ? `${nights(selected.check_in, selected.check_out) * 88} €` : `${selected.total_price} €`],
+                ['Total', isExternal(selected) ? `${nights(selected.check_in, selected.check_out) * 90} €` : `${selected.total_price} €`],
                 ['Téléphone', selected.guest_phone || '—'],
                 ['Email', isExternal(selected) ? '—' : (selected.guest_email || '—')],
               ].map(([l, v]) => (
@@ -657,7 +657,7 @@ function Calendrier({ reservations, onChanged }: { reservations: Reservation[], 
 // ── Facturation ────────────────────────────────────────────────────────────
 type Ligne = { id: string; label: string; qty: number; pu: number }
 const rid = () => Math.random().toString(36).slice(2, 9)
-const PRICE_NUIT  = 88
+const PRICE_NUIT  = 90
 const PRICE_TABLE = 25
 const TAXE_SEJOUR = 0.83
 
@@ -1007,7 +1007,7 @@ function StatsPanel({ reservations }: { reservations: Reservation[] }) {
   const monthPrefix = `${y}-${String(m+1).padStart(2,'0')}`
   const todayIso = isoDate(y, m, now.getDate())
 
-  const PRICE = 88 // tarif/nuit compté au CA pour les résas Booking.com (prix inconnu via iCal)
+  const PRICE = 90 // tarif/nuit compté au CA pour les résas Booking.com (prix inconnu via iCal)
   const getPrice = (r: Reservation) => r.guest_email === 'ical-sync@external' ? nights(r.check_in, r.check_out) * PRICE : r.total_price
 
   const active = reservations.filter(r => r.status !== 'cancelled' && r.room_id !== NOTE_ROOM && r.check_in >= STATS_START)
@@ -1055,7 +1055,7 @@ function StatsPanel({ reservations }: { reservations: Reservation[] }) {
   return (
     <div>
       <div style={{ fontSize: '0.78rem', color: 'rgba(60,48,34,.45)', marginBottom: 16 }}>
-        Statistiques depuis le 1ᵉʳ juin 2026 · les résas Booking.com sont comptées à 88 €/nuit · les annulations et notes sont exclues
+        Statistiques depuis le 1ᵉʳ juin 2026 · les résas Booking.com sont comptées à 90 €/nuit · les annulations et notes sont exclues
       </div>
 
       {/* KPIs */}

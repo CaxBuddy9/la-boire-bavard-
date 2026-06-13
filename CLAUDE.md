@@ -19,16 +19,15 @@ Tu travailles exclusivement dans `src/app/` et `src/components/`.
 | Email | contact@laboirebavard.com |
 | WhatsApp | https://wa.me/33675786335 |
 | Note Booking | 9.9/10 — Exceptionnel |
-| Tarif | 88 €/nuit petit-déjeuner inclus |
-| Table d'hôtes | 25 €/pers. sur réservation |
+| Tarif | 90 €/nuit petit-déjeuner inclus |
+| Planche du soir | 24 €/2 pers. sur réservation |
 
-### 4 Chambres
+### 3 Chambres
 | Slug | Nom | Capacité | Caractère |
 |------|-----|----------|-----------|
-| `jardin` | Côté Jardin | 1–4 pers. | Cheminée, terrasse directe |
-| `cedre` | Côté Cèdre | 1–2 pers. | Romantique, accès piscine direct |
-| `vallee` | Côté Vallée | 1–4 pers. | Vue Loire, escalier privé |
-| `potager` | Côté Potager | 1–2 pers. | Calme absolu, SdB séparée |
+| `jardin` | Côté Jardin | 1–2 pers. | Cheminée, terrasse directe |
+| `cedre` | Côté Cèdre | 1–2 pers. | Dépendance, baignoire ouverte sur la chambre, lit double |
+| `vallee` | Côté Vallée | 1–2 pers. | Cocon sous les toits, escalier extérieur en ardoise |
 
 ---
 

@@ -13,7 +13,6 @@ const BG_STYLES = [
   { bg: '#111009', color: 'white',   gold: 'rgba(184,154,90,.55)',  divider: 'rgba(184,154,90,.3)',  tagBorder: 'rgba(255,255,255,.22)', tagColor: 'rgba(255,255,255,.65)' },
   { bg: '#ece6d8', color: '#111009', gold: '#b89a5a',               divider: '#b89a5a',              tagBorder: 'rgba(0,0,0,.2)',        tagColor: '#111009' },
   { bg: '#9b4f2e', color: 'white',   gold: 'rgba(255,255,255,.55)', divider: 'rgba(255,255,255,.3)', tagBorder: 'rgba(255,255,255,.25)', tagColor: 'rgba(255,255,255,.7)' },
-  { bg: '#3a5040', color: 'white',   gold: 'rgba(255,255,255,.55)', divider: 'rgba(255,255,255,.3)', tagBorder: 'rgba(255,255,255,.25)', tagColor: 'rgba(255,255,255,.7)' },
 ]
 
 export default function ChambresPage() {

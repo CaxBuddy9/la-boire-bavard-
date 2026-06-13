@@ -100,7 +100,7 @@ const jsonLd = {
     '@type': 'AggregateRating',
     ratingValue: '9.9',
     bestRating: '10',
-    ratingCount: '50',
+    ratingCount: '200',
   },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Piscine',               value: true },
