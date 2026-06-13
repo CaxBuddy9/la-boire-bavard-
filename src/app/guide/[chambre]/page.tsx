@@ -73,6 +73,7 @@ const ROOMS = {
       { fr: "Dépendance indépendante, à quelques pas de la maison", en: "Independent annexe, just steps from the main house", es: "Anexo independiente, a unos pasos de la casa", pt: "Anexo independente, a alguns passos da casa" },
       { fr: "Belles poutres et pierres apparentes, atmosphère authentique", en: "Beautiful beams and exposed stone, an authentic atmosphere", es: "Vigas y piedra vista, ambiente auténtico", pt: "Belas vigas e pedra à vista, atmosfera autêntica" },
       { fr: "Chambre romantique pour un séjour en amoureux", en: "Romantic room for a couple's getaway", es: "Habitación romántica para una escapada en pareja", pt: "Quarto romântico para uma escapada a dois" },
+      { fr: "Un lit double — chambre pour 1 à 2 personnes", en: "One double bed — room for 1–2 guests", es: "Una cama doble — habitación para 1–2 personas", pt: "Uma cama de casal — quarto para 1–2 hóspedes" },
     ],
   },
   vallee: {
@@ -80,7 +81,7 @@ const ROOMS = {
     slug: 'vallee',
     emoji: '🏞️',
     bg: ROOM_COLORS.vallee.bg,
-    image: '/photos/chambres/vallee/chambre-vallee-01.jpeg',
+    image: '/photos/chambres/vallee/vallee-maison-famille.png',
     images: galleryOf('vallee'),
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [

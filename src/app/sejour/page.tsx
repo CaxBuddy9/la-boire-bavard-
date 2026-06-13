@@ -20,7 +20,7 @@ const PLANCHE = [
   'Saucisson sec',
   'Chiffonade de chorizo',
   'Fromages affinés du Maine-et-Loire',
-  'Quiche maison ou spécialité du jour, selon l\'envie',
+  'Suggestion du jour, selon l\'envie',
   'Pain frais & condiments',
 ]
 
@@ -237,7 +237,7 @@ export default function SejourPage() {
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
             <Image
               src="/photos/petitdej/petitdej-table-01.jpeg"
-              alt="Planche du soir"
+              alt="La planche apéritive du soir"
               fill
               className="object-cover"
               sizes="50vw"
@@ -247,7 +247,7 @@ export default function SejourPage() {
             <p className="label-caps mb-5">Le soir · sur réservation</p>
             <h2 className="font-serif font-normal text-cream leading-tight mb-6"
               style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)' }}>
-              La planche du soir
+              La planche apéritive du soir
             </h2>
             <div className="gold-line mb-8" />
             <p className="font-body text-white/70 text-[1.05rem] leading-[1.9] mb-5">

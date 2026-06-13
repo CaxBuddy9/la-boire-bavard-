@@ -6,12 +6,12 @@ import PhotoGallery from '@/components/PhotoGallery'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
-  description: "Découvrez la longère angevine de La Boire Bavard : piscine en saison, jardin arboré, vallée et val de Loire.",
+  description: "Découvrez la longère angevine de La Boire Bavard : piscine en saison, jardin arboré, au cœur de la Vallée de la Loire.",
 }
 
 const FEATURES = [
   { icon: '≋', title: 'Piscine en saison', desc: 'Profitez de la piscine ouverte de mai à fin septembre, au cœur du jardin. Sécurisée, accessible de 9h à 22h.' },
-  { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels et des coins de fraîcheur. Idéal pour flâner ou lire à l\'ombre.' },
+  { icon: '❧', title: 'Jardin arboré', desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels. Idéal pour flâner ou lire à l\'ombre.' },
   { icon: '✦', title: 'Vue sur la vallée', desc: 'La propriété domine la vallée, à deux pas du val de Loire — un cadre paisible entre nature et patrimoine.' },
   { icon: '◇', title: 'Pergola sous le mûrier', desc: 'Aux beaux jours, profitez de la pergola ombragée par le mûrier, vue sur le jardin et la piscine — un lieu où l\'on aime se poser.' },
   { icon: '☉', title: 'Petit-déjeuner gourmand', desc: 'Chaque matin, un petit-déjeuner préparé avec des produits frais, locaux et de saison — inclus dans chaque nuitée.' },
@@ -57,7 +57,7 @@ export default function PropriетеPage() {
               En Anjou et plus largement dans le bassin ligérien, une <strong style={{ color: '#c4a050', fontWeight: 500 }}>boire</strong> désigne un bras secondaire ou un ancien lit de la Loire — un cours d'eau tranquille, parfois marécageux, qui se remplit aux crues et offre refuge à toute une faune sauvage : hérons, libellules, brochets.
             </p>
             <p className="font-body text-[1.05rem] leading-[1.9] mb-5" style={{ color: 'rgba(255,255,255,.7)' }}>
-              Celle qui borde notre propriété, on l'appelle <em className="italic">« la Bavarde »</em> — parce qu'elle murmure, chuchote, raconte. L'eau y court à voix basse entre les saules et les peupliers, et le soir, on l'entend encore.
+              Celle qui est à proximité de notre propriété, on l'appelle <em className="italic">« la Bavarde »</em> — parce qu'elle murmure, chuchote, raconte. L'eau y court à voix basse entre les saules et les peupliers, et le soir, on l'entend encore.
             </p>
             <p className="font-body text-[0.95rem] leading-[1.9] italic" style={{ color: 'rgba(255,255,255,.5)' }}>
               C'est de cette boire bavarde, témoin discret du fleuve royal, que la maison tire son nom.
@@ -97,7 +97,7 @@ export default function PropriетеPage() {
               un accueil chaleureux, votre séjour reposant.
             </p>
             <p className="font-body text-white/65 text-[1.05rem] leading-[1.85]">
-              Située dans le Val de Loire classé au patrimoine mondial de l'UNESCO, la propriété
+              Située dans la Vallée de la Loire classée au patrimoine mondial de l'UNESCO, la propriété
               est le point de départ idéal pour vos balades à vélo, vos randonnées et vos
               découvertes de l'Anjou, entre vignobles, châteaux et villages de caractère.
             </p>
@@ -184,7 +184,7 @@ export default function PropriетеPage() {
                 <ul className="space-y-3">
                   {[
                     'Loire à vélo — départ depuis la maison',
-                    'Canot sur la Loire',
+                    'Canoës sur la Loire',
                     'Randonnées pédestres (GR3 accessible depuis le village)',
                     'Balades dans les vignes',
                     'Golf d\'Angers — 10 min',
