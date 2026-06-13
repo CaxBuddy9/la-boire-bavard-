@@ -45,8 +45,8 @@ export type RoomData = {
 const T = {
   tag:           { fr: 'Bienvenue · La Boire Bavard', en: 'Welcome · La Boire Bavard', es: 'Bienvenido · La Boire Bavard', pt: 'Bem-vindo · La Boire Bavard' },
   mainTitle:     { fr: 'Votre séjour en Anjou', en: 'Your Stay in Anjou', es: 'Su Estancia en Anjou', pt: 'A Sua Estadia no Anjou' },
-  sandrineNote:  { fr: '"Je suis heureuse de vous accueillir. Cette maison est la mienne et chaque détail a été pensé pour vous. N\'hésitez jamais à me demander quoi que ce soit."', en: '"I am delighted to welcome you. This is my home and every detail has been thought of for you. Please never hesitate to ask me anything at all."', es: '"Es un placer recibirle. Esta casa es mía y cada detalle ha sido pensado para usted. No dude nunca en pedirme lo que necesite."', pt: '"É um prazer recebê-lo. Esta casa é minha e cada detalhe foi pensado para si. Não hesite em pedir-me o que precisar."' },
-  sandrine:      { fr: '— Sandrine, votre hôtesse', en: '— Sandrine, your host', es: '— Sandrine, su anfitriona', pt: '— Sandrine, a sua anfitriã' },
+  sandrineNote:  { fr: '"Nous sommes heureux de vous accueillir. Cette maison est la nôtre et chaque détail a été pensé pour vous. N\'hésitez jamais à nous demander quoi que ce soit."', en: '"We are delighted to welcome you. This is our home and every detail has been thought of for you. Please never hesitate to ask us anything at all."', es: '"Estamos encantados de recibirle. Esta casa es nuestra y cada detalle ha sido pensado para usted. No dude nunca en pedirnos lo que necesite."', pt: '"Estamos felizes por recebê-lo. Esta casa é nossa e cada detalhe foi pensado para si. Não hesite em pedir-nos o que precisar."' },
+  sandrine:      { fr: '— Sandrine & Jean-Marc, vos hôtes', en: '— Sandrine & Jean-Marc, your hosts', es: '— Sandrine y Jean-Marc, sus anfitriones', pt: '— Sandrine e Jean-Marc, os seus anfitriões' },
   wifiTitle:     { fr: 'Connexion WiFi', en: 'WiFi Connection', es: 'Conexión WiFi', pt: 'Conexão WiFi' },
   network:       { fr: 'Réseau', en: 'Network', es: 'Red', pt: 'Rede' },
   password:      { fr: 'Mot de passe', en: 'Password', es: 'Contraseña', pt: 'Senha' },
@@ -56,15 +56,15 @@ const T = {
   menuLabel:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
   morningTag:    { fr: 'TRADITIONS DU MATIN', en: 'MORNING TRADITIONS', es: 'TRADICIONES MATUTINAS', pt: 'TRADIÇÕES MATINAIS' },
   morningTitle:  { fr: 'Le Petit-Déjeuner', en: 'Breakfast at the Estate', es: 'El Desayuno de la Casa', pt: 'O Café da Manhã da Casa' },
-  morningDesc:   { fr: 'Servi en salle ou en terrasse de 7h30 à 9h30. Sandrine prépare chaque matin un petit-déjeuner maison avec les meilleurs produits de la région.', en: 'Served indoors or on the terrace from 7:30 to 9:30. Sandrine prepares a homemade breakfast each morning with the finest local produce.', es: 'Servido en el salón o en la terraza de 7:30 a 9:30. Sandrine prepara cada mañana un desayuno casero con los mejores productos locales.', pt: 'Servido na sala ou na varanda das 7h30 às 9h30. A Sandrine prepara todos os dias um pequeno-almoço caseiro com os melhores produtos locais.' },
+  morningDesc:   { fr: 'Servi en salle ou en terrasse de 7h30 à 9h30. Sandrine & Jean-Marc préparent chaque matin un petit-déjeuner maison avec les meilleurs produits de la région.', en: 'Served indoors or on the terrace from 7:30 to 9:30. Sandrine & Jean-Marc prepare a homemade breakfast each morning with the finest local produce.', es: 'Servido en el salón o en la terraza de 7:30 a 9:30. Sandrine y Jean-Marc preparan cada mañana un desayuno casero con los mejores productos locales.', pt: 'Servido na sala ou na varanda das 7h30 às 9h30. A Sandrine e o Jean-Marc preparam todos os dias um pequeno-almoço caseiro com os melhores produtos locais.' },
   dietTag:       { fr: 'PRÉFÉRENCES ALIMENTAIRES', en: 'DIETARY PREFERENCES', es: 'PREFERENCIAS ALIMENTARIAS', pt: 'PREFERÊNCIAS ALIMENTARES' },
-  dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à Sandrine la veille.', en: 'We tailor breakfast to your needs. Let Sandrine know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a Sandrine de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe a Sandrine das suas preferências na noite anterior.' },
+  dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à vos hôtes la veille.', en: 'We tailor breakfast to your needs. Let your hosts know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a sus anfitriones de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe os seus anfitriões das suas preferências na noite anterior.' },
   diets:         { fr: ['Végétarien', 'Végétalien', 'Sans gluten', 'Allergie fruits à coque', 'Sans lactose'], en: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy', 'Dairy-Free'], es: ['Vegetariano', 'Vegano', 'Sin gluten', 'Alergia frutos secos', 'Sin lactosa'], pt: ['Vegetariano', 'Vegano', 'Sem glúten', 'Alergia a nozes', 'Sem lactose'] },
-  dietSent:      { fr: '✓ Sandrine a été prévenue', en: '✓ Sandrine has been notified', es: '✓ Sandrine ha sido avisada', pt: '✓ Sandrine foi notificada' },
+  dietSent:      { fr: '✓ Vos hôtes ont été prévenus', en: '✓ Your hosts have been notified', es: '✓ Sus anfitriones han sido avisados', pt: '✓ Os seus anfitriões foram notificados' },
   menuTag:       { fr: 'À TOUTE HEURE', en: 'ANYTIME', es: 'A CUALQUIER HORA', pt: 'A QUALQUER HORA' },
   menuTitle:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
-  menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec Sandrine — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with Sandrine — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con Sandrine, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com a Sandrine.' },
-  menuNote:      { fr: 'Une question sur la carte ? Demandez à Sandrine.', en: 'Any question about the menu? Just ask Sandrine.', es: '¿Alguna pregunta sobre la carta? Pregunte a Sandrine.', pt: 'Alguma questão sobre a carta? Pergunte à Sandrine.' },
+  menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec vos hôtes — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with your hosts — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con sus anfitriones, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com os seus anfitriões.' },
+  menuNote:      { fr: 'Une question sur la carte ? Demandez à vos hôtes.', en: 'Any question about the menu? Just ask your hosts.', es: '¿Alguna pregunta sobre la carta? Pregunte a sus anfitriones.', pt: 'Alguma questão sobre a carta? Pergunte aos seus anfitriões.' },
   galleryTag:    { fr: 'EN IMAGES', en: 'IN PICTURES', es: 'EN IMÁGENES', pt: 'EM IMAGENS' },
   galleryTitle:  { fr: 'Votre chambre en photos', en: 'Your Room in Photos', es: 'Su Habitación en Fotos', pt: 'O Seu Quarto em Fotos' },
   galleryHint:   { fr: 'touchez pour agrandir', en: 'tap to enlarge', es: 'toque para ampliar', pt: 'toque para ampliar' },
@@ -76,28 +76,28 @@ const T = {
       { emoji: '🚴', name: 'Loire à Vélo', desc: 'Départ depuis la propriété' },
       { emoji: '🏰', name: 'Château de Brissac', desc: 'Le plus haut château de France — 10 min' },
       { emoji: '🏙️', name: 'Angers', desc: 'Château, tapisserie, marché — 25 min' },
-      { emoji: '🌸', name: 'Saumur', desc: 'Château, caves, équitation — 35 min' },
+      { emoji: '🌸', name: 'Saumur', desc: 'Château, caves, équitation — 30 min' },
     ],
     en: [
       { emoji: '🍷', name: 'Anjou Vineyards', desc: 'Coteaux de l\'Aubance & Saumur — 5 min' },
       { emoji: '🚴', name: 'Loire Valley Cycling', desc: 'Departure from the property' },
       { emoji: '🏰', name: 'Château de Brissac', desc: 'Tallest castle in France — 10 min' },
       { emoji: '🏙️', name: 'Angers', desc: 'Castle, tapestry, market — 25 min' },
-      { emoji: '🌸', name: 'Saumur', desc: 'Castle, caves, equestrian — 35 min' },
+      { emoji: '🌸', name: 'Saumur', desc: 'Castle, caves, equestrian — 30 min' },
     ],
     es: [
       { emoji: '🍷', name: 'Viñedos de Anjou', desc: 'Coteaux de l\'Aubance & Saumur — 5 min' },
       { emoji: '🚴', name: 'Ciclismo por el Loira', desc: 'Salida desde la propiedad' },
       { emoji: '🏰', name: 'Castillo de Brissac', desc: 'El castillo más alto de Francia — 10 min' },
       { emoji: '🏙️', name: 'Angers', desc: 'Castillo, tapiz, mercado — 25 min' },
-      { emoji: '🌸', name: 'Saumur', desc: 'Castillo, cuevas, hípica — 35 min' },
+      { emoji: '🌸', name: 'Saumur', desc: 'Castillo, cuevas, hípica — 30 min' },
     ],
     pt: [
       { emoji: '🍷', name: 'Vinhedos de Anjou', desc: 'Coteaux de l\'Aubance & Saumur — 5 min' },
       { emoji: '🚴', name: 'Ciclismo no Loire', desc: 'Partida da propriedade' },
       { emoji: '🏰', name: 'Château de Brissac', desc: 'O castelo mais alto de França — 10 min' },
       { emoji: '🏙️', name: 'Angers', desc: 'Castelo, tapeçaria, mercado — 25 min' },
-      { emoji: '🌸', name: 'Saumur', desc: 'Castelo, adegas, equitação — 35 min' },
+      { emoji: '🌸', name: 'Saumur', desc: 'Castelo, adegas, equitação — 30 min' },
     ],
   },
   rulesTag:    { fr: 'LA MAISON', en: 'HOUSE RULES', es: 'LA CASA', pt: 'A CASA' },
@@ -110,7 +110,7 @@ const T = {
   },
   byeTag:   { fr: 'À BIENTÔT', en: 'SEE YOU SOON', es: 'HASTA PRONTO', pt: 'ATÉ BREVE' },
   byeTitle: { fr: 'Merci pour votre visite', en: 'Thank You for Staying', es: 'Gracias por su visita', pt: 'Obrigado pela sua visita' },
-  byeDesc:  { fr: 'Si votre séjour vous a plu, un avis Google aide beaucoup Sandrine à faire connaître la maison. Merci du fond du cœur.', en: 'If you enjoyed your stay, a Google review means the world to Sandrine and helps share this place. Thank you so much.', es: 'Si ha disfrutado de su estancia, una reseña en Google ayuda mucho a Sandrine a dar a conocer la casa. Muchas gracias.', pt: 'Se gostou da sua estadia, uma avaliação no Google ajuda muito a Sandrine a dar a conhecer a casa. Muito obrigado.' },
+  byeDesc:  { fr: 'Si votre séjour vous a plu, un avis Google nous aide beaucoup à faire connaître la maison. Merci du fond du cœur.', en: 'If you enjoyed your stay, a Google review means the world to us and helps share this place. Thank you so much.', es: 'Si ha disfrutado de su estancia, una reseña en Google nos ayuda mucho a dar a conocer la casa. Muchas gracias.', pt: 'Se gostou da sua estadia, uma avaliação no Google ajuda-nos muito a dar a conhecer a casa. Muito obrigado.' },
   rating:   { fr: 'Note actuelle', en: 'Current rating', es: 'Puntuación actual', pt: 'Avaliação atual' },
   navHome:  { fr: 'Accueil', en: 'Home', es: 'Inicio', pt: 'Início' },
   navGuide: { fr: 'Carnet', en: 'Guide', es: 'Guía', pt: 'Guia' },
@@ -536,8 +536,17 @@ export default function GuideClient({ room }: { room: RoomData }) {
             {t('byeDesc')}
           </p>
           <a
+            href="https://www.google.com/maps/search/?api=1&query=La+Boire+Bavard+Blaison-Saint-Sulpice"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'inline-block', padding: '13px 30px', background: theme.accent, color: theme.pillActiveText, textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.875rem' }}
+          >
+            {lang === 'en' ? '⭐ Leave a review' : lang === 'es' ? '⭐ Dejar una reseña' : lang === 'pt' ? '⭐ Deixar uma avaliação' : '⭐ Laisser un avis'}
+          </a>
+          <br />
+          <a
             href={`/chambres/cote-${room.slug}`}
-            style={{ display: 'inline-block', padding: '12px 28px', background: theme.accent, color: theme.pillActiveText, textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '1rem' }}
+            style={{ display: 'inline-block', color: 'rgba(255,255,255,0.6)', textDecoration: 'underline', fontSize: '0.78rem', marginBottom: '1rem' }}
           >
             {lang === 'en' ? 'Book again' : lang === 'es' ? 'Reservar de nuevo' : lang === 'pt' ? 'Reservar novamente' : 'Réserver à nouveau'}
           </a>

@@ -7,22 +7,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
+const FONT_TITLE = 'var(--font-playfair), Georgia, serif'
+const FONT_LABEL = 'var(--font-raleway), Arial, sans-serif'
+
 const BASE_URL      = 'https://la-boire-bavard.vercel.app'
 const WIFI_RESEAU   = 'Livebox-D6B0'
 const WIFI_PASSWORD = 'LSjfprSMoDSZCMp9xY'
 const WIFI_QR_DATA  = `WIFI:T:WPA;S:${WIFI_RESEAU};P:${WIFI_PASSWORD};;`
 
-// ─── À COMPLÉTER ────────────────────────────────────────────────────────────
-const CODE_JARDIN = 'À COMPLÉTER'
-const TEL         = '06 75 78 63 35'           // Sandrine — téléphone du site
-const TEL2        = 'À COMPLÉTER'              // 2ᵉ contact
-const ADRESSE     = '4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice'
+const TEL     = '06 75 78 63 35'
+const ADRESSE = '4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice'
 
-// Une identité de couleur par chambre — tons riches et élégants
+// Une identité de couleur par chambre, alignée sur le site :
+// Jardin = terracotta · Cèdre = taupe/beige doré · Vallée = bleu Loire
 const ROOMS = [
-  { id: 'jardin', label: 'Côté Jardin', accent: '#d98c5f', ink: '#4a2418', verso: '#8a3f28', qr: '#3a1d12' }, // terre cuite chaude
-  { id: 'cedre',  label: 'Côté Cèdre',  accent: '#c8aa66', ink: '#2c3a30', verso: '#2f4536', qr: '#1e2a22' }, // vert cèdre profond + or
-  { id: 'vallee', label: 'Côté Vallée', accent: '#79b4c6', ink: '#1d3a47', verso: '#234a5c', qr: '#13313d' }, // bleu Loire
+  { id: 'jardin', label: 'Côté Jardin', accent: '#c4603a', ink: '#4a2418', verso: '#7e3d24', qr: '#3a1d12' },
+  { id: 'cedre',  label: 'Côté Cèdre',  accent: '#a89070', ink: '#3a3128', verso: '#4a4034', qr: '#2a241b' },
+  { id: 'vallee', label: 'Côté Vallée', accent: '#5a9ab0', ink: '#1d3a47', verso: '#22323e', qr: '#13313d' },
 ]
 
 const card = {
@@ -32,7 +33,7 @@ const card = {
 
 export default function CartesPage() {
   return (
-    <main style={{ fontFamily: 'Georgia, serif', background: '#e8e3d8', minHeight: '100vh', padding: '26px 16px' }}>
+    <main style={{ fontFamily: FONT_LABEL, background: '#ece6d8', minHeight: '100vh', padding: '26px 16px' }}>
       <style>{`
         @media print {
           .no-print { display: none !important; }
@@ -43,7 +44,7 @@ export default function CartesPage() {
 
       <div style={{ maxWidth: 420, margin: '0 auto' }}>
         <div className="no-print" style={{ textAlign: 'center', marginBottom: 24 }}>
-          <h1 style={{ fontSize: '1.55rem', color: '#2a2018', margin: '0 0 8px' }}>Cartes d&apos;accueil</h1>
+          <h1 style={{ fontSize: '1.7rem', color: '#2a2018', margin: '0 0 8px', fontFamily: FONT_TITLE, fontStyle: 'italic' }}>Cartes d&apos;accueil</h1>
           <p style={{ fontSize: '0.85rem', color: '#6a6258', margin: '0 0 16px', lineHeight: 1.65 }}>
             Une carte par chambre — recto (infos + QR codes) et verso (couleur de la chambre).<br />
             Cliquez ci-dessous, puis choisissez « Enregistrer au format PDF ».
@@ -54,8 +55,8 @@ export default function CartesPage() {
         {ROOMS.map((room) => {
           const guideQr = buildQRDataUri(`${BASE_URL}/guide/${room.id}`, room.qr)
           const wifiQr  = buildQRDataUri(WIFI_QR_DATA, room.qr)
-          const miniLabel = { fontFamily: 'Arial, sans-serif', fontSize: '1.85mm', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: room.accent }
-          const tag = (s: string) => <strong style={{ color: room.accent, fontFamily: 'Arial, sans-serif', fontSize: '1.7mm', letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>{s}</strong>
+          const miniLabel = { fontFamily: FONT_LABEL, fontSize: '1.85mm', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: room.accent }
+          const tag = (s: string) => <strong style={{ color: room.accent, fontFamily: FONT_LABEL, fontSize: '1.7mm', letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>{s}</strong>
 
           return (
             <div key={room.id} className="card-row" style={{ marginBottom: 30 }}>
@@ -64,10 +65,10 @@ export default function CartesPage() {
               <div style={{ ...card, background: '#fffdf8', border: '0.3mm solid rgba(0,0,0,.12)', marginBottom: '4mm' }}>
                 <div style={{ height: '5mm', background: room.accent }} />
                 <div style={{ padding: '3.5mm 6mm 0' }}>
-                  <p style={{ margin: 0, fontFamily: 'Arial, sans-serif', fontSize: '2mm', letterSpacing: '0.32em', textTransform: 'uppercase', color: room.accent }}>
+                  <p style={{ margin: 0, fontFamily: FONT_LABEL, fontSize: '2mm', letterSpacing: '0.32em', textTransform: 'uppercase', color: room.accent }}>
                     La Boire Bavard
                   </p>
-                  <p style={{ margin: '0.5mm 0 0', fontSize: '5.2mm', color: room.ink, fontStyle: 'italic' }}>{room.label}</p>
+                  <p style={{ margin: '0.5mm 0 0', fontSize: '5.2mm', color: room.ink, fontStyle: 'italic', fontFamily: FONT_TITLE }}>{room.label}</p>
 
                   {/* QR codes + WiFi */}
                   <div style={{ display: 'flex', gap: '4mm', marginTop: '2.8mm', alignItems: 'flex-start' }}>
@@ -91,8 +92,7 @@ export default function CartesPage() {
                       <span>{tag('Départ')} avant 10h</span>
                       <span>{tag('Petit-déj')} 7h30–9h30</span>
                     </div>
-                    <div>{tag('Code jardin')} {CODE_JARDIN}</div>
-                    <div>{tag('Contacts')} Sandrine {TEL} · {TEL2}</div>
+                    <div>{tag('Contacts')} Sandrine &amp; Jean-Marc · {TEL}</div>
                     <div style={{ color: `${room.ink}99` }}>{ADRESSE}</div>
                   </div>
                 </div>
@@ -103,9 +103,9 @@ export default function CartesPage() {
                 <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 38%, ${room.accent}22 0%, transparent 62%)` }} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/icons/icon-192.png" alt="" style={{ width: '21mm', height: '21mm', position: 'relative' }} />
-                <p style={{ margin: '2.5mm 0 0', fontSize: '5.6mm', color: '#fffdf8', fontStyle: 'italic', position: 'relative' }}>La Boire Bavard</p>
+                <p style={{ margin: '2.5mm 0 0', fontSize: '5.6mm', color: '#fffdf8', fontStyle: 'italic', position: 'relative', fontFamily: FONT_TITLE }}>La Boire Bavard</p>
                 <div style={{ width: '13mm', height: '0.4mm', background: room.accent, margin: '2mm 0', position: 'relative' }} />
-                <p style={{ margin: 0, fontFamily: 'Arial, sans-serif', fontSize: '2.4mm', letterSpacing: '0.26em', textTransform: 'uppercase', color: room.accent, position: 'relative' }}>
+                <p style={{ margin: 0, fontFamily: FONT_LABEL, fontSize: '2.4mm', letterSpacing: '0.26em', textTransform: 'uppercase', color: room.accent, position: 'relative' }}>
                   {room.label}
                 </p>
                 <p style={{ margin: '3.5mm 0 0', fontSize: '3mm', color: 'rgba(253,252,249,.7)', position: 'relative' }}>{TEL}</p>
