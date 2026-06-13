@@ -163,7 +163,7 @@ const t = useT()
 ### 🟡 Améliorations
 - [ ] Ajouter "Bien-être" dans les liens Nav + Footer
 - [ ] Couverture FR/EN plus complète (descriptions longues des chambres)
-- [ ] Google Maps : vraies coordonnées GPS (lat 47.368, lon -0.511)
+- [x] Google Maps : vraies coordonnées GPS (lat 47.3952, lon -0.3690) — Impasse du Clos de la Hutte, La Hutte, Blaison-Saint-Sulpice (confirmé client)
 - [ ] Page propriété : compléter galerie
 
 ### 🟢 Optionnel
@@ -184,7 +184,7 @@ const t = useT()
 | next/font | — | Google Fonts (Playfair, Raleway, etc.) |
 | Stripe.js + stripe | latest | Paiement — **à brancher** |
 | Supabase | latest | BDD réservations — **à brancher** |
-| Open-Meteo API | — | Météo (lat:47.368, lon:-0.511), sans clé |
+| Open-Meteo API | — | Météo (lat:47.3952, lon:-0.3690), sans clé |
 | Vercel | — | Hébergement + déploiement auto depuis GitHub |
 
 ---

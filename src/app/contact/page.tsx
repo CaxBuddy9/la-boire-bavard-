@@ -276,7 +276,7 @@ function ContactInner() {
             {/* GPS box */}
             <div style={{ marginTop: 8, padding: '16px 20px', background: 'rgba(196,160,80,.07)', borderLeft: `2px solid rgba(196,160,80,.4)` }}>
               <p style={{ fontSize: '.5rem', letterSpacing: '.32em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 6 }}>Coordonnées GPS</p>
-              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.368° N, 0.511° O</p>
+              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem', color: 'rgba(240,235,225,.8)' }}>47.3952° N, 0.3690° O</p>
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.72rem', color: 'rgba(184,192,180,.4)', marginTop: 4 }}>4 chemin de la Boire Bavard, 49320 Blaison-Saint-Sulpice</p>
             </div>
           </div>
@@ -295,8 +295,10 @@ function ContactInner() {
               }} />
             ))}
             <div style={{ padding: 10 }}>
+              {/* ⚠️ COORDONNÉES VERROUILLÉES — vérifiées sur OpenStreetMap (Impasse du Clos de la Hutte, lieu-dit La Hutte, Blaison-Saint-Sulpice, 49320).
+                  Position réelle : 47.3952 N, -0.3690 O (confirmée par le client via Google Maps). NE PAS modifier sans regéocoder l'adresse. */}
               <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.531%2C47.358%2C-0.491%2C47.378&layer=mapnik&marker=47.368%2C-0.511"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.3890%2C47.3852%2C-0.3490%2C47.4052&layer=mapnik&marker=47.3952%2C-0.3690"
                 style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(30%) contrast(0.92)' }}
                 loading="lazy"
                 title="Carte La Boire Bavard"
@@ -308,7 +310,7 @@ function ContactInner() {
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.62rem', color: 'rgba(184,192,200,.55)', lineHeight: 1.65, marginBottom: 12 }}>
                 4 chemin de la Boire Bavard<br />49320 Blaison-Saint-Sulpice
               </p>
-              <a href="https://www.google.com/maps/dir/?api=1&destination=47.368,-0.511" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.google.com/maps/dir/?api=1&destination=47.3952,-0.3690" target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', letterSpacing: '.12em', textTransform: 'uppercase', color: S.gold, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                 ◇ Itinéraire Google Maps
               </a>
