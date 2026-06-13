@@ -26,8 +26,8 @@ export default function PropriетеPage() {
         {/* Hero */}
         <section className="relative h-[65vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/exterieur/celeste-piscine-cedre-grand-arbre.jpg"
-            alt="La propriété La Boire Bavard — jardin, piscine et grand arbre"
+            src="/photos/exterieur/celeste-dependance-piscine-bistrot.jpg"
+            alt="La propriété La Boire Bavard — dépendance, piscine et jardin"
             fill priority
             className="object-cover"
             sizes="100vw"
@@ -69,8 +69,8 @@ export default function PropriетеPage() {
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
             <Image
-              src="/photos/exterieur/celeste-facade-pierre-jardin.jpg"
-              alt="La longère angevine de La Boire Bavard"
+              src="/photos/exterieur/celeste-piscine-cedre-grand-arbre.jpg"
+              alt="La longère angevine de La Boire Bavard, piscine et grand cèdre"
               fill
               className="object-cover transition-transform duration-700 hover:scale-[1.03]"
               sizes="50vw"
@@ -139,15 +139,15 @@ export default function PropriетеPage() {
             <PhotoGallery
               columns={3}
               photos={[
-                { src: '/photos/exterieur/celeste-maison-piscine-transats.jpg', alt: 'Jardin et piscine' },
-                { src: '/photos/exterieur/celeste-piscine-facade.jpg', alt: 'La maison et la piscine' },
+                { src: '/photos/exterieur/celeste-maison-piscine-transats.jpg', alt: 'La maison, le jardin et la piscine' },
                 { src: '/photos/exterieur/celeste-piscine-jardin-fleurs.jpg', alt: 'Piscine et jardin fleuri' },
-                { src: '/photos/exterieur/celeste-dependance-piscine-bistrot.jpg', alt: 'Dépendance Cèdre côté piscine' },
-                { src: '/photos/exterieur/celeste-terrasse-pierre-table.jpg', alt: 'Terrasse en pierre et jardin' },
+                { src: '/photos/exterieur/celeste-maison-piscine-jardin.jpg', alt: 'La maison et la piscine' },
+                { src: '/photos/exterieur/celeste-piscine-facade.jpg', alt: 'La façade et la piscine' },
+                { src: '/photos/exterieur/celeste-dependance-piscine-transats.jpg', alt: 'La dépendance côté piscine' },
                 { src: '/photos/exterieur/celeste-table-bistrot-piscine.jpg', alt: 'Coin détente au bord de la piscine' },
+                { src: '/photos/exterieur/celeste-terrasse-pierre-table.jpg', alt: 'Terrasse en pierre et jardin' },
                 { src: '/photos/exterieur/celeste-transat-piscine.jpg', alt: 'Transat au bord de la piscine' },
                 { src: '/photos/exterieur/celeste-rose-cle-paradis.jpg', alt: 'Rose blanche au jardin' },
-                { src: '/photos/exterieur/celeste-cle-paradis.jpg', alt: 'La clé « Paradis » à la porte' },
                 { src: '/photos/chambres/jardin/celeste-jardin-lit-cheminee.jpg', alt: 'Chambre Côté Jardin' },
                 { src: '/photos/chambres/cedre/celeste-cedre-lit-baignoire-commode.jpg', alt: 'Chambre Côté Cèdre, dépendance' },
                 { src: '/photos/chambres/vallee/chambre-vallee-02.jpeg', alt: 'Chambre Côté Vallée' },
