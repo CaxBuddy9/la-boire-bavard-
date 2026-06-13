@@ -11,7 +11,7 @@ const AVIS = [
   {
     fr: "Un endroit paisible au cœur de l'Anjou. La piscine et le jardin sont très agréables et l'accueil est vraiment chaleureux. On reviendra.",
     en: "A peaceful spot in the heart of Anjou. The pool and garden are lovely and the welcome is truly warm. We'll be back.",
-    author: 'Client récent', city: '', date: { fr: 'Avr. 2026', en: 'Apr. 2026' },
+    author: 'Hôte vérifié', city: '', date: { fr: 'Avr. 2026', en: 'Apr. 2026' },
   },
 ]
 

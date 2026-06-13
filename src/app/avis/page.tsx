@@ -20,7 +20,7 @@ const AVIS = [
   },
   {
     text: "Un endroit paisible au cœur de l'Anjou. La piscine et le jardin sont très agréables et l'accueil est vraiment chaleureux. On reviendra avec plaisir.",
-    author: 'Client récent',
+    author: 'Hôte vérifié',
     city: '',
     date: 'Avr. 2026',
     stars: 5,
