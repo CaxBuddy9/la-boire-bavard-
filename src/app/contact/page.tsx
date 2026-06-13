@@ -103,7 +103,7 @@ function ContactInner() {
           </div>
           <p style={{ position: 'relative', zIndex: 2, fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Nous avons hâte de vous accueillir</p>
           <h1 style={{ position: 'relative', zIndex: 2, fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
-            Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.6)' }}>on vous répond vite</em>
+            Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.6)' }}>nous sommes à votre écoute</em>
           </h1>
           <p style={{ position: 'relative', zIndex: 2, fontFamily: 'var(--font-garamond)', fontSize: 'clamp(.95rem,1.2vw,1.05rem)', color: 'rgba(240,235,225,.8)', maxWidth: 580, marginTop: 22, lineHeight: 1.8 }}>
             Sandrine & Jean-Marc se font un plaisir de répondre à chaque demande dans les plus brefs délais. Une question sur les chambres, les dates ou la planche du soir ? N'hésitez pas — par mail, par téléphone ou par WhatsApp.
@@ -296,10 +296,9 @@ function ContactInner() {
             ))}
             <div style={{ padding: 10 }}>
               <iframe
-                src="https://www.google.com/maps?q=47.368,-0.511&z=15&hl=fr&output=embed"
-                style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(40%) contrast(0.88) sepia(10%)' }}
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.531%2C47.358%2C-0.491%2C47.378&layer=mapnik&marker=47.368%2C-0.511"
+                style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(30%) contrast(0.92)' }}
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
                 title="Carte La Boire Bavard"
               />
             </div>
@@ -309,6 +308,10 @@ function ContactInner() {
               <p style={{ fontFamily: 'var(--font-raleway)', fontSize: '.62rem', color: 'rgba(184,192,200,.55)', lineHeight: 1.65, marginBottom: 12 }}>
                 4 chemin de la Boire Bavard<br />49320 Blaison-Saint-Sulpice
               </p>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=47.368,-0.511" target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', letterSpacing: '.12em', textTransform: 'uppercase', color: S.gold, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                ◇ Itinéraire Google Maps
+              </a>
               <a href="https://wa.me/33675786335" target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: 'var(--font-raleway)', fontSize: '.6rem', letterSpacing: '.12em', textTransform: 'uppercase', color: S.gold, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
                 ◇ WhatsApp
