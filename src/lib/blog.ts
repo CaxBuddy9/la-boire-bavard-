@@ -33,7 +33,7 @@ export const blogPosts: BlogPost[] = [
       "Entre Tours et Angers, la « Loire des Confluences » rejoint la liste internationale Ramsar " +
       "des zones humides d'une valeur exceptionnelle. Une belle reconnaissance pour ce fleuve sauvage " +
       'qui coule à quelques minutes de La Boire Bavard.',
-    poster: '/photos/exterieur/maison-facade-printemps.jpg',
+    poster: '/photos/exterieur/celeste-piscine-facade.jpg',
     youtubeId: 'UftAoVLCOlw',
     featured: true,
     sourceLabel: 'France 3 Centre-Val de Loire',
@@ -48,7 +48,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Au départ de la maison, une boucle de 20 km serpente entre les vignes du Layon. " +
       'Pentes douces, villages de tuffeau et caves à visiter — l\'Anjou viticole comme on l\'aime.',
-    poster: '/photos/exterieur/propriete-jardin-cedre.jpg',
+    poster: '/photos/exterieur/celeste-piscine-cedre-grand-arbre.jpg',
     youtubeId: '',
   },
   {
@@ -59,7 +59,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Iris en fleurs, grand cèdre et premières baignades : visite guidée du jardin de " +
       'La Boire Bavard aux beaux jours, là où nos hôtes aiment prendre le temps.',
-    poster: '/photos/exterieur/jardin-iris-01.jpeg',
+    poster: '/photos/exterieur/celeste-piscine-jardin-fleurs.jpg',
     youtubeId: '',
   },
 ]

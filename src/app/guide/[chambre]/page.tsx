@@ -52,7 +52,7 @@ const ROOMS = {
     slug: 'jardin',
     emoji: '🌿',
     bg: ROOM_COLORS.jardin.bg,
-    image: '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
+    image: '/photos/chambres/jardin/celeste-jardin-lit-cheminee.jpg',
     images: galleryOf('jardin'),
     theme: makeTheme('jardin') satisfies RoomTheme,
     details: [
@@ -66,7 +66,7 @@ const ROOMS = {
     slug: 'cedre',
     emoji: '🌲',
     bg: ROOM_COLORS.cedre.bg,
-    image: '/photos/chambres/cedre/chambre-cedre-01.jpeg',
+    image: '/photos/chambres/cedre/celeste-cedre-lit-baignoire-commode.jpg',
     images: galleryOf('cedre'),
     theme: makeTheme('cedre') satisfies RoomTheme,
     details: [

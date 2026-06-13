@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
     description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand.",
-    images: ['/photos/exterieur/maison-facade-printemps.jpg'],
+    images: ['/photos/exterieur/celeste-maison-piscine-transats.jpg'],
     siteName: 'La Boire Bavard',
     locale: 'fr_FR',
     type: 'website',
@@ -110,7 +110,7 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Jardin',                value: true },
   ],
   hasMap: 'https://maps.google.com/?q=47.368,-0.511',
-  image: 'https://laboirebavard.com/photos/exterieur/maison-facade-printemps.jpg',
+  image: 'https://laboirebavard.com/photos/exterieur/celeste-maison-piscine-transats.jpg',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

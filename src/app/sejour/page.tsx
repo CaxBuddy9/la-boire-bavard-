@@ -46,7 +46,7 @@ export default function SejourPage() {
         {/* Hero */}
         <section className="relative h-[70vh] flex items-end pb-16 overflow-hidden">
           <Image
-            src="/photos/exterieur/maison-exterieure-piscine.jpg"
+            src="/photos/exterieur/celeste-piscine-facade.jpg"
             alt="La Boire Bavard — piscine, jardin, art de vivre"
             fill priority
             className="object-cover"
@@ -137,7 +137,7 @@ export default function SejourPage() {
         {/* ═══════════════ LE JOUR ═══════════════ */}
         <div className="grid md:grid-cols-2 min-h-[70vh]">
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-            <Image src="/photos/exterieur/maison-exterieure-piscine.jpg" alt="Piscine et jardin" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/celeste-maison-piscine-jardin.jpg" alt="Piscine et jardin" fill className="object-cover" sizes="50vw" />
           </div>
           <div style={{ background: '#141f15' }} className="flex flex-col justify-center px-8 py-20 md:px-16">
             <p className="label-caps mb-5">Le jour · 9h – 22h · Mai – Sept</p>
@@ -201,7 +201,7 @@ export default function SejourPage() {
             </div>
           </div>
           <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-            <Image src="/photos/exterieur/terrasse-pierre-01.jpeg" alt="Terrasse en pierre et jardin" fill className="object-cover" sizes="50vw" />
+            <Image src="/photos/exterieur/celeste-terrasse-pierre-table.jpg" alt="Terrasse en pierre et jardin" fill className="object-cover" sizes="50vw" />
           </div>
         </div>
 

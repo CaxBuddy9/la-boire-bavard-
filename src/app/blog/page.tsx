@@ -12,7 +12,7 @@ export const metadata = {
   openGraph: {
     title: 'Journal — La Boire Bavard',
     description: "Vidéos des alentours et vie de la maison d'hôtes en Anjou.",
-    images: ['/photos/exterieur/propriete-jardin-cedre.jpg'],
+    images: ['/photos/exterieur/celeste-dependance-piscine-transats.jpg'],
   },
 }
 

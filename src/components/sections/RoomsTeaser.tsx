@@ -5,8 +5,8 @@ import { ROOMS } from '@/lib/rooms'
 import { useT } from '@/context/LangContext'
 
 const ROOM_IMAGES: Record<string, string> = {
-  jardin:  '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg',
-  cedre:   '/photos/chambres/cedre/chambre-cedre-01.jpeg',
+  jardin:  '/photos/chambres/jardin/celeste-jardin-lit-coussins.jpg',
+  cedre:   '/photos/chambres/cedre/celeste-cedre-lit-baignoire-commode.jpg',
   vallee:  '/photos/chambres/vallee/chambre-vallee-02.jpeg',
 }
 
@@ -32,7 +32,7 @@ export default function RoomsTeaser() {
             className="group relative overflow-hidden aspect-[3/4] block"
           >
             <Image
-              src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/chambre-jardin-blanc-04.jpeg'}
+              src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/celeste-jardin-lit-coussins.jpg'}
               alt={room.name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
