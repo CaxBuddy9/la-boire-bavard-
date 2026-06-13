@@ -4,7 +4,7 @@ import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 
 export const metadata = {
-  title: "Le séjour — Petit-déjeuner, piscine & bien-être — La Boire Bavard",
+  title: "Votre séjour — Petit-déjeuner, piscine & bien-être — La Boire Bavard",
   description: "Une journée à La Boire Bavard : petit-déjeuner gourmand fait avec des produits locaux, piscine en saison (mai–sept, 9h–22h), pergola sous le mûrier, planche du soir sur réservation.",
 }
 
@@ -57,7 +57,7 @@ export default function SejourPage() {
             <p className="label-caps mb-3">L'art de vivre · Anjou</p>
             <h1 className="font-serif font-normal text-white leading-none"
               style={{ fontSize: 'clamp(3rem,6vw,5rem)' }}>
-              Le séjour
+              Votre séjour
             </h1>
             <p className="font-sans text-[0.7rem] tracking-[0.25em] uppercase text-gold/80 mt-4">
               Petit-déjeuner · Piscine · Pergola · Planche du soir

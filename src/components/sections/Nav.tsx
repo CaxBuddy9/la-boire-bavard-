@@ -9,7 +9,7 @@ const links = [
   { href: '/',          fr: 'Accueil',       en: 'Home',                es: 'Inicio',       pt: 'Início' },
   { href: '/propriete', fr: 'La propriété',  en: 'The Estate',          es: 'La propiedad', pt: 'A propriedade' },
   { href: '/chambres',  fr: 'Chambres',      en: 'Rooms',               es: 'Habitaciones', pt: 'Quartos' },
-  { href: '/sejour',    fr: 'Le séjour',     en: 'The Stay',            es: 'La estancia',  pt: 'A estadia' },
+  { href: '/sejour',    fr: 'Votre séjour',  en: 'Your Stay',           es: 'Su estancia',  pt: 'A sua estadia' },
   { href: '/avis',      fr: 'Avis',          en: 'Reviews',             es: 'Opiniones',    pt: 'Avaliações' },
   { href: '/contact',   fr: 'Contact',       en: 'Contact',             es: 'Contacto',     pt: 'Contacto' },
 ]

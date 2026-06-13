@@ -59,7 +59,7 @@ export const ROOMS: Room[] = [
     capacityMin: 1,
     capacityMax: 2,
     pricePerNight: 90,
-    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Lit double ou 2 lits jumeaux', 'Lit enfant sur demande', 'Salle d\'eau avec baignoire, ouverte sur la chambre', 'TV', 'Plateau de courtoisie — thé, tisane, café, eau', 'Articles de toilette', 'Non-fumeur', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
+    features: ['Dépendance indépendante', 'Belles poutres', 'Pierres apparentes', 'Lit double', 'Salle d\'eau avec baignoire, ouverte sur la chambre', 'TV', 'Plateau de courtoisie — thé, tisane, café, eau', 'Articles de toilette', 'Non-fumeur', 'Accès piscine', 'WiFi', 'Petit-déjeuner inclus'],
     images: [
       '/photos/chambres/cedre/celeste-cedre-lit-baignoire-commode.jpg',
       '/photos/chambres/cedre/celeste-cedre-lit-chevets.jpg',

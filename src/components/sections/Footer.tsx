@@ -27,7 +27,7 @@ export default function Footer() {
     { href: '/',                 label: t('Accueil', 'Home') },
     { href: '/propriete',        label: t('La propriété', 'The Estate') },
     { href: '/chambres',         label: t('Chambres', 'Rooms') },
-    { href: '/sejour',           label: t('Le séjour', 'The Stay') },
+    { href: '/sejour',           label: t('Votre séjour', 'Your Stay') },
     { href: '/avis',             label: t('Avis', 'Reviews') },
     { href: '/contact',          label: t('Contact', 'Contact') },
     { href: '/mentions-legales', label: t('Mentions légales', 'Legal notice') },

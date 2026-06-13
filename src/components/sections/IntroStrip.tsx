@@ -52,8 +52,8 @@ export default function IntroStrip() {
             style={{ fontSize: 'clamp(0.95rem,1.3vw,1.1rem)' }}
           >
             {t(
-              "Nous tenons enfin à remercier Maryline et Jean-Paul pour le travail et la passion qu'ils ont consacrés à ce lieu.",
-              "Finally, we want to thank Maryline and Jean-Paul for all the work and passion they devoted to this place."
+              "Nous tenons également à remercier Maryline et Jean-Paul pour la passion qu'ils ont consacrée à ce lieu, et nous sommes heureux de pouvoir poursuivre cette belle aventure !",
+              "We also want to thank Maryline and Jean-Paul for the passion they devoted to this place, and we are delighted to continue this beautiful adventure!"
             )}
           </p>
         </div>
