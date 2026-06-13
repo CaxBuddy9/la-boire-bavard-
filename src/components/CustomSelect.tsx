@@ -26,7 +26,7 @@ export default function CustomSelect({ options, value, onChange, name }: Props) 
   }, [])
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
+    <div ref={ref} style={{ position: 'relative', zIndex: open ? 100 : 'auto' }}>
       {name && <input type="hidden" name={name} value={value} />}
 
       <button

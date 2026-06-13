@@ -1,5 +1,5 @@
 'use client'
-import { useState, forwardRef, useImperativeHandle } from 'react'
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
 const DAYS_FR   = ['Lu','Ma','Me','Je','Ve','Sa','Di']
@@ -40,10 +40,20 @@ const DateRangePicker = forwardRef<DateRangePickerHandle, Props>(function DateRa
 ) {
   const today = new Date(); today.setHours(0,0,0,0)
   const [open,      setOpen]  = useState<'in'|'out'|null>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useImperativeHandle(ref, () => ({
     openCheckin: () => setOpen('in'),
   }))
+
+  // Fermeture du calendrier au clic extérieur
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(null)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
   const [year,      setYear]  = useState(today.getFullYear())
   const [month,     setMonth] = useState(today.getMonth())
   const [hoverDay,  setHover] = useState<Date|null>(null)
@@ -129,7 +139,7 @@ const DateRangePicker = forwardRef<DateRangePickerHandle, Props>(function DateRa
   const GOLD = '#c4a050'
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div ref={rootRef} style={{ position: 'relative', zIndex: open ? 300 : 'auto' }}>
 
       {/* ── Champs Arrivée / Départ ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>

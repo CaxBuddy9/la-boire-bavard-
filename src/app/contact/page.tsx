@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect, Suspense } from 'react'
+import Image from 'next/image'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
@@ -92,14 +93,19 @@ function ContactInner() {
       <main>
         {/* Hero header — sombre */}
         <div style={{ background: S.slate, padding: 'clamp(100px,14vw,140px) clamp(16px,5vw,52px) 70px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ overflow: 'hidden', position: 'absolute', bottom: -20, left: -10, right: 0, pointerEvents: 'none' }}>
-          <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(6rem,18vw,18vw)', lineHeight: .85, color: 'rgba(255,255,255,.025)', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
+          {/* Photo de fond + voile */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+            <Image src="/photos/exterieur/celeste-maison-piscine-jardin.jpg" alt="" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(20,28,20,.78) 0%, rgba(20,28,20,.86) 60%, rgba(34,43,32,.96) 100%)' }} />
           </div>
-          <p style={{ fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Nous avons hâte de vous accueillir</p>
-          <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
-            Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.45)' }}>on vous répond vite</em>
+          <div style={{ overflow: 'hidden', position: 'absolute', bottom: -20, left: -10, right: 0, pointerEvents: 'none', zIndex: 1 }}>
+          <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(6rem,18vw,18vw)', lineHeight: .85, color: 'rgba(255,255,255,.04)', whiteSpace: 'nowrap', fontWeight: 400 }}>CONTACT</span>
+          </div>
+          <p style={{ position: 'relative', zIndex: 2, fontSize: '.58rem', letterSpacing: '.42em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 14 }}>Nous avons hâte de vous accueillir</p>
+          <h1 style={{ position: 'relative', zIndex: 2, fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2.5rem,5vw,4.5rem)', fontWeight: 400, color: 'white', lineHeight: 1.05 }}>
+            Écrivez-nous,<br /><em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,.6)' }}>on vous répond vite</em>
           </h1>
-          <p style={{ fontFamily: 'var(--font-garamond)', fontSize: 'clamp(.95rem,1.2vw,1.05rem)', color: 'rgba(240,235,225,.65)', maxWidth: 580, marginTop: 22, lineHeight: 1.8 }}>
+          <p style={{ position: 'relative', zIndex: 2, fontFamily: 'var(--font-garamond)', fontSize: 'clamp(.95rem,1.2vw,1.05rem)', color: 'rgba(240,235,225,.8)', maxWidth: 580, marginTop: 22, lineHeight: 1.8 }}>
             Sandrine & Jean-Marc se font un plaisir de répondre à chaque demande dans les plus brefs délais. Une question sur les chambres, les dates ou la planche du soir ? N'hésitez pas — par mail, par téléphone ou par WhatsApp.
           </p>
         </div>
@@ -203,6 +209,15 @@ function ContactInner() {
 
             {/* Sidebar */}
             <aside>
+              {/* Photo d'accueil */}
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', marginBottom: 24, overflow: 'hidden', border: `1px solid ${S.border}` }}>
+                <Image src="/photos/exterieur/celeste-rose-cle-paradis.jpg" alt="Bienvenue à La Boire Bavard" fill sizes="(max-width:768px) 100vw, 420px" style={{ objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(12,18,14,.85) 0%, transparent 55%)' }} />
+                <p style={{ position: 'absolute', bottom: 16, left: 18, right: 18, fontFamily: 'var(--font-playfair)', fontSize: '1.05rem', color: '#f4eedf', lineHeight: 1.3 }}>
+                  Votre chambre vous attend<br /><em style={{ fontStyle: 'italic', color: 'rgba(196,160,80,.85)', fontSize: '.85rem' }}>« Paradis »</em>
+                </p>
+              </div>
+
               <div style={{ border: `1px solid ${S.border}`, padding: 32, marginBottom: 24 }}>
                 <p style={{ fontSize: '.56rem', letterSpacing: '.4em', textTransform: 'uppercase', color: S.gold, fontFamily: 'var(--font-raleway)', marginBottom: 22 }}>Coordonnées</p>
                 {[

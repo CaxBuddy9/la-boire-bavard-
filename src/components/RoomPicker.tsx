@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { ROOMS } from '@/lib/rooms'
 
@@ -12,11 +12,21 @@ export default function RoomPicker({ name = 'chambre', onSelect, takenRooms = []
   const [open, setOpen]     = useState(false)
   const [hovered, setHovered] = useState<number | null>(null)
   const [selected, setSelected] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
 
   const S = { gold: '#c4a050', border: 'rgba(196,160,80,.25)', bg: '#1e2a1c', dim: 'rgba(184,192,180,.5)' }
 
+  // Fermeture au clic extérieur
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
   return (
-    <div style={{ position: 'relative' }}>
+    <div ref={ref} style={{ position: 'relative', zIndex: open ? 100 : 'auto' }}>
       <input type="hidden" name={name} value={ALL[selected].value} />
 
       {/* Trigger */}
