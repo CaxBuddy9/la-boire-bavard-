@@ -60,7 +60,12 @@ const T = {
   dietTag:       { fr: 'PRÉFÉRENCES ALIMENTAIRES', en: 'DIETARY PREFERENCES', es: 'PREFERENCIAS ALIMENTARIAS', pt: 'PREFERÊNCIAS ALIMENTARES' },
   dietDesc:      { fr: 'Nous adaptons le petit-déjeuner à vos besoins. Signalez vos préférences à vos hôtes la veille.', en: 'We tailor breakfast to your needs. Let your hosts know your preferences the evening before.', es: 'Adaptamos el desayuno a sus necesidades. Informe a sus anfitriones de sus preferencias la noche anterior.', pt: 'Adaptamos o café da manhã às suas necessidades. Informe os seus anfitriões das suas preferências na noite anterior.' },
   diets:         { fr: ['Végétarien', 'Végétalien', 'Sans gluten', 'Allergie fruits à coque', 'Sans lactose'], en: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Nut Allergy', 'Dairy-Free'], es: ['Vegetariano', 'Vegano', 'Sin gluten', 'Alergia frutos secos', 'Sin lactosa'], pt: ['Vegetariano', 'Vegano', 'Sem glúten', 'Alergia a nozes', 'Sem lactose'] },
+  plancheItems:  { fr: ['Saucisson sec', 'Chiffonade de chorizo', 'Fromages affinés du Maine-et-Loire', 'Quiche maison ou spécialité du jour', 'Pain frais & condiments'], en: ['Cured sausage', 'Chorizo', 'Aged Maine-et-Loire cheeses', 'Homemade quiche or dish of the day', 'Fresh bread & condiments'], es: ['Salchichón', 'Chorizo', 'Quesos curados de Maine-et-Loire', 'Quiche casera o plato del día', 'Pan fresco y condimentos'], pt: ['Salame seco', 'Chouriço', 'Queijos curados de Maine-et-Loire', 'Quiche caseira ou prato do dia', 'Pão fresco e condimentos'] },
   dietSent:      { fr: '✓ Vos hôtes ont été prévenus', en: '✓ Your hosts have been notified', es: '✓ Sus anfitriones han sido avisados', pt: '✓ Os seus anfitriões foram notificados' },
+  plancheTag:    { fr: 'EN SOIRÉE · SUR RÉSERVATION', en: 'EVENINGS · ON REQUEST', es: 'POR LA NOCHE · BAJO RESERVA', pt: 'À NOITE · SOB RESERVA' },
+  plancheTitle:  { fr: 'La Planche du Soir', en: 'The Evening Board', es: 'La Tabla de la Noche', pt: 'A Tábua da Noite' },
+  plancheDesc:   { fr: 'Envie de prolonger la soirée sans ressortir ? Sur réservation, nous vous préparons une planche généreuse à partager — 24 € pour 2, un verre de vin local chacun inclus. Prévenez-nous le matin même.', en: 'Want to extend the evening without going out? On request, we prepare a generous board to share — €24 for two, a glass of local wine each included. Just let us know in the morning.', es: '¿Quiere alargar la velada sin salir? Bajo reserva, preparamos una tabla generosa para compartir — 24 € para 2, una copa de vino local cada uno incluida. Avísenos por la mañana.', pt: 'Quer prolongar a noite sem sair? Sob reserva, preparamos uma tábua generosa para partilhar — 24 € para 2, um copo de vinho local cada um incluído. Avise-nos de manhã.' },
+  plancheNote:   { fr: 'Réservez auprès de vos hôtes avant 15h.', en: 'Reserve with your hosts before 3 PM.', es: 'Reserve con sus anfitriones antes de las 15h.', pt: 'Reserve com os seus anfitriões antes das 15h.' },
   menuTag:       { fr: 'À TOUTE HEURE', en: 'ANYTIME', es: 'A CUALQUIER HORA', pt: 'A QUALQUER HORA' },
   menuTitle:     { fr: 'Boissons & Snacks', en: 'Drinks & Snacks', es: 'Bebidas & Snacks', pt: 'Bebidas & Snacks' },
   menuDesc:      { fr: 'Quelques douceurs et boissons sont à votre disposition. Servez-vous et réglez avec vos hôtes — en toute simplicité.', en: 'A few treats and drinks are at your disposal. Help yourself and settle up with your hosts — simple as that.', es: 'Algunas delicias y bebidas están a su disposición. Sírvase y abone con sus anfitriones, con toda sencillez.', pt: 'Algumas guloseimas e bebidas estão à sua disposição. Sirva-se e acerte contas com os seus anfitriões.' },
@@ -455,6 +460,36 @@ export default function GuideClient({ room }: { room: RoomData }) {
           </div>
         </div>
 
+        {/* Planche du soir */}
+        <div style={card}>
+          <div style={{ background: 'linear-gradient(145deg, #3a2410 0%, #160d04 100%)', padding: '2.25rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', bottom: -20, right: -16, fontSize: '6.5rem', opacity: 0.14, lineHeight: 1 }}>🧀</div>
+            <p style={{ color: 'rgba(196,160,80,0.85)', fontSize: '0.68rem', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0 0 0.75rem' }}>
+              {t('plancheTag')}
+            </p>
+            <h2 style={{ fontFamily: 'var(--font-playfair, Georgia, serif)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'white', fontWeight: 400, margin: '0 0 0.875rem', lineHeight: 1.3 }}>
+              {t('plancheTitle')}
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+              {t('plancheDesc')}
+            </p>
+          </div>
+          <div style={{ background: theme.cardBg, padding: '1.1rem 1.5rem 1.25rem' }}>
+            {(T.plancheItems[lang] as string[]).map((item, i, arr) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.55rem 0', ...(i < arr.length - 1 ? cardDivider : {}) }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: theme.accent, flexShrink: 0 }} />
+                <p style={{ fontSize: '0.95rem', color: theme.text, margin: 0, lineHeight: 1.4 }}>{item}</p>
+              </div>
+            ))}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '0.875rem', borderTop: `1px solid ${theme.divider}` }}>
+              <p style={{ fontSize: '0.78rem', color: theme.textMuted, fontStyle: 'italic', margin: 0, lineHeight: 1.5 }}>
+                {t('plancheNote')}
+              </p>
+              <span style={{ flexShrink: 0, fontSize: '1.05rem', fontWeight: 700, color: theme.accent, fontFamily: 'monospace', marginLeft: '1rem' }}>24 € / 2</span>
+            </div>
+          </div>
+        </div>
+
         {/* Boissons & Snacks */}
         <div style={card}>
           <div style={{ background: `linear-gradient(145deg, ${room.bg} 0%, #0a1208 100%)`, padding: '2rem 1.75rem', position: 'relative', overflow: 'hidden' }}>
@@ -536,7 +571,7 @@ export default function GuideClient({ room }: { room: RoomData }) {
             {t('byeDesc')}
           </p>
           <a
-            href="https://www.google.com/maps/search/?api=1&query=La+Boire+Bavard+Blaison-Saint-Sulpice"
+            href="https://www.google.com/travel/search?q=la%20boire%20bavard&ap=ugEHcmV2aWV3cw"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-block', padding: '13px 30px', background: theme.accent, color: theme.pillActiveText, textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.875rem' }}

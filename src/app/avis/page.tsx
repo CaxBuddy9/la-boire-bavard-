@@ -7,15 +7,15 @@ export const metadata = {
   description: "Découvrez les avis de nos hôtes. Note 9.9/10 sur Google — Exceptionnel.",
 }
 
-// ⚠️ TODO Sandrine — coller ici les TEXTES EXACTS des deux derniers avis Google
-// (Morgane Coupliere + le second avis récent). Les placeholders ci-dessous sont
-// volontairement génériques en attendant les vrais textes.
+// ⚠️ Pour ajouter un avis récent (Google ou Booking) : copiez un bloc ci-dessous,
+// collez le texte EXACT, l'auteur, la date et la source ('Google' ou 'Booking.com').
 const AVIS = [
   {
     text: "Très bon accueil de Sandrine et Jean-Marc. Chambre agréable et calme, petit-déjeuner copieux et savoureux. Un séjour reposant, à recommander.",
     author: 'Morgane Coupliere',
     city: '',
     date: 'Avr. 2026',
+    source: 'Google',
     stars: 5,
   },
   {
@@ -23,6 +23,7 @@ const AVIS = [
     author: 'Hôte vérifié',
     city: '',
     date: 'Avr. 2026',
+    source: 'Google',
     stars: 5,
   },
 ]
@@ -70,6 +71,9 @@ export default function AvisPage() {
               {AVIS.map((a, i) => (
                 <div key={i} className="relative" style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(196,160,80,.14)', padding: '2.5rem 2rem' }}>
                   <span className="absolute top-4 left-6 font-serif leading-none select-none" style={{ fontSize: '4rem', color: 'rgba(196,160,80,.15)' }}>&ldquo;</span>
+                  {a.source && (
+                    <span className="absolute top-5 right-5 font-sans" style={{ fontSize: '.5rem', letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(196,160,80,.7)', border: '1px solid rgba(196,160,80,.3)', borderRadius: 3, padding: '3px 8px' }}>{a.source}</span>
+                  )}
                   <p className="font-body leading-relaxed pt-6 mb-6" style={{ fontSize: '1.05rem', color: 'rgba(253,252,249,.7)' }}>{a.text}</p>
                   <div style={{ borderTop: '1px solid rgba(196,160,80,.15)', paddingTop: '1rem' }}>
                     <div className="flex gap-0.5 mb-2">
@@ -90,7 +94,10 @@ export default function AvisPage() {
           <h2 className="font-serif font-normal mb-8" style={{ fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'rgba(253,252,249,.85)' }}>
             Rejoignez nos hôtes satisfaits
           </h2>
-          <Link href="/contact" className="btn-gold">Réserver votre séjour</Link>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link href="/contact" className="btn-gold">Réserver votre séjour</Link>
+            <a href="https://www.google.com/travel/search?q=la%20boire%20bavard&ap=ugEHcmV2aWV3cw" target="_blank" rel="noopener noreferrer" className="btn-ghost">Laisser un avis</a>
+          </div>
         </section>
 
       </main>

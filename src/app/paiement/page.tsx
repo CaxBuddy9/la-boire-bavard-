@@ -6,7 +6,6 @@ import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 
 const PRIX_NUIT = 90
-const PLANCHE_PRIX = 24 // planche pour 2, 1 verre de vin chacun
 
 function ReservationInner() {
   const params  = useSearchParams()
@@ -19,14 +18,12 @@ function ReservationInner() {
   const [nom,        setNom]        = useState(params.get('nom')   || '')
   const [email,      setEmail]      = useState(params.get('email') || '')
   const [tel,        setTel]        = useState(params.get('tel')   || '')
-  const [planche,    setPlanche]    = useState(false)
   const [message,    setMessage]    = useState('')
   const [status,     setStatus]     = useState<'idle'|'loading'|'sent'|'error'>('idle')
   const [errMsg,     setErrMsg]     = useState('')
 
   const totalNuits   = nuits * PRIX_NUIT
-  const totalPlanche = planche ? PLANCHE_PRIX : 0
-  const totalEstime  = totalNuits + totalPlanche
+  const totalEstime  = totalNuits
 
   const slugFromName: Record<string,string> = {
     'Côté Jardin': 'jardin',
@@ -48,7 +45,6 @@ function ReservationInner() {
       `Demande de réservation pour ${chambre || 'une chambre'}`,
       arrive && depart ? `Du ${arrive} au ${depart} — ${nuits} nuit${nuits>1?'s':''}` : '',
       `${pers} personne${pers>1?'s':''}`,
-      planche ? `Planche du soir (pour 2, 1 verre de vin chacun) : ${PLANCHE_PRIX} €` : '',
       `Total estimé : ${totalEstime} € (paiement sur place)`,
       message ? `\nMessage du client :\n${message}` : '',
     ].filter(Boolean).join('\n')
@@ -149,12 +145,6 @@ function ReservationInner() {
           <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Personnes</span><span style={{ color: 'rgba(255,255,255,.85)' }}>{pers}</span></div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>{PRIX_NUIT} € × {nuits} nuit{nuits>1?'s':''}</span><span style={{ color: 'rgba(255,255,255,.85)' }}>{totalNuits} €</span></div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Petit-déjeuner</span><span style={{ color: '#c4a050' }}>Inclus</span></div>
-          {planche && (
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Planche du soir (pour 2)</span>
-              <span style={{ color: 'rgba(255,255,255,.85)' }}>{totalPlanche} €</span>
-            </div>
-          )}
         </div>
         <div style={{ height: 1, background: 'rgba(196,160,80,.2)', margin: '18px 0' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -204,22 +194,6 @@ function ReservationInner() {
                 onFocus={e => (e.target.style.borderColor = 'rgba(196,160,80,.5)')}
                 onBlur={e  => (e.target.style.borderColor = 'rgba(255,255,255,.1)')} />
             </div>
-          </div>
-
-          {/* Option planche */}
-          <div style={{ background: 'rgba(196,160,80,.04)', border: '1px solid rgba(196,160,80,.15)', padding: '18px 20px', marginBottom: 24 }}>
-            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 14, cursor: 'pointer' }}>
-              <input type="checkbox" checked={planche} onChange={e => setPlanche(e.target.checked)}
-                style={{ marginTop: 3, accentColor: '#c4a050', width: 16, height: 16, flexShrink: 0 }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.85rem', color: '#f5f0e8', marginBottom: 4 }}>
-                  Planche gourmande du soir — pour 2 <span style={{ color: '#c4a050' }}>+{PLANCHE_PRIX} €</span>
-                </div>
-                <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,.45)', lineHeight: 1.6 }}>
-                  Charcuterie, fromages et spécialités du terroir, avec un verre de vin local chacun
-                </div>
-              </div>
-            </label>
           </div>
 
           {errMsg && (
