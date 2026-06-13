@@ -9,10 +9,15 @@ export const metadata = {
   description: "3 chambres de charme à La Boire Bavard. Piscine, jardin, vue sur la vallée. 90€/nuit petit-déjeuner inclus.",
 }
 
+// Une couleur par chambre, fidèle à son identité et bien distincte :
+// Jardin = terracotta chaleureux · Cèdre = beige/taupe clair · Vallée = bleu nuit
 const BG_STYLES = [
-  { bg: '#111009', color: 'white',   gold: 'rgba(184,154,90,.55)',  divider: 'rgba(184,154,90,.3)',  tagBorder: 'rgba(255,255,255,.22)', tagColor: 'rgba(255,255,255,.65)' },
-  { bg: '#ece6d8', color: '#111009', gold: '#b89a5a',               divider: '#b89a5a',              tagBorder: 'rgba(0,0,0,.2)',        tagColor: '#111009' },
-  { bg: '#9b4f2e', color: 'white',   gold: 'rgba(255,255,255,.55)', divider: 'rgba(255,255,255,.3)', tagBorder: 'rgba(255,255,255,.25)', tagColor: 'rgba(255,255,255,.7)' },
+  // Côté Jardin — terracotta (poutres bois, tuiles, cheminée)
+  { bg: '#7e3d24', color: 'white',   gold: 'rgba(255,221,196,.75)', divider: 'rgba(255,255,255,.32)', tagBorder: 'rgba(255,255,255,.28)', tagColor: 'rgba(255,255,255,.78)' },
+  // Côté Cèdre — beige/taupe doré (dépendance, pierres, poutres)
+  { bg: '#e8e0d2', color: '#2a2018', gold: '#9c7c4e',               divider: '#b8a37a',              tagBorder: 'rgba(60,45,25,.25)',    tagColor: '#3a2c1c' },
+  // Côté Vallée — bleu nuit (cocon sous les toits)
+  { bg: '#22323e', color: 'white',   gold: 'rgba(150,200,220,.8)',  divider: 'rgba(150,200,220,.35)', tagBorder: 'rgba(255,255,255,.25)', tagColor: 'rgba(220,235,242,.78)' },
 ]
 
 export default function ChambresPage() {
