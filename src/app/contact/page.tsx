@@ -296,7 +296,7 @@ function ContactInner() {
             ))}
             <div style={{ padding: 10 }}>
               <iframe
-                src="https://maps.google.com/maps?q=4+chemin+de+la+Boire+Bavard,+49320+Blaison-Saint-Sulpice&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                src="https://www.google.com/maps?q=47.368,-0.511&z=15&hl=fr&output=embed"
                 style={{ width: '100%', aspectRatio: '4/3', border: 'none', display: 'block', filter: 'grayscale(40%) contrast(0.88) sepia(10%)' }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
