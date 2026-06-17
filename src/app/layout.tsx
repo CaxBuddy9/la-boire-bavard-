@@ -93,9 +93,10 @@ const jsonLd = {
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 47.368,
-    longitude: -0.511,
+    latitude: 47.3952,
+    longitude: -0.3690,
   },
+  logo: 'https://laboirebavard.com/icons/icon-192.png',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '9.9',
@@ -109,7 +110,7 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Planche du soir',       value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Jardin',                value: true },
   ],
-  hasMap: 'https://maps.google.com/?q=47.368,-0.511',
+  hasMap: 'https://maps.google.com/?q=47.3952,-0.3690',
   image: 'https://laboirebavard.com/photos/exterieur/celeste-maison-piscine-transats.jpg',
 }
 
