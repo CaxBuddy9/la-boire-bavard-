@@ -6,7 +6,7 @@ import { ROOMS } from '@/lib/rooms'
 
 export const metadata = {
   title: "Chambres — La Boire Bavard",
-  description: "3 chambres de charme à La Boire Bavard. Piscine, jardin, vue sur la vallée. 90€/nuit petit-déjeuner inclus.",
+  description: "3 chambres de charme à La Boire Bavard. Piscine, jardin, cadre calme et verdoyant. 90€/nuit petit-déjeuner inclus.",
 }
 
 // Une couleur par chambre, fidèle à son identité et bien distincte :

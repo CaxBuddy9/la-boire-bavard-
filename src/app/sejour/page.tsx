@@ -12,7 +12,7 @@ const PRODUCTS = [
   { icon: '✦', name: 'Viennoiseries & pains du jour',  desc: 'Cuits chaque matin, croustillants à souhait' },
   { icon: '✿', name: 'Les Délices de Flo',             desc: 'Confitures artisanales cuites au chaudron à Montreuil-Bellay, à base de fruits du Val de Loire' },
   { icon: '◉', name: 'Yaourts maison',                  desc: 'Préparés sur place, doux et onctueux' },
-  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du Petit Jardin à Brissac · orange pressée, jus de pomme artisanal' },
+  { icon: '❧', name: 'Fruits de saison & jus',          desc: 'Fruits & légumes du « Petit Jardin » à Brissac · orange pressée, jus de pomme artisanal' },
   { icon: '◇', name: 'Boissons chaudes',                desc: 'Café, thé, chocolat chaud' },
 ]
 
@@ -94,7 +94,7 @@ export default function SejourPage() {
                 Chaque matin, nous vous invitons à partager un moment de douceur et de convivialité autour d'un petit-déjeuner servi dans notre grande cuisine familiale ou, aux beaux jours, sous la pergola à l'ombre du mûrier, avec vue sur le jardin et la piscine.
               </p>
               <p className="font-body mt-4 max-w-2xl mx-auto text-[1.05rem] leading-[1.85]" style={{ color: 'rgba(255,255,255,.6)' }}>
-                Respectueux des traditions françaises, il est préparé avec des produits frais, locaux et de saison, soigneusement sélectionnés auprès de producteurs de la région.
+                Respectueux des traditions françaises, il est préparé avec des produits frais, locaux et de saison, soigneusement sélectionnés chez notre maraîcher « Le Petit Jardin » à Brissac.
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -188,10 +188,11 @@ export default function SejourPage() {
               et on y lit tranquillement à l'abri du soleil.
             </p>
             <p className="font-sans text-white/60 text-[1.05rem] leading-[1.85] mb-8">
-              Vue sur le jardin et la piscine, ambiance douce et lumière filtrée — un moment hors du temps.
+              Vue sur le jardin et la piscine, ambiance douce et lumière filtrée — un moment hors du temps,
+              où l'on entend surtout le chant des oiseaux.
             </p>
             <div className="flex flex-wrap gap-3">
-              {['Pergola ombragée', 'À l\'ombre du mûrier', 'Petit-déj aux beaux jours', 'Lecture au calme'].map(tag => (
+              {['Pergola ombragée', 'À l\'ombre du mûrier', 'Petit-déj aux beaux jours', 'Le chant des oiseaux'].map(tag => (
                 <span key={tag}
                   style={{ border: '1px solid rgba(196,160,80,.25)', padding: '6px 14px' }}
                   className="font-sans text-[0.6rem] tracking-[0.15em] uppercase text-white/55">
@@ -200,8 +201,17 @@ export default function SejourPage() {
               ))}
             </div>
           </div>
-          <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden order-1 md:order-2">
-            <Image src="/photos/exterieur/celeste-terrasse-pierre-table.jpg" alt="Terrasse en pierre et jardin" fill className="object-cover" sizes="50vw" />
+          <div className="grid grid-cols-2 gap-1 min-h-[50vw] md:min-h-0 order-1 md:order-2">
+            {[
+              '/photos/exterieur/pergola-01.jpeg',
+              '/photos/exterieur/pergola-02.jpeg',
+              '/photos/exterieur/pergola-03.jpeg',
+              '/photos/exterieur/pergola-04.jpeg',
+            ].map((src, idx) => (
+              <div key={src} className="relative overflow-hidden min-h-[40vw] md:min-h-0">
+                <Image src={src} alt={`La pergola sous le mûrier — vue ${idx + 1}`} fill className="object-cover" sizes="25vw" />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -217,7 +227,7 @@ export default function SejourPage() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { ico: '🌳', titre: 'Jardin arboré',     desc: 'Un jardin arboré et paysagé, avec des espaces ombragés naturels à proximité immédiate de la piscine.' },
+                { ico: '🌳', titre: 'Jardin arboré',     desc: 'Un jardin arboré et paysager, avec des espaces ombragés naturels à proximité immédiate de la piscine.' },
                 { ico: '🦋', titre: 'Nature & calme',    desc: 'Un cadre calme et verdoyant, à 25 minutes d\'Angers, où l\'on entend surtout les oiseaux.' },
                 { ico: '🚲', titre: 'Balades & vélo',    desc: 'De nombreux sentiers et circuits à vélo au départ de la maison, vers les coteaux viticoles et les bords de Loire.' },
               ].map(item => (
@@ -234,14 +244,18 @@ export default function SejourPage() {
 
         {/* ═══════════════ LE SOIR ═══════════════ */}
         <div className="grid md:grid-cols-2 min-h-[60vh]">
-          <div className="relative min-h-[50vw] md:min-h-0 overflow-hidden">
-            <Image
-              src="/photos/petitdej/petitdej-table-01.jpeg"
-              alt="La planche apéritive du soir"
-              fill
-              className="object-cover"
-              sizes="50vw"
-            />
+          <div
+            className="relative min-h-[50vw] md:min-h-0 overflow-hidden flex flex-col items-center justify-center text-center px-8"
+            style={{ background: 'radial-gradient(circle at 50% 35%, #1f2a1c 0%, #11180f 70%)' }}
+          >
+            <span className="text-4xl mb-6">🧀🍷🥖</span>
+            <p className="font-serif italic text-cream/90 mb-3" style={{ fontSize: 'clamp(2rem,3.5vw,3rem)' }}>
+              Bon appétit !
+            </p>
+            <div className="gold-line mx-auto mb-5" />
+            <p className="font-sans text-white/45 text-[0.7rem] tracking-[0.22em] uppercase">
+              Photos de nos planches à venir
+            </p>
           </div>
           <div className="bg-forest flex flex-col justify-center px-8 py-20 md:px-16">
             <p className="label-caps mb-5">Le soir · sur réservation</p>

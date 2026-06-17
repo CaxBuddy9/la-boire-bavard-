@@ -63,7 +63,7 @@ C'est ça, La Boire Bavard.
     category: 'Présentation complète',
     caption: `🏡 La Boire Bavard — Chambres d'Hôtes en Anjou
 
-Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 3 chambres de charme, chacune avec sa personnalité : vue sur la vallée, accès jardin, terrasse privée ou dépendance romantique sous le grand cèdre.
+Niché entre la vallée de la Loire et les vignobles d'Anjou, notre domaine vous accueille dans 3 chambres de charme, chacune avec sa personnalité : cocon sous les toits, accès jardin, terrasse privée ou dépendance romantique sous le grand cèdre.
 
 ✅ Note Exceptionnel 9.9/10 sur Booking
 ✅ Petit-déjeuner gourmand inclus — 90€/nuit
@@ -115,7 +115,7 @@ const HASHTAGS = {
 
 const OG_SPECS = [
   { page: 'Accueil', file: '/photos/exterieur/celeste-maison-piscine-transats.jpg', title: "La Boire Bavard — Chambres d'Hôtes en Anjou", desc: "Maison d'hôtes de charme 9.9/10. Piscine, jardin, petit-déjeuner gourmand. 90€/nuit." },
-  { page: 'Chambres', file: '/photos/chambres/jardin/celeste-jardin-lit-cheminee.jpg', title: "3 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée. Vue sur la vallée, piscine, jardin." },
+  { page: 'Chambres', file: '/photos/chambres/jardin/celeste-jardin-lit-cheminee.jpg', title: "3 Chambres — La Boire Bavard", desc: "Côté Jardin, Côté Cèdre, Côté Vallée. Cocon sous les toits, piscine, jardin." },
   { page: 'Avis', file: '/photos/chambres/cedre/celeste-cedre-lit-chevets.jpg', title: "Avis 9.9/10 — La Boire Bavard", desc: "200+ avis Exceptionnel. Découvrez ce que nos hôtes disent de leur séjour." },
   { page: 'Petit-déjeuner', file: '/photos/petitdej/petit-dejeuner-01.jpeg', title: "Petit-déjeuner Gourmand — La Boire Bavard", desc: "Confitures Les Délices de Flo, viennoiseries fraîches, fromages locaux. Inclus dans chaque nuit." },
 ]

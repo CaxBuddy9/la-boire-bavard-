@@ -86,7 +86,7 @@ const ROOMS = {
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [
       { fr: "Cocon sous les toits : tuffeau, poutraison et plafonds en pente", en: "A cocoon under the eaves: tuffeau stone, beams and sloping ceilings", es: "Un refugio bajo el tejado: piedra tuffeau, vigas y techos inclinados", pt: "Um refúgio sob o telhado: pedra tuffeau, vigas e tetos inclinados" },
-      { fr: "Accès par un escalier extérieur en ardoise — entrée indépendante", en: "Access via an outdoor slate staircase — private entrance", es: "Acceso por una escalera exterior de pizarra — entrada independiente", pt: "Acesso por uma escada exterior em ardósia — entrada independente" },
+      { fr: "Accès par un escalier extérieur en pierre — entrée indépendante", en: "Access via an outdoor stone staircase — private entrance", es: "Acceso por una escalera exterior de piedra — entrada independiente", pt: "Acesso por uma escada exterior em pedra — entrada independente" },
       { fr: "1 lit double et 2 lits simples · recommandée aux voyageurs de taille moyenne", en: "1 double bed and 2 single beds · best suited to average-height guests", es: "1 cama doble y 2 camas individuales · recomendada para huéspedes de estatura media", pt: "1 cama de casal e 2 camas de solteiro · recomendada a hóspedes de estatura média" },
     ],
   },
