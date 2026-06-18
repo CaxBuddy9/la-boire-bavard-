@@ -35,6 +35,7 @@ export default function RoomsTeaser() {
               src={ROOM_IMAGES[room.id] ?? '/photos/chambres/jardin/celeste-jardin-lit-coussins.jpg'}
               alt={room.name}
               fill
+              quality={90}
               className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
               sizes="(max-width:768px) 100vw, 33vw"
             />
