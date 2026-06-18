@@ -100,7 +100,7 @@ export default function Footer() {
 
         {/* Crédit studio — Speerla Studio */}
         <a
-          href="https://speerla.fr"
+          href="https://speerlastudio.com"
           target="_blank"
           rel="noopener noreferrer"
           title="Site conçu par Speerla Studio"
