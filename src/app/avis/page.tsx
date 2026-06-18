@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: "Avis — La Boire Bavard",
-  description: "Découvrez les avis de nos hôtes. Note 9.9/10 sur Google — Exceptionnel.",
+  description: "Découvrez les avis de nos hôtes. Note 9.9/10 sur Booking.com et avis 5★ sur Google.",
 }
 
 // ⚠️ Pour ajouter un avis récent (Google ou Booking) : copiez un bloc ci-dessous,
@@ -43,14 +43,14 @@ export default function AvisPage() {
               9.9<span className="text-gold">/10</span>
             </div>
             <p className="font-sans text-[0.65rem] tracking-[0.3em] uppercase text-white/40 mb-6">
-              Exceptionnel · Google
+              Exceptionnel · Booking.com & Google
             </p>
             <div className="flex justify-center gap-2 mb-10">
               {Array.from({ length: 5 }).map((_, i) => <span key={i} className="text-gold text-lg">✦</span>)}
             </div>
             <div className="gold-line mx-auto mb-10" />
             <div className="grid grid-cols-3 gap-8">
-              {[{ val: '9.9', label: 'Note globale' }, { val: '200+', label: 'Avis clients' }, { val: '98%', label: 'Recommandent' }].map((s) => (
+              {[{ val: '9.9', label: 'Note Booking' }, { val: '200+', label: 'Avis clients' }, { val: '98%', label: 'Recommandent' }].map((s) => (
                 <div key={s.label}>
                   <div className="font-serif text-gold text-3xl">{s.val}</div>
                   <div className="font-sans text-[0.58rem] tracking-[0.2em] uppercase text-white/35 mt-1">{s.label}</div>

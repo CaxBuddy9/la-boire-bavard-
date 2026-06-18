@@ -8,7 +8,7 @@ export default function Hero() {
   const t = useT()
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-[100svh] min-h-[560px] flex items-center justify-center overflow-hidden">
       {/* Image Ken Burns */}
       <Image
         src="/photos/exterieur/celeste-maison-piscine-transats.jpg"
@@ -50,7 +50,7 @@ export default function Hero() {
 
       {/* Contenu */}
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto pt-20">
-        <div className="flex justify-center mb-5 animate-[rise_0.9s_0s_both]">
+        <div className="flex justify-center mb-5 animate-[rise_0.9s_0s_both] scale-[0.72] sm:scale-100">
           <LogoSVG height={140} variant="dark-bg" />
         </div>
 
@@ -65,11 +65,11 @@ export default function Hero() {
           <em className="font-serif italic" style={{ color: 'rgba(255,255,255,0.82)', animation: 'gold-shimmer 4s 1.5s ease-in-out infinite' }}>Bavard</em>
         </h1>
 
-        <p className="font-sans text-[0.72rem] tracking-[0.38em] uppercase text-white/50 mb-12 animate-[rise_0.8s_0.45s_both]">
+        <p className="font-sans text-[0.6rem] sm:text-[0.72rem] tracking-[0.22em] sm:tracking-[0.38em] uppercase text-white/50 mb-10 sm:mb-12 px-4 leading-relaxed animate-[rise_0.8s_0.45s_both]">
           4 chemin de la Boire Bavard · 49320 Blaison-Saint-Sulpice
         </p>
 
-        <div className="flex gap-4 justify-center animate-[rise_0.8s_0.6s_both]">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-[rise_0.8s_0.6s_both]">
           <Link href="/chambres" className="btn-gold">{t('Nos chambres', 'Our rooms')}</Link>
           <Link href="/contact" className="btn-ghost">{t('Réserver', 'Book')}</Link>
         </div>

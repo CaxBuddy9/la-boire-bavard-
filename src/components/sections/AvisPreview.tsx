@@ -26,7 +26,7 @@ export default function AvisPreview() {
             9.9<span className="text-gold">/10</span>
           </div>
           <p className="font-sans text-[0.6rem] tracking-[0.3em] uppercase text-stone mt-2">
-            {t('Exceptionnel · Google', 'Exceptional · Google')}
+            {t('Exceptionnel · Booking.com & Google', 'Exceptional · Booking.com & Google')}
           </p>
           <div className="flex justify-center gap-1 mt-3">
             {Array.from({ length: 5 }).map((_, i) => (

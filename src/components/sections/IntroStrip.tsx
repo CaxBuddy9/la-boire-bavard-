@@ -7,7 +7,7 @@ export default function IntroStrip() {
   const t = useT()
 
   const stats = [
-    { n: '9.9', l: t('Note Google', 'Google rating') },
+    { n: '9.9', l: t('Note Booking', 'Booking rating') },
     { n: '90€', l: t('La nuit', 'Per night') },
     { n: '3',   l: t('Chambres', 'Rooms') },
   ]
