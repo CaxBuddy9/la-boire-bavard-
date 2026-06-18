@@ -26,7 +26,7 @@ export default function ChambresPage() {
       <Nav />
       <main>
         {/* Header éditorial */}
-        <div style={{ padding: '160px 52px 80px', background: '#111009', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ padding: 'clamp(120px,20vw,160px) clamp(22px,5vw,52px) 80px', background: '#111009', position: 'relative', overflow: 'hidden' }}>
           <span style={{
             position: 'absolute', bottom: -20, left: -10,
             fontFamily: 'var(--font-playfair)', fontSize: '22vw', lineHeight: .85,
@@ -48,9 +48,9 @@ export default function ChambresPage() {
           const s = BG_STYLES[i]
           const reverse = i % 2 === 1
           return (
-            <div key={room.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '70vh', direction: reverse ? 'rtl' : 'ltr' }}>
+            <div key={room.id} className="grid grid-cols-1 md:grid-cols-2 md:min-h-[70vh]">
               {/* Image */}
-              <div style={{ overflow: 'hidden', position: 'relative', direction: 'ltr', minHeight: '50vw' }}>
+              <div className={`relative overflow-hidden min-h-[280px] md:min-h-full ${reverse ? 'md:order-2' : ''}`}>
                 <Image src={room.images[0]} alt={room.name} fill className="object-cover" sizes="50vw"
                   style={{ transition: 'transform .8s ease' }}
                 />
@@ -66,7 +66,7 @@ export default function ChambresPage() {
               </div>
 
               {/* Contenu */}
-              <div style={{ background: s.bg, color: s.color, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '70px 64px', direction: 'ltr' }}>
+              <div className={`flex flex-col justify-center px-6 py-12 md:px-16 md:py-[70px] ${reverse ? 'md:order-1' : ''}`} style={{ background: s.bg, color: s.color }}>
                 <div style={{ fontFamily: 'var(--font-playfair)', fontSize: '6rem', lineHeight: 1, opacity: .07, marginBottom: -20, color: s.color, fontWeight: 400 }}>
                   {String(i + 1).padStart(2, '0')}
                 </div>
@@ -107,7 +107,7 @@ export default function ChambresPage() {
         })}
 
         {/* CTA */}
-        <div style={{ background: '#111009', padding: '90px 52px', textAlign: 'center' }}>
+        <div style={{ background: '#111009', padding: 'clamp(60px,12vw,90px) clamp(22px,5vw,52px)', textAlign: 'center' }}>
           <p className="label-caps" style={{ marginBottom: 16 }}>Disponibilités</p>
           <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: 'white', marginBottom: 32, fontWeight: 400 }}>
             Prêt pour votre séjour ?
