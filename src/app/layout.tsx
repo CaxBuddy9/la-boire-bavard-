@@ -34,9 +34,12 @@ const garamond = EB_Garamond({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://laboirebavard.com'),
+  metadataBase: new URL('https://www.laboirebavard.com'),
   title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand. Note 9.9/10 Booking · 90 €/nuit.",
+  alternates: {
+    canonical: '/',
+  },
   verification: {
     google: 'siMyIWDcGoVyg9ERTP0Ff4WLyoO4NqADvZt4J69m5oI',
   },
@@ -58,7 +61,7 @@ export const metadata: Metadata = {
     siteName: 'La Boire Bavard',
     locale: 'fr_FR',
     type: 'website',
-    url: 'https://laboirebavard.com',
+    url: 'https://www.laboirebavard.com',
   },
 }
 
@@ -71,7 +74,7 @@ const websiteJsonLd = {
   '@type': 'WebSite',
   name: 'La Boire Bavard',
   alternateName: "Chambres d'Hôtes La Boire Bavard",
-  url: 'https://laboirebavard.com',
+  url: 'https://www.laboirebavard.com',
 }
 
 const jsonLd = {
@@ -79,7 +82,7 @@ const jsonLd = {
   '@type': 'BedAndBreakfast',
   name: 'La Boire Bavard',
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand. Note 9.9/10.",
-  url: 'https://laboirebavard.com',
+  url: 'https://www.laboirebavard.com',
   telephone: '+33675786335',
   email: 'contact@laboirebavard.com',
   priceRange: '90€',
@@ -96,7 +99,7 @@ const jsonLd = {
     latitude: 47.3952,
     longitude: -0.3690,
   },
-  logo: 'https://laboirebavard.com/icons/icon-192.png',
+  logo: 'https://www.laboirebavard.com/icons/icon-192.png',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '9.9',
@@ -111,7 +114,7 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Jardin',                value: true },
   ],
   hasMap: 'https://maps.google.com/?q=47.3952,-0.3690',
-  image: 'https://laboirebavard.com/photos/exterieur/celeste-maison-piscine-transats.jpg',
+  image: 'https://www.laboirebavard.com/photos/exterieur/celeste-maison-piscine-transats.jpg',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
