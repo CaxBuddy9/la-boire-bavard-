@@ -1,6 +1,7 @@
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import Link from 'next/link'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata = {
   title: "Avis — La Boire Bavard",
@@ -32,6 +33,7 @@ export default function AvisPage() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'Avis', path: '/avis' }]} />
       <main>
 
         {/* Hero score */}

@@ -35,8 +35,28 @@ const garamond = EB_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.laboirebavard.com'),
-  title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
+  title: {
+    default: "La Boire Bavard",
+    template: "%s | La Boire Bavard"
+  },
   description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand. Note 9.9/10 Booking · 90 €/nuit.",
+  // CHANGEMENT CLÉ : applicationName est l'un des signaux que Google utilise pour
+  // afficher le « nom du site » (sitename) à la place du domaine dans les résultats.
+  applicationName: "La Boire Bavard",
+  // Renforce l'attribution éditoriale au nom de la maison (cohérence des signaux).
+  authors: [{ name: "La Boire Bavard", url: "https://www.laboirebavard.com" }],
+  creator: "La Boire Bavard",
+  publisher: "La Boire Bavard",
+  // Mots-clés ciblés maison d'hôtes / localisation (signal mineur mais propre).
+  keywords: [
+    "maison d'hôtes Anjou",
+    "chambres d'hôtes Angers",
+    "chambres d'hôtes Saumur",
+    "Blaison-Saint-Sulpice",
+    "bed and breakfast Loire",
+    "La Boire Bavard",
+  ],
+  category: "Hébergement",
   alternates: {
     canonical: '/',
   },
@@ -55,18 +75,45 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: "La Boire Bavard — Chambres d'Hôtes en Anjou",
+    // Sur la home : titre = nom seul (pas de slogan) pour renforcer le sitename.
+    title: "La Boire Bavard",
     description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand.",
-    images: ['/photos/exterieur/celeste-maison-piscine-transats.jpg'],
-    siteName: 'La Boire Bavard',
+    // CHANGEMENT : image OG enrichie (dimensions + alt) → meilleur rendu social
+    // et meilleure éligibilité aux aperçus riches.
+    images: [
+      {
+        url: '/photos/exterieur/celeste-maison-piscine-transats.jpg',
+        width: 1200,
+        height: 630,
+        alt: "La Boire Bavard — maison d'hôtes avec piscine en Anjou",
+      },
+    ],
+    // og:site_name = signal n°1 du sitename Google, identique partout.
+    siteName: "La Boire Bavard",
     locale: 'fr_FR',
     type: 'website',
     url: 'https://www.laboirebavard.com',
   },
-}
-
-export const viewport: Viewport = {
-  themeColor: '#0a0f0a',
+  // CHANGEMENT : Twitter/X Card → titre = nom de la maison, jamais le domaine.
+  twitter: {
+    card: 'summary_large_image',
+    title: "La Boire Bavard",
+    description: "Maison d'hôtes de charme entre Angers et Saumur. Piscine, jardin arboré, petit-déjeuner gourmand.",
+    images: ['/photos/exterieur/celeste-maison-piscine-transats.jpg'],
+  },
+  // CHANGEMENT : autorise explicitement les grands aperçus image/texte
+  // (rich results) — aide l'affichage du nom + visuel dans Google.
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
 }
 
 const websiteJsonLd = {

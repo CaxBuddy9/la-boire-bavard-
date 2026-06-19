@@ -7,6 +7,7 @@ import Footer from '@/components/sections/Footer'
 import RoomPicker from '@/components/RoomPicker'
 import DateRangePicker from '@/components/DateRangePicker'
 import CustomSelect from '@/components/CustomSelect'
+import Breadcrumbs from '@/components/Breadcrumbs'
 const S = { slate: '#1a2318', slate2: '#222b20', gold: '#c4a050', cream: 'rgba(240,235,225,.75)', dim: 'rgba(184,192,180,.5)', border: 'rgba(196,160,80,.25)' }
 
 const ACCESS = [
@@ -90,6 +91,7 @@ function ContactInner() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'Contact & Accès', path: '/contact' }]} />
       <main>
         {/* Hero header — sombre */}
         <div style={{ background: S.slate, padding: 'clamp(100px,14vw,140px) clamp(16px,5vw,52px) 70px', position: 'relative', overflow: 'hidden' }}>

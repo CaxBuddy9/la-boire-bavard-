@@ -6,6 +6,7 @@ import Footer from '@/components/sections/Footer'
 import BookingCard from '@/components/BookingCard'
 import PhotoGallery from '@/components/PhotoGallery'
 import { ROOMS, getRoomBySlug } from '@/lib/rooms'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export function generateStaticParams() {
   return ROOMS.map((r) => ({ slug: r.slug }))
@@ -29,6 +30,12 @@ export default async function RoomPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <Nav />
+      <Breadcrumbs
+        items={[
+          { name: 'Chambres', path: '/chambres' },
+          { name: room.name, path: `/chambres/${room.slug}` },
+        ]}
+      />
       <main>
         {/* Hero */}
         <section className="relative h-[70vh] flex items-end pb-16 overflow-hidden">

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import PhotoGallery from '@/components/PhotoGallery'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata = {
   title: "La Propriété — La Boire Bavard",
@@ -22,6 +23,7 @@ export default function PropriетеPage() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'La Propriété', path: '/propriete' }]} />
       <main>
         {/* Hero */}
         <section className="relative h-[65vh] flex items-end pb-16 overflow-hidden">

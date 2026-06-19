@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata = {
   title: "Votre séjour — Petit-déjeuner, piscine & bien-être — La Boire Bavard",
@@ -41,6 +42,7 @@ export default function SejourPage() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'Votre séjour', path: '/sejour' }]} />
       <main>
 
         {/* Hero */}

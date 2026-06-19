@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import { featuredPost, gridPosts, formatDate, type BlogPost } from '@/lib/blog'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata = {
   title: 'Journal — La Boire Bavard',
@@ -127,6 +128,7 @@ export default function BlogPage() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'Journal', path: '/blog' }]} />
       <main>
 
         {/* Hero */}

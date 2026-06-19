@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/sections/Nav'
 import Footer from '@/components/sections/Footer'
 import { ROOMS } from '@/lib/rooms'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata = {
   title: "Chambres — La Boire Bavard",
@@ -24,6 +25,7 @@ export default function ChambresPage() {
   return (
     <>
       <Nav />
+      <Breadcrumbs items={[{ name: 'Chambres', path: '/chambres' }]} />
       <main>
         {/* Header éditorial */}
         <div style={{ padding: 'clamp(120px,20vw,160px) clamp(22px,5vw,52px) 80px', background: '#111009', position: 'relative', overflow: 'hidden' }}>
