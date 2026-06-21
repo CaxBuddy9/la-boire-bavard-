@@ -81,7 +81,7 @@ const ROOMS = {
     slug: 'vallee',
     emoji: '🏞️',
     bg: ROOM_COLORS.vallee.bg,
-    image: '/photos/chambres/vallee/vallee-maison-famille.png',
+    image: '/photos/chambres/vallee/chambre-vallee-lit-cheminee.jpeg',
     images: galleryOf('vallee'),
     theme: makeTheme('vallee') satisfies RoomTheme,
     details: [

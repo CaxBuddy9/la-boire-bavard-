@@ -7,7 +7,7 @@ import { useT } from '@/context/LangContext'
 const ROOM_IMAGES: Record<string, string> = {
   jardin:  '/photos/chambres/jardin/celeste-jardin-lit-coussins.jpg',
   cedre:   '/photos/chambres/cedre/celeste-cedre-lit-chevets.jpg',
-  vallee:  '/photos/chambres/vallee/vallee-maison-famille.png',
+  vallee:  '/photos/chambres/vallee/chambre-vallee-lit-cheminee.jpeg',
 }
 
 export default function RoomsTeaser() {

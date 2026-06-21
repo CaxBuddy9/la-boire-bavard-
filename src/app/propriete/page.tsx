@@ -152,7 +152,7 @@ export default function PropriетеPage() {
                 { src: '/photos/exterieur/celeste-rose-cle-paradis.jpg', alt: 'Rose blanche au jardin' },
                 { src: '/photos/chambres/jardin/celeste-jardin-lit-cheminee.jpg', alt: 'Chambre Côté Jardin' },
                 { src: '/photos/chambres/cedre/celeste-cedre-lit-baignoire-commode.jpg', alt: 'Chambre Côté Cèdre, dépendance' },
-                { src: '/photos/chambres/vallee/chambre-vallee-02.jpeg', alt: 'Chambre Côté Vallée' },
+                { src: '/photos/chambres/vallee/chambre-vallee-lit-coussins.jpeg', alt: 'Chambre Côté Vallée' },
               ]}
             />
           </div>
